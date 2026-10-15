@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .main {
+            background-color: #f2f3f4;
+            display: flex;
+            flex-wrap: wrap;
+            margin: 10px;
+            padding: 10px 0;
+        }
+        .box {
+            width: 150px;
+            height: 159px;
+            border: 1px solid #ccc;
+            margin: 10px;
+            background-color: #fff;
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            box-sizing: border-box;
+            position: relative;
+            cursor: pointer;
+        }
+        .box:first-child:hover {
+            background-color: #000;
+            color: #fff;
+            font-size: 100px;
+            border-width: 30px;
+        }
+        .box:nth-child(2):hover {
+            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
+        }
+        .box:nth-child(3):hover {
+            text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+        }
+        .box:nth-of-type(4):hover {
+            border-radius: 50%;
+        }
+        .box:nth-of-type(5) {
+            background: linear-gradient(#000, #fff);
+        }
+        .box:nth-of-type(6) {
+            background: linear-gradient(#fff, #000);
+        }
+        .box:nth-of-type(6)+.box:hover {
+            transform: scale(0.5);
+        }
+        .box:nth-of-type(8):hover {
+            transform: translateX(-100px);
+        }
+        .box:nth-of-type(9):hover {
+            transform: rotateZ(-180deg);
+        }
+        .box:nth-of-type(10):hover {
+            transform: skewX(-45deg);
+        }
+        .box:nth-last-child(2):hover::before {
+            content: "#";
+            color: red;
+            font-size: 40px;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-weight: bold;
+            text-shadow: 0 0 6px white;
+        }
+        .box:last-child:hover::after {
+            content: "周徐倬玚";
+            color: #fff;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #000;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            margin: 0;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+            font-weight: bold;
+            line-height: 1;
+        }
+        .box:nth-of-type(3n):hover {
+            border: 3px solid #f00;
+        }
+        .box:nth-child(even):hover {
+            background: linear-gradient(145deg, #a8c0ff, #3f2b96);
+            color: #fff;
+            font-weight: bold;
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(106, 90, 205, 0.6);
+            border-color: #6a5acd;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="box">1</div>
+        <div class="box">2</div>
+        <div class="box">3</div>
+        <div class="box">4</div>
+        <div class="box">5</div>
+        <div class="box">6</div>
+        <div class="box">7</div>
+        <div class="box">8</div>
+        <div class="box">9</div>
+        <div class="box">10</div>
+        <div class="box">11</div>
+        <div class="box">12</div>
+    </div>
+</body>
+</html>

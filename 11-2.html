@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS3 3D 动画</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            overflow-x: hidden;
+        }
+
+        .zhou-header {
+            text-align: center;
+            padding: 3rem 1.5rem 1rem;
+        }
+
+        .zhou-header h1 {
+            margin: 0 0 0.5rem;
+            font-size: clamp(1.75rem, 5vw, 2.5rem);
+            background: linear-gradient(135deg, #38bdf8, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .zhou-header p {
+            margin: 0;
+            color: #94a3b8;
+        }
+
+        .zhou-stage {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 3rem;
+        }
+
+        .zhou-card {
+            padding: 2rem 1.5rem 1.5rem;
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            border-radius: 1rem;
+            background: rgba(30, 41, 59, 0.6);
+            text-align: center;
+        }
+
+        .zhou-card h2 {
+            margin: 0 0 0.25rem;
+            font-size: 1.1rem;
+            color: #e2e8f0;
+        }
+
+        .zhou-card .zhou-sub {
+            margin: 0 0 1.5rem;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        .zhou-scene {
+            height: 220px;
+            display: grid;
+            place-items: center;
+            perspective: 600px;
+            margin-bottom: 1rem;
+        }
+
+        .zhou-code {
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.78rem;
+            color: #7dd3fc;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 0.6rem 0.8rem;
+            border-radius: 0.5rem;
+            text-align: left;
+            white-space: pre;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .zhou-cube,
+            .zhou-card-3d,
+            .zhou-carousel {
+                animation: none !important;
+            }
+        }
+
+        /* 1. 旋转立方体 */
+        .zhou-cube {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: zhou-spin-cube 6s linear infinite;
+        }
+
+        .zhou-cube-face {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            display: grid;
+            place-items: center;
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: #fff;
+            background: rgba(59, 130, 246, 0.75);
+        }
+
+        .zhou-cube-front  { transform: rotateY(0deg) translateZ(40px); }
+        .zhou-cube-back   { transform: rotateY(180deg) translateZ(40px); background: rgba(239, 68, 68, 0.75); }
+        .zhou-cube-right  { transform: rotateY(90deg) translateZ(40px); background: rgba(16, 185, 129, 0.75); }
+        .zhou-cube-left   { transform: rotateY(-90deg) translateZ(40px); background: rgba(245, 158, 11, 0.75); }
+        .zhou-cube-top    { transform: rotateX(90deg) translateZ(40px); background: rgba(139, 92, 246, 0.75); }
+        .zhou-cube-bottom { transform: rotateX(-90deg) translateZ(40px); background: rgba(236, 72, 153, 0.75); }
+
+        @keyframes zhou-spin-cube {
+            from { transform: rotateX(-20deg) rotateY(0deg); }
+            to   { transform: rotateX(-20deg) rotateY(360deg); }
+        }
+
+        /* 2. 3D 翻转卡片 */
+        .zhou-card-3d {
+            width: 160px;
+            height: 100px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: zhou-flip-card 4s ease-in-out infinite;
+        }
+
+        .zhou-card-face {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #fff;
+            backface-visibility: hidden;
+        }
+
+        .zhou-card-front {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        .zhou-card-back {
+            background: linear-gradient(135deg, #f43f5e, #ec4899);
+            transform: rotateY(180deg);
+        }
+
+        @keyframes zhou-flip-card {
+            0%, 45%   { transform: rotateY(0deg); }
+            55%, 100% { transform: rotateY(180deg); }
+        }
+
+        /* 3. 3D 旋转木马 */
+        .zhou-carousel {
+            width: 70px;
+            height: 70px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: zhou-spin-carousel 8s linear infinite;
+        }
+
+        .zhou-carousel-item {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            display: grid;
+            place-items: center;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 1.2rem;
+            background: rgba(16, 185, 129, 0.7);
+        }
+
+        .zhou-carousel-item:nth-child(1) { transform: rotateY(0deg) translateZ(100px); }
+        .zhou-carousel-item:nth-child(2) { transform: rotateY(60deg) translateZ(100px); background: rgba(59, 130, 246, 0.7); }
+        .zhou-carousel-item:nth-child(3) { transform: rotateY(120deg) translateZ(100px); background: rgba(245, 158, 11, 0.7); }
+        .zhou-carousel-item:nth-child(4) { transform: rotateY(180deg) translateZ(100px); background: rgba(239, 68, 68, 0.7); }
+        .zhou-carousel-item:nth-child(5) { transform: rotateY(240deg) translateZ(100px); background: rgba(139, 92, 246, 0.7); }
+        .zhou-carousel-item:nth-child(6) { transform: rotateY(300deg) translateZ(100px); background: rgba(236, 72, 153, 0.7); }
+
+        @keyframes zhou-spin-carousel {
+            from { transform: rotateX(-15deg) rotateY(0deg); }
+            to   { transform: rotateX(-15deg) rotateY(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header class="zhou-header">
+        <h1>CSS3 3D 动画</h1>
+        <p>周徐倬玚 · 高级网页设计课堂实践</p>
+    </header>
+
+    <main class="zhou-stage">
+        <section class="zhou-card">
+            <h2>旋转立方体</h2>
+            <p class="zhou-sub">transform-style: preserve-3d + 6 面 translateZ</p>
+            <div class="zhou-scene">
+                <div class="zhou-cube">
+                    <div class="zhou-cube-face zhou-cube-front">前</div>
+                    <div class="zhou-cube-face zhou-cube-back">后</div>
+                    <div class="zhou-cube-face zhou-cube-right">右</div>
+                    <div class="zhou-cube-face zhou-cube-left">左</div>
+                    <div class="zhou-cube-face zhou-cube-top">上</div>
+                    <div class="zhou-cube-face zhou-cube-bottom">下</div>
+                </div>
+            </div>
+            <div class="zhou-code">transform-style: preserve-3d;
+animation: spin 6s linear infinite;</div>
+        </section>
+
+        <section class="zhou-card">
+            <h2>3D 翻转卡片</h2>
+            <p class="zhou-sub">backface-visibility + rotateY</p>
+            <div class="zhou-scene">
+                <div class="zhou-card-3d">
+                    <div class="zhou-card-face zhou-card-front">正面</div>
+                    <div class="zhou-card-face zhou-card-back">背面</div>
+                </div>
+            </div>
+            <div class="zhou-code">backface-visibility: hidden;
+animation: flip 4s ease-in-out infinite;</div>
+        </section>
+
+        <section class="zhou-card">
+            <h2>3D 旋转木马</h2>
+            <p class="zhou-sub">6 个面 rotateY + translateZ 围成一圈</p>
+            <div class="zhou-scene">
+                <div class="zhou-carousel">
+                    <div class="zhou-carousel-item">1</div>
+                    <div class="zhou-carousel-item">2</div>
+                    <div class="zhou-carousel-item">3</div>
+                    <div class="zhou-carousel-item">4</div>
+                    <div class="zhou-carousel-item">5</div>
+                    <div class="zhou-carousel-item">6</div>
+                </div>
+            </div>
+            <div class="zhou-code">transform: rotateY(60deg)
+  translateZ(100px);
+animation: spin 8s linear infinite;</div>
+        </section>
+    </main>
+</body>
+</html>

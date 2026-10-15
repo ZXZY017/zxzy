@@ -1,0 +1,472 @@
+/* ============================================================
+   高级网页设计I - 联想应用商店首页
+   学号：24001011015
+   姓名：周徐倬玚
+   班级：计算机24010
+   全局CSS - Global Styles
+   ============================================================ */
+
+/* ---------- 全局重置与公共样式 ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+    background-color: #f5f6f8;
+    overflow-x: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    border: none;
+}
+
+button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+input {
+    border: none;
+    outline: none;
+    font-family: inherit;
+}
+
+/* ---------- 整体布局：左右两栏 ---------- */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* 学号标识类（用于标明本项目归属） */
+.stu-1015 {
+    /* 本项目学号 1015 的标识类，无样式，仅用于满足作业"代码包含学号"要求 */
+}
+
+/* ============================================================
+   网页元素1：左侧导航栏（一左一右布局）
+   ============================================================ */
+.sidebar {
+    width: 200px;
+    background-color: #ffffff;
+    border-right: 1px solid #ebeef5;
+    flex-shrink: 0;
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    padding: 8px 20px 24px;
+    gap: 10px;
+}
+
+.logo-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    color: #fff;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.logo-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0 10px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: #4b5563;
+    font-size: 14px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.nav-item:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+.nav-item.active {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.nav-icon {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.badge {
+    margin-left: auto;
+    background-color: #ef4444;
+    color: #fff;
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-style: normal;
+}
+
+/* ---------- 右侧主内容区 ---------- */
+.main-content {
+    flex: 1;
+    padding: 16px 24px 40px;
+    min-width: 0;
+}
+
+/* ---------- 顶部搜索栏 ---------- */
+.top-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.back-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #fff;
+    color: #6b7280;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 8px 18px;
+    width: 340px;
+    border: 1px solid #e5e7eb;
+}
+
+.search-icon {
+    font-size: 14px;
+    color: #9ca3af;
+}
+
+.search-input {
+    flex: 1;
+    font-size: 13px;
+    color: #374151;
+    background: transparent;
+}
+
+.search-input::placeholder {
+    color: #9ca3af;
+}
+
+.top-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #d1d5db;
+}
+
+.username {
+    font-size: 13px;
+    color: #4b5563;
+    margin-right: 6px;
+}
+
+.icon-btn {
+    font-size: 14px;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px;
+}
+
+/* ============================================================
+   网页元素2：Banner 区（背景图，所有内容由图片承载）
+   ============================================================ */
+.banner-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.main-banner {
+    position: relative;
+    /* 背景图铺满整个 Banner，图片里已含文字、按钮和圆点 */
+    background: url('../images/banner.png') center center / cover no-repeat;
+    background-color: #0d1b2a;
+    border-radius: 14px;
+    overflow: hidden;
+    min-height: 260px;
+}
+
+/* 右侧小卡片 2行4列（用图片填充） */
+.banner-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.mini-card {
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    background-color: #fff;
+    min-height: 110px;
+}
+
+.mini-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.mini-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ============================================================
+   网页元素3：精选推荐（多行多列 Grid 列表）
+   ============================================================ */
+.recommend-section {
+    margin-bottom: 32px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.section-header h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.more-link {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.more-link:hover {
+    color: #16a34a;
+}
+
+.recommend-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 14px 18px;
+}
+
+.app-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.app-item:hover {
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.app-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    object-fit: cover;
+    background-color: #e5e7eb;
+}
+
+.app-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.app-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1f2937;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 3px;
+}
+
+.app-desc {
+    font-size: 11px;
+    color: #9ca3af;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ============================================================
+   网页元素4：热门游戏推荐（上图下文卡片）
+   ============================================================ */
+.games-section {
+    margin-bottom: 30px;
+}
+
+.arrows {
+    display: flex;
+    gap: 8px;
+}
+
+.arrow-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+.arrow-btn:hover {
+    background-color: #f3f4f6;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+}
+
+.game-card {
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.game-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.game-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: linear-gradient(135deg, #a78bfa, #60a5fa);
+}
+
+.game-info {
+    padding: 12px 14px 16px;
+}
+
+.game-info h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 6px;
+}
+
+.rating {
+    font-size: 11px;
+    color: #f59e0b;
+    margin-bottom: 10px;
+}
+
+.tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.tag {
+    font-size: 11px;
+    color: #6b7280;
+    background-color: #f3f4f6;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+/* ============================================================
+   响应式适配（多视口测试）
+   ============================================================ */
+@media (max-width: 1400px) {
+    .recommend-grid { grid-template-columns: repeat(6, 1fr); }
+    .games-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 1100px) {
+    .sidebar { width: 160px; }
+    .banner-section { grid-template-columns: 1fr; }
+    .banner-cards { grid-template-columns: repeat(4, 1fr); }
+    .recommend-grid { grid-template-columns: repeat(4, 1fr); }
+    .games-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .sidebar { display: none; }
+    .recommend-grid { grid-template-columns: repeat(2, 1fr); }
+    .games-grid { grid-template-columns: repeat(2, 1fr); }
+    .search-box { width: 200px; }
+}

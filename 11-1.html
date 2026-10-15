@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web 前端长度单位</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f8fafc;
+            color: #1e293b;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            line-height: 1.6;
+        }
+
+        .zhou-page {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .zhou-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            margin: 0 0 0.5rem;
+            font-size: clamp(1.75rem, 5vw, 2.5rem);
+            color: #0f172a;
+        }
+
+        .zhou-subtitle {
+            margin: 0;
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        .zhou-unit-section {
+            margin-bottom: 2.5rem;
+        }
+
+        h2 {
+            margin: 0 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+            font-size: 1.25rem;
+            color: #334155;
+        }
+
+        .zhou-unit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+
+        .zhou-unit-card {
+            padding: 1.25rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            background: #fff;
+            transition: transform 180ms ease, box-shadow 180ms ease;
+        }
+
+        .zhou-unit-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+        }
+
+        .zhou-unit-name {
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.375rem;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .zhou-unit-desc {
+            margin: 0.5rem 0 0;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        .zhou-unit-example {
+            margin: 0.75rem 0 0;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            background: #f1f5f9;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .zhou-demo-area {
+            margin-top: 2.5rem;
+            padding: 1.5rem;
+            border: 1px dashed #cbd5e1;
+            border-radius: 0.75rem;
+            background: #fff;
+        }
+
+        .zhou-demo-area h2 {
+            margin-top: 0;
+        }
+
+        .zhou-demo-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .zhou-demo-box {
+            display: grid;
+            place-items: center;
+            border-radius: 0.5rem;
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .zhou-demo-px {
+            width: 100px;
+            height: 60px;
+            background: #3b82f6;
+        }
+
+        .zhou-demo-em {
+            width: 6.25em;
+            height: 3.75em;
+            background: #10b981;
+            font-size: 16px;
+        }
+
+        .zhou-demo-rem {
+            width: 6.25rem;
+            height: 3.75rem;
+            background: #f59e0b;
+        }
+
+        .zhou-demo-percent {
+            width: 50%;
+            max-width: 200px;
+            height: 60px;
+            background: #8b5cf6;
+        }
+
+        .zhou-demo-vw {
+            width: 25vw;
+            max-width: 200px;
+            height: 60px;
+            background: #ef4444;
+        }
+
+        .zhou-footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <main class="zhou-page">
+        <header class="zhou-header">
+            <h1>Web 前端长度单位</h1>
+            <p class="zhou-subtitle">周徐倬玚 · 高级网页设计课堂实践</p>
+        </header>
+
+        <section class="zhou-unit-section">
+            <h2>绝对单位</h2>
+            <div class="zhou-unit-grid">
+                <div class="zhou-unit-card">
+                    <span class="zhou-unit-name">px</span>
+                    <p class="zhou-unit-desc">像素，最常用的绝对单位。1px 对应屏幕上的一个物理像素点（CSS 像素）。</p>
+                    <div class="zhou-unit-example">width: 100px;</div>
+                </div>
+                <div class="zhou-unit-card">
+                    <span class="zhou-unit-name">pt</span>
+                    <p class="zhou-unit-desc">磅，印刷单位。1pt = 1/72 英寸，屏幕显示中较少使用。</p>
+                    <div class="zhou-unit-example">font-size: 12pt;</div>
+                </div>
+                <div class="zhou-unit-card">
+                    <span class="zhou-unit-name">cm / mm / in</span>
+                    <p class="zhou-unit-desc">厘米、毫米、英寸。物理长度单位，主要用于打印样式。</p>
+                    <div class="zhou-unit-example">width: 5cm;</div>
+                </div>
+                <div class="zhou-unit-card">
+                    <span class="zhou-unit-name">pc</span>
+                    <p class="zhou-unit-desc">派卡，印刷单位。1pc = 12pt，前端开发中极少使用。</p>
+                    <div class="zhou-unit-example">font-size: 1pc;</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="zhou-unit-section">
+            <h2>相对单位 — 相对于字体大小</h2>
+            <div class="zhou-unit-grid">
+                <div class="zhou-unit-card">
+                    <span class="zhou-unit-name">em</span>
+                    <p class="zhou-unit-desc">相对于当前元素的 font-size。若当前元素 font-size 为 16px，则 1em = 16px。</p>
+                    <div class="zhou-unit-example">margin: 1.5em;</div>
+                </div>
+                <div class="zhou-unit-card">
+                    <span class="zhou-unit-name">rem</span>
+                    <p class="zhou-unit-desc">相对于根元素（html）的 font-size。默认 1rem = 16px，不受嵌套影响。</p>
+                    <div class="zhou-unit-example">padding: 2rem;</div>
+                </div>
+                <div class="zhou-unit-card">
+                    <span class="zhou-unit-name">ex</span>
+                    <p class="zhou-unit-desc">相对于当前字体中小写字母 "x" 的高度，实际使用较少。</p>
+                    <div class="zhou-unit-example">height: 4ex;</div>
+                </div>
+                <div class="zhou-unit-card">
+                    <span class="zhou-unit-name">ch</span>
+                    <p class="zhou-unit-desc">相对于当前字体中数字 "0" 的宽度，常用于限制文本宽度。</p>
+                    <div class="zhou-unit-example">width: 40ch;</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="zhou-unit-section">
+            <h2>相对单位 — 相对于视口</h2>
+            <div class="zhou-unit-grid">
+                <div class="zhou-unit-card">
+                    <span class="zhou-unit-name">vw</span>
+                    <p class="zhou-unit-desc">视口宽度的 1%。100vw = 视口总宽度。</p>
+                    <div class="zhou-unit-example">width: 50vw;</div>
+                </div>
+                <div class="zhou-unit-card">
+                    <span class="zhou-unit-name">vh</span>
+                    <p class="zhou-unit-desc">视口高度的 1%。100vh = 视口总高度。</p>
+                    <div class="zhou-unit-example">height: 100vh;</div>
+                </div>
+                <div class="zhou-unit-card">
+                    <span class="zhou-unit-name">vmin</span>
+                    <p class="zhou-unit-desc">取 vw 和 vh 中较小值的 1%，适合保持比例。</p>
+                    <div class="zhou-unit-example">font-size: 4vmin;</div>
+                </div>
+                <div class="zhou-unit-card">
+                    <span class="zhou-unit-name">vmax</span>
+                    <p class="zhou-unit-desc">取 vw 和 vh 中较大值的 1%，适合全屏背景。</p>
+                    <div class="zhou-unit-example">width: 80vmax;</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="zhou-unit-section">
+            <h2>相对单位 — 相对于父元素</h2>
+            <div class="zhou-unit-grid">
+                <div class="zhou-unit-card">
+                    <span class="zhou-unit-name">%</span>
+                    <p class="zhou-unit-desc">相对于父元素对应属性的百分比，是最常用的相对单位之一。</p>
+                    <div class="zhou-unit-example">width: 50%;</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="zhou-demo-area">
+            <h2>直观对比</h2>
+            <div class="zhou-demo-row">
+                <div class="zhou-demo-box zhou-demo-px">100px</div>
+                <div class="zhou-demo-box zhou-demo-em">6.25em</div>
+                <div class="zhou-demo-box zhou-demo-rem">6.25rem</div>
+                <div class="zhou-demo-box zhou-demo-percent">50%</div>
+                <div class="zhou-demo-box zhou-demo-vw">25vw</div>
+            </div>
+        </section>
+
+        <footer class="zhou-footer">周徐倬玚 · 《高级网页设计》课堂实践</footer>
+    </main>
+</body>
+</html>

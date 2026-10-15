@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="联想应用商店 - 高级网页设计I 实验项目">
+    <title>联想应用商店 - 高级网页设计I</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 
+        高级网页设计I - 联想应用商店首页
+        学号：24001011015
+        姓名：周徐倬玚
+        班级：计算机24010
+    -->
+
+    <!-- ========== 网页元素1：左侧导航 + 顶部搜索栏（一左一右布局） ========== -->
+    <div class="app-layout stu-1015">
+
+        <!-- 左侧导航栏 -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <span class="logo-icon">✓</span>
+                <span class="logo-text">联想应用商店</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active"><span class="nav-icon">🏠</span>推荐</a>
+                <a href="#" class="nav-item"><span class="nav-icon">🎮</span>游戏</a>
+                <a href="#" class="nav-item"><span class="nav-icon">📂</span>分类</a>
+                <a href="#" class="nav-item"><span class="nav-icon">🖼️</span>壁纸</a>
+                <a href="#" class="nav-item"><span class="nav-icon">🏷️</span>折扣</a>
+                <a href="#" class="nav-item"><span class="nav-icon">🤖</span>AI专区</a>
+                <a href="#" class="nav-item"><span class="nav-icon">💬</span>圈子</a>
+                <a href="#" class="nav-item"><span class="nav-icon">📄</span>办公</a>
+                <a href="#" class="nav-item"><span class="nav-icon">⬆️</span>升级 <em class="badge">6</em></a>
+                <a href="#" class="nav-item"><span class="nav-icon">👤</span>我的</a>
+            </nav>
+        </aside>
+
+        <!-- 右侧主内容区 -->
+        <main class="main-content">
+
+            <!-- 顶部搜索栏 -->
+            <header class="top-bar">
+                <button class="back-btn">‹</button>
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="猎鱼达人3D  大话西游联动" class="search-input">
+                </div>
+                <div class="top-right">
+                    <img src="images/avatar.png" alt="用户头像" class="avatar">
+                    <span class="username">lenovo1...</span>
+                    <span class="icon-btn">⬇</span>
+                    <span class="icon-btn">📥</span>
+                    <span class="icon-btn">✉</span>
+                    <span class="icon-btn">⭕</span>
+                    <span class="icon-btn">➖</span>
+                    <span class="icon-btn">▢</span>
+                    <span class="icon-btn">✕</span>
+                </div>
+            </header>
+
+            <!-- ========== 网页元素2：Banner + 右侧小卡片（一左一右） ========== -->
+            <section class="banner-section">
+                <!-- 左侧大 Banner（背景图已含文字、按钮和圆点） -->
+                <div class="main-banner"></div>
+
+                <!-- 右侧 8 个小卡片（2行4列） -->
+                <div class="banner-cards">
+                    <div class="mini-card">
+                        <img src="images/card-1.png" alt="装机必备" class="mini-card-img">
+                    </div>
+                    <div class="mini-card">
+                        <img src="images/card-2.png" alt="秋日考研备战" class="mini-card-img">
+                    </div>
+                    <div class="mini-card">
+                        <img src="images/card-3.png" alt="深度清理C盘" class="mini-card-img">
+                    </div>
+                    <div class="mini-card">
+                        <img src="images/card-4.png" alt="驱动大师+DLL修复" class="mini-card-img">
+                    </div>
+                    <div class="mini-card">
+                        <img src="images/card-5.png" alt="无畏契约" class="mini-card-img">
+                    </div>
+                    <div class="mini-card">
+                        <img src="images/card-6.png" alt="千问功能上新" class="mini-card-img">
+                    </div>
+                    <div class="mini-card">
+                        <img src="images/card-7.png" alt="精选专题合集" class="mini-card-img">
+                    </div>
+                    <div class="mini-card">
+                        <img src="images/card-8.png" alt="全球PC上榜" class="mini-card-img">
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== 网页元素3：精选推荐（列表布局 - 多行多列） ========== -->
+            <section class="recommend-section">
+                <div class="section-header">
+                    <h3>精选推荐</h3>
+                    <a href="#" class="more-link">更多</a>
+                </div>
+
+                <div class="recommend-grid">
+                    <div class="app-item">
+                        <img src="images/icon-1.png" alt="豆包" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">豆包</p>
+                            <p class="app-desc">工作任务Agent全新开...</p>
+                        </div>
+                    </div>
+                    <div class="app-item">
+                        <img src="images/icon-2.png" alt="优酷" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">优酷</p>
+                            <p class="app-desc">你的视频播放平台</p>
+                        </div>
+                    </div>
+                    <div class="app-item">
+                        <img src="images/icon-3.png" alt="微信" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">微信</p>
+                            <p class="app-desc">一个生活方式</p>
+                        </div>
+                    </div>
+                    <div class="app-item">
+                        <img src="images/icon-4.png" alt="钉钉" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">钉钉</p>
+                            <p class="app-desc">让工作学习更简单</p>
+                        </div>
+                    </div>
+                    <div class="app-item">
+                        <img src="images/icon-5.png" alt="抖音" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">抖音</p>
+                            <p class="app-desc">记录美好生活</p>
+                        </div>
+                    </div>
+                    <div class="app-item">
+                        <img src="images/icon-6.png" alt="企业微信" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">企业微信</p>
+                            <p class="app-desc">让每个企业都有自己的微信</p>
+                        </div>
+                    </div>
+                    <div class="app-item">
+                        <img src="images/icon-7.png" alt="千问" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">千问</p>
+                            <p class="app-desc">全能AI助手，回答聪明...</p>
+                        </div>
+                    </div>
+                    <div class="app-item">
+                        <img src="images/icon-8.png" alt="迅雷" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">迅雷</p>
+                            <p class="app-desc">下载更快更稳定</p>
+                        </div>
+                    </div>
+                    <div class="app-item">
+                        <img src="images/icon-9.png" alt="酷狗音乐" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">酷狗音乐</p>
+                            <p class="app-desc">就是歌多</p>
+                        </div>
+                    </div>
+                    <div class="app-item">
+                        <img src="images/icon-10.png" alt="汽水音乐" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">汽水音乐</p>
+                            <p class="app-desc">年轻人的音乐社区</p>
+                        </div>
+                    </div>
+                    <div class="app-item">
+                        <img src="images/icon-11.png" alt="谷歌浏览器" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">谷歌浏览器</p>
+                            <p class="app-desc">快速、安全的浏览器</p>
+                        </div>
+                    </div>
+                    <div class="app-item">
+                        <img src="images/icon-12.png" alt="学习通" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">学习通</p>
+                            <p class="app-desc">一站式学习平台</p>
+                        </div>
+                    </div>
+                    <div class="app-item">
+                        <img src="images/icon-13.png" alt="联想浏览器" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">联想浏览器</p>
+                            <p class="app-desc">安全、快速的浏览器</p>
+                        </div>
+                    </div>
+                    <div class="app-item">
+                        <img src="images/icon-14.png" alt="小红书" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">小红书</p>
+                            <p class="app-desc">你的生活兴趣社区</p>
+                        </div>
+                    </div>
+                    <div class="app-item">
+                        <img src="images/icon-15.png" alt="芒果TV" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">芒果TV</p>
+                            <p class="app-desc">青春芒果，快乐中国</p>
+                        </div>
+                    </div>
+                    <div class="app-item">
+                        <img src="images/icon-16.png" alt="剪映" class="app-icon">
+                        <div class="app-info">
+                            <p class="app-name">剪映</p>
+                            <p class="app-desc">轻而易剪</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== 网页元素4：热门游戏推荐（卡片列表 - 上图下文） ========== -->
+            <section class="games-section">
+                <div class="section-header">
+                    <h3>热门游戏推荐</h3>
+                    <div class="arrows">
+                        <span class="arrow-btn">‹</span>
+                        <span class="arrow-btn">›</span>
+                    </div>
+                </div>
+
+                <div class="games-grid">
+                    <div class="game-card">
+                        <img src="images/game-1.jpg" alt="伊莫" class="game-img">
+                        <div class="game-info">
+                            <h4>伊莫</h4>
+                            <p class="rating">★★★★★ 5万次安装</p>
+                            <div class="tags">
+                                <span class="tag">开放世界</span>
+                                <span class="tag">角色扮演</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-card">
+                        <img src="images/game-2.jpg" alt="英雄联盟" class="game-img">
+                        <div class="game-info">
+                            <h4>英雄联盟</h4>
+                            <p class="rating">★★★★★ 1425万次安装</p>
+                            <div class="tags">
+                                <span class="tag">动作冒险</span>
+                                <span class="tag">MOBA</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-card">
+                        <img src="images/game-3.jpg" alt="异环" class="game-img">
+                        <div class="game-info">
+                            <h4>异环</h4>
+                            <p class="rating">★★★★★ 133万次安装</p>
+                            <div class="tags">
+                                <span class="tag">开放世界</span>
+                                <span class="tag">二次元</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-card">
+                        <img src="images/game-4.jpg" alt="洛克王国" class="game-img">
+                        <div class="game-info">
+                            <h4>洛克王国：世界</h4>
+                            <p class="rating">★★★★★ 233万次安装</p>
+                            <div class="tags">
+                                <span class="tag">开放世界</span>
+                                <span class="tag">冒险</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-card">
+                        <img src="images/game-5.jpg" alt="鸣潮" class="game-img">
+                        <div class="game-info">
+                            <h4>鸣潮（官服）</h4>
+                            <p class="rating">★★★★★ 352万次安装</p>
+                            <div class="tags">
+                                <span class="tag">开放世界</span>
+                                <span class="tag">动作冒险</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>媒体查询响应式盒子布局</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-width: 320px;
+            margin: 0;
+            background: #f1f5f9;
+            color: #0f172a;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        .page {
+            width: 100%;
+            min-height: 100vh;
+            padding: 2rem 1.25rem;
+        }
+
+        h1 {
+            margin: 0 0 2rem;
+            color: #1e293b;
+            font-size: clamp(1.75rem, 5vw, 3rem);
+            text-align: center;
+        }
+
+        .box-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+            max-width: 90rem;
+            margin: 0 auto;
+        }
+
+        .box {
+            min-height: 8rem;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 1.25rem;
+            background: linear-gradient(135deg, #38bdf8, #6366f1);
+            box-shadow: 0 0.75rem 1.5rem rgba(30, 64, 175, 0.16);
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            transition: transform 180ms ease, box-shadow 180ms ease;
+        }
+
+        .box:nth-child(1) { background: linear-gradient(135deg, #f87171, #e11d48); }
+        .box:nth-child(2) { background: linear-gradient(135deg, #fb923c, #ea580c); }
+        .box:nth-child(3) { background: linear-gradient(135deg, #facc15, #ca8a04); }
+        .box:nth-child(4) { background: linear-gradient(135deg, #4ade80, #16a34a); }
+        .box:nth-child(5) { background: linear-gradient(135deg, #2dd4bf, #0f766e); }
+        .box:nth-child(6) { background: linear-gradient(135deg, #38bdf8, #2563eb); }
+        .box:nth-child(7) { background: linear-gradient(135deg, #a78bfa, #7c3aed); }
+        .box:nth-child(8) { background: linear-gradient(135deg, #f472b6, #c026d3); }
+
+        .box:hover {
+            transform: translateY(-0.3rem);
+            box-shadow: 0 1rem 2rem rgba(30, 64, 175, 0.24);
+        }
+
+        /* 手机：每行 2 个 */
+        @media (min-width: 20rem) and (max-width: 40rem) {
+            .box-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        /* 平板：每行 4 个 */
+        @media (min-width: 40rem) and (max-width: 64rem) {
+            .box-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+
+        /* 桌面：每行 8 个 */
+        @media (min-width: 64rem) {
+            .box-grid {
+                grid-template-columns: repeat(8, minmax(0, 1fr));
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .box {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <h1>周徐倬玚</h1>
+        <section class="box-grid" aria-label="八个响应式盒子">
+            <div class="box">盒子 1</div>
+            <div class="box">盒子 2</div>
+            <div class="box">盒子 3</div>
+            <div class="box">盒子 4</div>
+            <div class="box">盒子 5</div>
+            <div class="box">盒子 6</div>
+            <div class="box">盒子 7</div>
+            <div class="box">盒子 8</div>
+        </section>
+    </main>
+</body>
+</html>

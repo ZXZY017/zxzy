@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>015 周徐倬玚</title>
+    <style>
+        /* 标签选择器 */
+        p{
+            color: #94a;
+            font-size: 50px;
+        }
+        
+        /* id选择器 以#开头 */
+        #box{
+            width: 600px;
+            height: 500px;
+            background-color: #ccc;
+        }
+
+        /* 类选择器 */
+        .n1{
+            color: red;
+        }
+        .n2{
+            color: blue;
+        }
+        .n3{    
+            color: green;
+        }
+        .n4{
+            color: yellow;
+        }
+
+        /* 扩展2：h2黑底白字 */
+        h2{
+            background-color: black;
+            color: white;
+            padding: 10px;
+        }
+
+        /* 扩展3：选择器三个字是白色 */
+        .white-text{
+            color: white;
+        }
+
+        /* 新增盒子：宽300高300，背景颜色，在最左边 */
+        .new-box{
+            width: 300px;
+            height: 300px;
+            background-color: #ff6b6b;  /* 珊瑚红 */
+            margin: 20px 0;  /* 上下边距20px，左右边距为0（靠左） */
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            /* 确保盒子在最左边 */
+            float: left;  /* 或者使用以下方式 */
+            /* position: absolute; left: 0; */  /* 备选方案 */
+        }
+    </style>
+</head>
+<body>
+    <h2>层叠样式表 CSS </h2>
+    <div id="box">
+        <!-- 扩展3：给"选择器"添加白色类 -->
+        <p>CSS<span class="white-text">选择器</span></p>
+        <p><span class="n1">周</span><span class="n2">徐</span><span class="n3">倬</span><span class="n4">玚</span></p>
+        <p>CSS属性</p>
+    </div>
+    
+    <!-- 新增盒子：宽300高300，在最左边 -->
+    <div class="new-box">
+        新盒子
+    </div>
+    
+    <!-- 扩展1：名字的每个字不同颜色，在同一行 ✅ 已完成 -->
+    <!-- 扩展2：h2黑底白字 ✅ 已完成 -->
+    <!-- 扩展3：选择器三个字是白色 ✅ 已完成 -->
+    <!-- 新增盒子：宽300高300，有背景颜色，在最左边 ✅ 已完成 -->
+</body>
+</html>
