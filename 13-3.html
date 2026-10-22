@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>13-3 · 移动端底部导航（字体图标）</title>
+    <link rel="stylesheet" href="cdn/iconfont/iconfont.css">
+    <link rel="stylesheet" href="cdn/fontawesome/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            background: #e8e4dc;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+
+        .zhou-phone {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            margin: 0 auto;
+            background: #f6f4f0;
+        }
+
+        .zhou-statusbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px 6px;
+            background: #fff;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .zhou-statusbar .zhou-icons i {
+            margin-left: 5px;
+            font-size: 11px;
+        }
+
+        .zhou-appbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .zhou-appbar .zhou-title {
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .zhou-appbar .zhou-bell {
+            position: relative;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .zhou-badge {
+            position: absolute;
+            top: -5px;
+            right: -7px;
+            min-width: 15px;
+            height: 15px;
+            padding: 0 4px;
+            border: 1.5px solid #fff;
+            border-radius: 999px;
+            background: #fa3534;
+            color: #fff;
+            font-size: 10px;
+            font-style: normal;
+            line-height: 12px;
+            text-align: center;
+        }
+
+        .zhou-content {
+            padding: 14px 14px 110px;
+        }
+
+        .zhou-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+            padding: 9px 14px;
+            border-radius: 999px;
+            background: #fff;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .zhou-banner {
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+
+        .zhou-banner img {
+            display: block;
+            width: 100%;
+        }
+
+        .zhou-section-title {
+            margin: 18px 4px 10px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .zhou-quick {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            padding: 14px 8px;
+            border-radius: 12px;
+            background: #fff;
+        }
+
+        .zhou-quick a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: #333;
+            text-decoration: none;
+            font-size: 11px;
+        }
+
+        .zhou-quick .zhou-quick-icon {
+            display: grid;
+            place-items: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            font-size: 20px;
+        }
+
+        .zhou-item-card {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            background: #fff;
+            margin-bottom: 10px;
+        }
+
+        .zhou-item-card img {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+        }
+
+        .zhou-item-info { flex: 1; }
+        .zhou-item-info h3 { font-size: 14px; }
+        .zhou-item-info p { margin-top: 4px; color: #999; font-size: 11px; }
+
+        .zhou-item-btn {
+            align-self: center;
+            padding: 6px 14px;
+            border: none;
+            border-radius: 999px;
+            background: #fa3534;
+            color: #fff;
+            font-size: 12px;
+        }
+
+        .zhou-tabbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            width: 100%;
+            padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
+            background: #fff;
+            border-top: 1px solid #e8e8e8;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, .05);
+            z-index: 100;
+        }
+
+        .zhou-tab {
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 4px 0;
+            color: #999;
+            text-decoration: none;
+            font-size: 10px;
+            transition: color .2s ease;
+        }
+
+        .zhou-tab .zhou-tab-icon {
+            position: relative;
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .zhou-tab.zhou-active {
+            color: #fa3534;
+        }
+
+        .zhou-tab .zhou-badge {
+            top: -6px;
+            right: -14px;
+            border: none;
+        }
+
+        .zhou-tab .zhou-dot {
+            position: absolute;
+            top: -3px;
+            right: -8px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fa3534;
+        }
+
+        .zhou-page-panel { display: none; }
+        .zhou-page-panel.zhou-show { display: block; }
+
+        .zhou-page-title {
+            padding: 26px 20px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="zhou-phone">
+        <div class="zhou-statusbar">
+            <span>9:41</span>
+            <span class="zhou-icons"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-full"></i></span>
+        </div>
+
+        <div class="zhou-appbar">
+            <span class="zhou-title">应用商店</span>
+            <span class="zhou-bell"><i class="fa-regular fa-bell"></i><i class="zhou-badge">6</i></span>
+        </div>
+
+        <div class="zhou-content">
+            <div class="zhou-search"><i class="iconfont icon-sousuo"></i>搜索应用、游戏</div>
+
+            <div class="zhou-banner"><img src="images/banner.png" alt="横幅"></div>
+
+            <div class="zhou-section-title">热门分类</div>
+            <div class="zhou-quick">
+                <a href="javascript:void(0)"><span class="zhou-quick-icon" style="background:#e8f4ff;color:#3498db"><i class="iconfont icon-zhuanti"></i></span>精选</a>
+                <a href="javascript:void(0)"><span class="zhou-quick-icon" style="background:#fdeaea;color:#fa3534"><i class="fa-solid fa-gamepad"></i></span>游戏</a>
+                <a href="javascript:void(0)"><span class="zhou-quick-icon" style="background:#e9f9ee;color:#2ecc71"><i class="iconfont icon-anzhuang"></i></span>软件</a>
+                <a href="javascript:void(0)"><span class="zhou-quick-icon" style="background:#fff6e5;color:#f5a623"><i class="iconfont icon-shoucang"></i></span>收藏</a>
+                <a href="javascript:void(0)"><span class="zhou-quick-icon" style="background:#f3eaff;color:#9b59b6"><i class="iconfont icon-paihangbang"></i></span>排行</a>
+            </div>
+
+            <div class="zhou-section-title">每日精选</div>
+            <div class="zhou-item-card">
+                <img src="images/icon-1.png" alt="">
+                <div class="zhou-item-info"><h3>效率笔记</h3><p>办公学习 · 12.5 MB</p></div>
+                <button class="zhou-item-btn">安装</button>
+            </div>
+            <div class="zhou-item-card">
+                <img src="images/icon-2.png" alt="">
+                <div class="zhou-item-info"><h3>像素农场</h3><p>休闲游戏 · 86.2 MB</p></div>
+                <button class="zhou-item-btn">安装</button>
+            </div>
+            <div class="zhou-item-card">
+                <img src="images/icon-3.png" alt="">
+                <div class="zhou-item-info"><h3>无损音乐盒</h3><p>影音播放 · 24.8 MB</p></div>
+                <button class="zhou-item-btn">安装</button>
+            </div>
+        </div>
+
+        <nav class="zhou-tabbar" aria-label="底部导航">
+            <a class="zhou-tab zhou-active" href="javascript:void(0)" data-zhou-tab>
+                <span class="zhou-tab-icon"><i class="iconfont icon-zhuanti"></i><span class="zhou-dot"></span></span>精选
+            </a>
+            <a class="zhou-tab" href="javascript:void(0)" data-zhou-tab>
+                <span class="zhou-tab-icon"><i class="fa-solid fa-gamepad"></i><span class="zhou-badge">3</span></span>游戏
+            </a>
+            <a class="zhou-tab" href="javascript:void(0)" data-zhou-tab>
+                <span class="zhou-tab-icon"><i class="iconfont icon-anzhuang"></i><span class="zhou-badge">12</span></span>软件
+            </a>
+            <a class="zhou-tab" href="javascript:void(0)" data-zhou-tab>
+                <span class="zhou-tab-icon"><i class="iconfont icon-wode"></i><span class="zhou-badge">5</span></span>我的
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        var zhouTabs = document.querySelectorAll('[data-zhou-tab]');
+        zhouTabs.forEach(function (zhouTab) {
+            zhouTab.addEventListener('click', function () {
+                zhouTabs.forEach(function (t) { t.classList.remove('zhou-active'); });
+                zhouTab.classList.add('zhou-active');
+            });
+        });
+    </script>
+</body>
+</html>

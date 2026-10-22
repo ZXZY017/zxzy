@@ -1,0 +1,291 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>13-4 · 移动端底部导航（SVG）</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            background: #e8e4dc;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+
+        .zhou-phone {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            margin: 0 auto;
+            background: #f6f4f0;
+        }
+
+        .zhou-statusbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px 6px;
+            background: #fff;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .zhou-statusbar svg { width: 15px; height: 15px; margin-left: 5px; vertical-align: middle; }
+
+        .zhou-appbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .zhou-appbar .zhou-title { font-size: 17px; font-weight: 600; }
+
+        .zhou-appbar .zhou-bell { position: relative; color: #333; }
+        .zhou-appbar .zhou-bell svg { width: 20px; height: 20px; display: block; }
+
+        .zhou-badge {
+            position: absolute;
+            top: -5px;
+            right: -7px;
+            min-width: 15px;
+            height: 15px;
+            padding: 0 4px;
+            border: 1.5px solid #fff;
+            border-radius: 999px;
+            background: #fa3534;
+            color: #fff;
+            font-size: 10px;
+            font-style: normal;
+            line-height: 12px;
+            text-align: center;
+        }
+
+        .zhou-content { padding: 14px 14px 110px; }
+
+        .zhou-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+            padding: 9px 14px;
+            border-radius: 999px;
+            background: #fff;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .zhou-search svg { width: 15px; height: 15px; }
+
+        .zhou-banner { border-radius: 12px; overflow: hidden; margin-bottom: 14px; }
+        .zhou-banner img { display: block; width: 100%; }
+
+        .zhou-section-title { margin: 18px 4px 10px; font-size: 15px; font-weight: 600; }
+
+        .zhou-quick {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            padding: 14px 8px;
+            border-radius: 12px;
+            background: #fff;
+        }
+
+        .zhou-quick a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: #333;
+            text-decoration: none;
+            font-size: 11px;
+        }
+
+        .zhou-quick .zhou-quick-icon {
+            display: grid;
+            place-items: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            color: #3498db;
+        }
+
+        .zhou-quick .zhou-quick-icon svg { width: 22px; height: 22px; }
+        .zhou-quick a:nth-child(1) .zhou-quick-icon { background: #e8f4ff; color: #3498db; }
+        .zhou-quick a:nth-child(2) .zhou-quick-icon { background: #fdeaea; color: #fa3534; }
+        .zhou-quick a:nth-child(3) .zhou-quick-icon { background: #e9f9ee; color: #2ecc71; }
+        .zhou-quick a:nth-child(4) .zhou-quick-icon { background: #fff6e5; color: #f5a623; }
+        .zhou-quick a:nth-child(5) .zhou-quick-icon { background: #f3eaff; color: #9b59b6; }
+
+        .zhou-item-card {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            background: #fff;
+            margin-bottom: 10px;
+        }
+
+        .zhou-item-card img { width: 56px; height: 56px; border-radius: 12px; }
+
+        .zhou-item-info { flex: 1; }
+        .zhou-item-info h3 { font-size: 14px; }
+        .zhou-item-info p { margin-top: 4px; color: #999; font-size: 11px; }
+
+        .zhou-item-btn {
+            align-self: center;
+            padding: 6px 14px;
+            border: none;
+            border-radius: 999px;
+            background: #fa3534;
+            color: #fff;
+            font-size: 12px;
+        }
+
+        .zhou-tabbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            width: 100%;
+            padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
+            background: #fff;
+            border-top: 1px solid #e8e8e8;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, .05);
+            z-index: 100;
+        }
+
+        .zhou-tab {
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 4px 0;
+            color: #999;
+            text-decoration: none;
+            font-size: 10px;
+            transition: color .2s ease;
+        }
+
+        .zhou-tab .zhou-tab-icon { position: relative; line-height: 0; }
+
+        .zhou-tab-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .zhou-tab.zhou-active { color: #fa3534; }
+
+        .zhou-tab .zhou-badge { top: -6px; right: -14px; border: none; }
+
+        .zhou-tab .zhou-dot {
+            position: absolute;
+            top: -3px;
+            right: -8px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fa3534;
+        }
+    </style>
+</head>
+<body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="icon-zhuanti" viewBox="0 0 1024 1024"><path d="M736.8 235.1h-89.6L509.1 97 371 235.1h-83.8L148.3 662.7 512 927l363.7-264.3-138.9-427.6z m-227.7-73l73 73H436l73.1-73z m-306.8 483l118.3-364h382.8l118.3 364-309.7 225-309.7-225z"  ></path><path d="M703.7 488.5L569.2 469l-60.1-121.8L448.9 469l-134.5 19.5 97.3 94.8-23 133.9L509 654l120.3 63.2-23-133.9 97.4-94.8zM568.2 633.2L509 602.1l-59.2 31.1 11.3-65.9-47.9-46.7 66.2-9.6 29.6-60 29.6 60 66.2 9.6-47.9 46.7 11.3 65.9z"  ></path></symbol>
+<symbol id="icon-anzhuang" viewBox="0 0 1024 1024"><path d="M921.81 298.35a48.58 48.58 0 0 0-7.46-5.7L688.87 158.8c-7.84-4.71-17.33-5.22-21.09-5.22H348c-3.82 0-13.52 0.53-21.42 5.42L109.83 292.53l-0.19 0.12a48.23 48.23 0 0 0-7.44 5.69 27.16 27.16 0 0 0-17.88 25.48v502.52a27.17 27.17 0 0 0 27.14 27.14h801.07a27.09 27.09 0 0 0 27.14-27V323.82a27.16 27.16 0 0 0-17.86-25.47zM350.3 206.21h315.32L818 296.68H203.45zM887 800.84H137V349.32h750z"  ></path><path d="M671.63 573.94l-38.97-35.39-94.34 103.87V411.99h-52.64v230.43l-94.34-103.87-38.97 35.39L512 749.68l159.63-175.74z"  ></path></symbol>
+<symbol id="icon-wode" viewBox="0 0 1024 1024"><path d="M704 329.152C704 209.365333 622.848 128 512 128s-192 81.365333-192 201.152C320 454.762667 407.146667 554.666667 512 554.666667s192-99.904 192-225.514667z m42.666667 0C746.666667 476.714667 642.176 597.333333 512 597.333333s-234.666667-120.618667-234.666667-268.181333C277.333333 181.546667 381.824 85.333333 512 85.333333s234.666667 96.213333 234.666667 243.818667zM512.106667 640c408.96 0 404.864 256.512 404.864 256.512 3.093333 23.274667-13.482667 42.154667-37.098667 42.154667H144.32c-23.573333 0-41.088-19.136-37.077333-42.154667 0 0-4.096-256.512 404.864-256.512zM149.909333 896l0.064 3.861333-0.704 3.968c0.682667-3.882667-2.837333-7.829333-4.949333-7.829333H879.872c-2.154667 0-5.504 3.818667-5.205333 6.144l-0.426667-3.157333 0.064-3.157334c0-0.853333-0.128-3.349333-0.533333-7.125333a161.813333 161.813333 0 0 0-4.266667-23.082667 192.96 192.96 0 0 0-35.242667-71.104C780.330667 725.461333 678.634667 682.666667 512.106667 682.666667c-166.549333 0-268.224 42.794667-322.176 111.850666a192.96 192.96 0 0 0-35.242667 71.104c-2.176 8.426667-3.541333 16.192-4.266667 23.082667a81.045333 81.045333 0 0 0-0.512 7.296z"  ></path></symbol>
+
+
+<symbol id="icon-shoucang" viewBox="0 0 1025 1024"><path d="M512.118374 131.072L603.766374 317.44c20.48 41.472 59.392 70.144 104.96 76.8l205.824 30.208-148.992 145.92c-32.768 32.256-47.616 78.336-39.936 123.392l35.328 205.824-183.296-96.768c-19.968-10.752-42.496-16.384-65.024-16.384-22.528 0-45.056 5.632-65.024 16.384l-183.296 96.768 35.328-205.824c7.68-45.056-7.168-91.136-39.936-123.392L109.686374 424.448 314.998374 394.24c45.568-6.656 84.992-35.328 104.96-76.8l92.16-186.368m0-112.64c-20.48 0-41.472 10.752-51.712 32.256L346.742374 281.6c-8.192 16.896-24.576 29.184-43.52 31.744L49.270374 350.208C2.166374 357.376-16.777626 415.232 17.526374 449.024l183.808 180.224c13.312 13.312 19.968 32.256 16.384 51.2l-43.52 253.952c-6.144 37.376 23.552 67.584 56.832 67.584 8.704 0 17.92-2.048 27.136-6.656L484.982374 875.52c8.192-4.608 17.92-6.656 27.136-6.656 9.216 0 18.432 2.048 27.136 6.656l226.816 119.808c8.704 4.608 17.92 6.656 27.136 6.656 33.792 0 63.488-30.208 56.832-67.584l-43.52-253.952c-3.072-18.944 3.072-37.888 16.384-51.2l183.808-180.224c34.304-33.28 15.36-91.648-32.256-98.304l-253.952-36.864c-18.944-2.56-35.328-14.848-43.52-31.744L563.830374 50.688c-10.752-21.504-31.232-32.256-51.712-32.256z"  ></path></symbol>
+<symbol id="icon-paihangbang" viewBox="0 0 1024 1024"><path d="M544 661.333333a32 32 0 0 1-64 0V362.666667a32 32 0 0 1 64 0v298.666666z m160 0a32 32 0 0 1-64 0V490.666667a32 32 0 0 1 64 0v170.666666z m-320 0a32 32 0 0 1-64 0V448a32 32 0 0 1 64 0v213.333333zM202.666667 138.666667h618.666666c64.8 0 117.333333 52.533333 117.333334 117.333333v512c0 64.8-52.533333 117.333333-117.333334 117.333333H202.666667c-64.8 0-117.333333-52.533333-117.333334-117.333333V256c0-64.8 52.533333-117.333333 117.333334-117.333333z m0 64a53.333333 53.333333 0 0 0-53.333334 53.333333v512a53.333333 53.333333 0 0 0 53.333334 53.333333h618.666666a53.333333 53.333333 0 0 0 53.333334-53.333333V256a53.333333 53.333333 0 0 0-53.333334-53.333333H202.666667z"  ></path></symbol><symbol id="icon-gamepad" viewBox="0 0 24 24">
+  <line x1="6" x2="10" y1="11" y2="11" />
+  <line x1="8" x2="8" y1="9" y2="13" />
+  <line x1="15" x2="15.01" y1="12" y2="12" />
+  <line x1="18" x2="18.01" y1="10" y2="10" />
+  <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z" />
+</symbol></defs></svg>
+    <div class="zhou-phone">
+        <div class="zhou-statusbar">
+            <span>9:41</span>
+            <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" x2="12.01" y1="20" y2="20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/><line x1="6" x2="6" y1="11" y2="13"/><line x1="10" x2="10" y1="11" y2="13"/><line x1="14" x2="14" y1="11" y2="13"/></svg>
+            </span>
+        </div>
+
+        <div class="zhou-appbar">
+            <span class="zhou-title">应用商店</span>
+            <span class="zhou-bell">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                <span class="zhou-badge">6</span>
+            </span>
+        </div>
+
+        <div class="zhou-content">
+            <div class="zhou-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                搜索应用、游戏
+            </div>
+
+            <div class="zhou-banner"><img src="images/banner.png" alt="横幅"></div>
+
+            <div class="zhou-section-title">热门分类</div>
+            <div class="zhou-quick">
+                <a href="javascript:void(0)"><span class="zhou-quick-icon"><svg><use href="#icon-zhuanti"/></svg></span>精选</a>
+                <a href="javascript:void(0)"><span class="zhou-quick-icon"><svg><use href="#icon-gamepad"/></svg></span>游戏</a>
+                <a href="javascript:void(0)"><span class="zhou-quick-icon"><svg><use href="#icon-anzhuang"/></svg></span>软件</a>
+                <a href="javascript:void(0)"><span class="zhou-quick-icon"><svg><use href="#icon-shoucang"/></svg></span>收藏</a>
+                <a href="javascript:void(0)"><span class="zhou-quick-icon"><svg><use href="#icon-paihangbang"/></svg></span>排行</a>
+            </div>
+
+            <div class="zhou-section-title">每日精选</div>
+            <div class="zhou-item-card">
+                <img src="images/icon-1.png" alt="">
+                <div class="zhou-item-info"><h3>效率笔记</h3><p>办公学习 · 12.5 MB</p></div>
+                <button class="zhou-item-btn">安装</button>
+            </div>
+            <div class="zhou-item-card">
+                <img src="images/icon-2.png" alt="">
+                <div class="zhou-item-info"><h3>像素农场</h3><p>休闲游戏 · 86.2 MB</p></div>
+                <button class="zhou-item-btn">安装</button>
+            </div>
+            <div class="zhou-item-card">
+                <img src="images/icon-3.png" alt="">
+                <div class="zhou-item-info"><h3>无损音乐盒</h3><p>影音播放 · 24.8 MB</p></div>
+                <button class="zhou-item-btn">安装</button>
+            </div>
+        </div>
+
+        <nav class="zhou-tabbar" aria-label="底部导航">
+            <a class="zhou-tab zhou-active" href="javascript:void(0)" data-zhou-tab>
+                <span class="zhou-tab-icon"><svg><use href="#icon-zhuanti"/></svg><span class="zhou-dot"></span></span>精选
+            </a>
+            <a class="zhou-tab" href="javascript:void(0)" data-zhou-tab>
+                <span class="zhou-tab-icon"><svg><use href="#icon-gamepad"/></svg><span class="zhou-badge">3</span></span>游戏
+            </a>
+            <a class="zhou-tab" href="javascript:void(0)" data-zhou-tab>
+                <span class="zhou-tab-icon"><svg><use href="#icon-anzhuang"/></svg><span class="zhou-badge">12</span></span>软件
+            </a>
+            <a class="zhou-tab" href="javascript:void(0)" data-zhou-tab>
+                <span class="zhou-tab-icon"><svg><use href="#icon-wode"/></svg><span class="zhou-badge">5</span></span>我的
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        var zhouTabs = document.querySelectorAll('[data-zhou-tab]');
+        zhouTabs.forEach(function (zhouTab) {
+            zhouTab.addEventListener('click', function () {
+                zhouTabs.forEach(function (t) { t.classList.remove('zhou-active'); });
+                zhouTab.classList.add('zhou-active');
+            });
+        });
+    </script>
+</body>
+</html>
+
+

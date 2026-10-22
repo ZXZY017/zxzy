@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13-1 · FontAwesome 字体图标</title>
+    <link rel="stylesheet" href="cdn/fontawesome/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #f4efe6;
+            color: #192725;
+            font-family: Georgia, "Times New Roman", "Noto Serif SC", "Microsoft YaHei", serif;
+        }
+
+        .zhou-page {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+        }
+
+        .zhou-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(25, 39, 37, .16);
+        }
+
+        .zhou-head h1 {
+            margin: 0;
+            font-size: clamp(28px, 4vw, 44px);
+            font-weight: 500;
+            letter-spacing: -.03em;
+        }
+
+        .zhou-head p {
+            margin: 6px 0 0;
+            color: #6d7c76;
+            font-size: 15px;
+        }
+
+        .zhou-back {
+            flex-shrink: 0;
+            display: inline-block;
+            padding: 10px 18px;
+            border: 1px solid #192725;
+            border-radius: 999px;
+            color: #192725;
+            font: 700 13px/1 Arial, sans-serif;
+            text-decoration: none;
+            transition: background .2s ease, color .2s ease;
+        }
+
+        .zhou-back:hover {
+            color: #fff;
+            background: #244e47;
+            border-color: #244e47;
+        }
+
+        .zhou-section {
+            margin-top: 44px;
+        }
+
+        .zhou-section-title {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            margin: 0 0 6px;
+            font-size: 22px;
+            font-weight: 500;
+        }
+
+        .zhou-section-title .zhou-num {
+            color: #c4553d;
+            font: 700 13px/1 Arial, sans-serif;
+            letter-spacing: .15em;
+        }
+
+        .zhou-section-desc {
+            margin: 0 0 22px;
+            color: #6d7c76;
+            font-size: 14px;
+        }
+
+        .zhou-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .zhou-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 22px 12px 16px;
+            border: 1px solid rgba(25, 39, 37, .16);
+            border-radius: 14px;
+            background: rgba(255, 253, 248, .76);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .zhou-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 30px rgba(25, 39, 37, .12);
+        }
+
+        .zhou-card .zhou-icon {
+            font-size: 34px;
+            line-height: 1;
+            color: #244e47;
+        }
+
+        .zhou-card .zhou-icon.zhou-red { color: #c4553d; }
+        .zhou-card .zhou-icon.zhou-gold { color: #c98f1b; }
+
+        .zhou-card .zhou-label {
+            color: #192725;
+            font-size: 13px;
+        }
+
+        .zhou-card .zhou-class {
+            color: #6d7c76;
+            font: 11px/1.4 Consolas, monospace;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .zhou-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 18px 34px;
+            padding: 26px 28px;
+            border: 1px solid rgba(25, 39, 37, .16);
+            border-radius: 14px;
+            background: rgba(255, 253, 248, .76);
+        }
+
+        .zhou-size-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .zhou-size-item .zhou-name {
+            color: #6d7c76;
+            font: 11px/1 Consolas, monospace;
+        }
+
+        .zhou-code {
+            margin: 22px 0 0;
+            padding: 20px 24px;
+            border-radius: 12px;
+            background: #192725;
+            color: #a8d5c5;
+            font: 13px/1.8 Consolas, monospace;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .zhou-code .zhou-tag { color: #e2a595; }
+        .zhou-code .zhou-attr { color: #7fc8e8; }
+
+        .zhou-note {
+            margin: 18px 0 0;
+            padding: 14px 18px;
+            border-left: 3px solid #c4553d;
+            background: rgba(196, 85, 61, .07);
+            color: #6d7c76;
+            font-size: 14px;
+        }
+
+        .zhou-anim {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #244e47;
+            color: #fff;
+            font-size: 26px;
+        }
+
+        .zhou-list-demo {
+            margin: 0;
+            padding-left: 0;
+            list-style: none;
+            font-size: 16px;
+            line-height: 2.2;
+        }
+
+        .zhou-list-demo i {
+            width: 32px;
+            color: #c4553d;
+        }
+    </style>
+</head>
+<body>
+    <div class="zhou-page">
+        <header class="zhou-head">
+            <div>
+                <h1>FontAwesome 字体图标</h1>
+                <p>通过 @font-face 字体 + content 码点渲染图标（fa-solid / fa-regular / fa-brands）</p>
+            </div>
+            <a class="zhou-back" href="index.html">← 返回索引</a>
+        </header>
+
+        <section class="zhou-section">
+            <h2 class="zhou-section-title"><span class="zhou-num">01</span>常用实心图标（fa-solid）</h2>
+            <p class="zhou-section-desc">粗实风格，适合界面主操作与导航。</p>
+            <div class="zhou-grid">
+                <div class="zhou-card"><i class="fa-solid fa-house zhou-icon"></i><span class="zhou-label">首页</span><span class="zhou-class">fa-solid fa-house</span></div>
+                <div class="zhou-card"><i class="fa-solid fa-magnifying-glass zhou-icon"></i><span class="zhou-label">搜索</span><span class="zhou-class">fa-solid fa-magnifying-glass</span></div>
+                <div class="zhou-card"><i class="fa-solid fa-gear zhou-icon"></i><span class="zhou-label">设置</span><span class="zhou-class">fa-solid fa-gear</span></div>
+                <div class="zhou-card"><i class="fa-solid fa-bell zhou-icon"></i><span class="zhou-label">通知</span><span class="zhou-class">fa-solid fa-bell</span></div>
+                <div class="zhou-card"><i class="fa-solid fa-envelope zhou-icon"></i><span class="zhou-label">邮件</span><span class="zhou-class">fa-solid fa-envelope</span></div>
+                <div class="zhou-card"><i class="fa-solid fa-phone zhou-icon"></i><span class="zhou-label">电话</span><span class="zhou-class">fa-solid fa-phone</span></div>
+                <div class="zhou-card"><i class="fa-solid fa-camera zhou-icon"></i><span class="zhou-label">相机</span><span class="zhou-class">fa-solid fa-camera</span></div>
+                <div class="zhou-card"><i class="fa-solid fa-music zhou-icon"></i><span class="zhou-label">音乐</span><span class="zhou-class">fa-solid fa-music</span></div>
+                <div class="zhou-card"><i class="fa-solid fa-trash-can zhou-icon"></i><span class="zhou-label">删除</span><span class="zhou-class">fa-solid fa-trash-can</span></div>
+                <div class="zhou-card"><i class="fa-solid fa-calendar-days zhou-icon"></i><span class="zhou-label">日历</span><span class="zhou-class">fa-solid fa-calendar-days</span></div>
+                <div class="zhou-card"><i class="fa-solid fa-clock zhou-icon"></i><span class="zhou-label">时钟</span><span class="zhou-class">fa-solid fa-clock</span></div>
+                <div class="zhou-card"><i class="fa-solid fa-bookmark zhou-icon"></i><span class="zhou-label">收藏</span><span class="zhou-class">fa-solid fa-bookmark</span></div>
+                <div class="zhou-card"><i class="fa-solid fa-thumbs-up zhou-icon"></i><span class="zhou-label">点赞</span><span class="zhou-class">fa-solid fa-thumbs-up</span></div>
+                <div class="zhou-card"><i class="fa-solid fa-cart-shopping zhou-icon"></i><span class="zhou-label">购物车</span><span class="zhou-class">fa-solid fa-cart-shopping</span></div>
+                <div class="zhou-card"><i class="fa-solid fa-eye zhou-icon"></i><span class="zhou-label">查看</span><span class="zhou-class">fa-solid fa-eye</span></div>
+                <div class="zhou-card"><i class="fa-solid fa-wifi zhou-icon"></i><span class="zhou-label">无线</span><span class="zhou-class">fa-solid fa-wifi</span></div>
+            </div>
+        </section>
+
+        <section class="zhou-section">
+            <h2 class="zhou-section-title"><span class="zhou-num">02</span>线框风格（fa-regular）</h2>
+            <p class="zhou-section-desc">细线风格，适合次级信息与可交互（如未选中状态）。</p>
+            <div class="zhou-grid">
+                <div class="zhou-card"><i class="fa-regular fa-heart zhou-icon"></i><span class="zhou-label">心（轮廓）</span><span class="zhou-class">fa-regular fa-heart</span></div>
+                <div class="zhou-card"><i class="fa-regular fa-star zhou-icon"></i><span class="zhou-label">星（轮廓）</span><span class="zhou-class">fa-regular fa-star</span></div>
+                <div class="zhou-card"><i class="fa-regular fa-bell zhou-icon"></i><span class="zhou-label">铃（轮廓）</span><span class="zhou-class">fa-regular fa-bell</span></div>
+                <div class="zhou-card"><i class="fa-regular fa-envelope zhou-icon"></i><span class="zhou-label">邮件（轮廓）</span><span class="zhou-class">fa-regular fa-envelope</span></div>
+                <div class="zhou-card"><i class="fa-regular fa-calendar zhou-icon"></i><span class="zhou-label">日历（轮廓）</span><span class="zhou-class">fa-regular fa-calendar</span></div>
+                <div class="zhou-card"><i class="fa-regular fa-clock zhou-icon"></i><span class="zhou-label">时钟（轮廓）</span><span class="zhou-class">fa-regular fa-clock</span></div>
+                <div class="zhou-card"><i class="fa-regular fa-bookmark zhou-icon"></i><span class="zhou-label">收藏（轮廓）</span><span class="zhou-class">fa-regular fa-bookmark</span></div>
+                <div class="zhou-card"><i class="fa-regular fa-user zhou-icon"></i><span class="zhou-label">用户（轮廓）</span><span class="zhou-class">fa-regular fa-user</span></div>
+                <div class="zhou-card"><i class="fa-regular fa-comment zhou-icon"></i><span class="zhou-label">评论（轮廓）</span><span class="zhou-class">fa-regular fa-comment</span></div>
+                <div class="zhou-card"><i class="fa-regular fa-file zhou-icon"></i><span class="zhou-label">文件（轮廓）</span><span class="zhou-class">fa-regular fa-file</span></div>
+                <div class="zhou-card"><i class="fa-regular fa-moon zhou-icon"></i><span class="zhou-label">月亮（轮廓）</span><span class="zhou-class">fa-regular fa-moon</span></div>
+                <div class="zhou-card"><i class="fa-regular fa-trash-can zhou-icon"></i><span class="zhou-label">删除（轮廓）</span><span class="zhou-class">fa-regular fa-trash-can</span></div>
+            </div>
+        </section>
+
+        <section class="zhou-section">
+            <h2 class="zhou-section-title"><span class="zhou-num">03</span>品牌图标（fa-brands）</h2>
+            <p class="zhou-section-desc">社交媒体与厂商品牌标识。</p>
+            <div class="zhou-grid">
+                <div class="zhou-card"><i class="fa-brands fa-github zhou-icon"></i><span class="zhou-label">GitHub</span><span class="zhou-class">fa-brands fa-github</span></div>
+                <div class="zhou-card"><i class="fa-brands fa-twitter zhou-icon"></i><span class="zhou-label">Twitter</span><span class="zhou-class">fa-brands fa-twitter</span></div>
+                <div class="zhou-card"><i class="fa-brands fa-facebook zhou-icon"></i><span class="zhou-label">Facebook</span><span class="zhou-class">fa-brands fa-facebook</span></div>
+                <div class="zhou-card"><i class="fa-brands fa-instagram zhou-icon zhou-red"></i><span class="zhou-label">Instagram</span><span class="zhou-class">fa-brands fa-instagram</span></div>
+                <div class="zhou-card"><i class="fa-brands fa-weixin zhou-icon"></i><span class="zhou-label">微信</span><span class="zhou-class">fa-brands fa-weixin</span></div>
+                <div class="zhou-card"><i class="fa-brands fa-weibo zhou-icon"></i><span class="zhou-label">微博</span><span class="zhou-class">fa-brands fa-weibo</span></div>
+                <div class="zhou-card"><i class="fa-brands fa-qq zhou-icon"></i><span class="zhou-label">QQ</span><span class="zhou-class">fa-brands fa-qq</span></div>
+                <div class="zhou-card"><i class="fa-brands fa-apple zhou-icon"></i><span class="zhou-label">Apple</span><span class="zhou-class">fa-brands fa-apple</span></div>
+                <div class="zhou-card"><i class="fa-brands fa-android zhou-icon"></i><span class="zhou-label">Android</span><span class="zhou-class">fa-brands fa-android</span></div>
+                <div class="zhou-card"><i class="fa-brands fa-chrome zhou-icon"></i><span class="zhou-label">Chrome</span><span class="zhou-class">fa-brands fa-chrome</span></div>
+                <div class="zhou-card"><i class="fa-brands fa-firefox zhou-icon"></i><span class="zhou-label">Firefox</span><span class="zhou-class">fa-brands fa-firefox</span></div>
+                <div class="zhou-card"><i class="fa-brands fa-windows zhou-icon"></i><span class="zhou-label">Windows</span><span class="zhou-class">fa-brands fa-windows</span></div>
+            </div>
+        </section>
+
+        <section class="zhou-section">
+            <h2 class="zhou-section-title"><span class="zhou-num">04</span>尺寸与宽度</h2>
+            <p class="zhou-section-desc">通过 fa-*x 类控制字号大小，fa-fw 锁定统一宽度。</p>
+            <div class="zhou-row">
+                <div class="zhou-size-item"><i class="fa-solid fa-heart" style="font-size:14px"></i><span class="zhou-name">fa-xs · 14px</span></div>
+                <div class="zhou-size-item"><i class="fa-solid fa-heart" style="font-size:20px"></i><span class="zhou-name">fa-sm · 20px</span></div>
+                <div class="zhou-size-item"><i class="fa-solid fa-heart fa-lg zhou-icon" style="font-size:26px"></i><span class="zhou-name">fa-lg · 26px</span></div>
+                <div class="zhou-size-item"><i class="fa-solid fa-heart fa-2x" style="font-size:34px"></i><span class="zhou-name">fa-2x · 34px</span></div>
+                <div class="zhou-size-item"><i class="fa-solid fa-heart fa-3x" style="font-size:44px"></i><span class="zhou-name">fa-3x · 44px</span></div>
+                <div class="zhou-size-item"><i class="fa-solid fa-heart fa-5x" style="font-size:60px"></i><span class="zhou-name">fa-5x · 60px</span></div>
+            </div>
+            <div class="zhou-row" style="margin-top:14px; justify-content:flex-start; gap:60px;">
+                <div class="zhou-size-item" style="flex-direction:row; gap:14px;"><i class="fa-solid fa-bell fa-fw" style="font-size:22px; width:34px;"></i><span class="zhou-name">fa-fw 等宽</span></div>
+                <div class="zhou-size-item" style="flex-direction:row; gap:14px;"><i class="fa-solid fa-envelope fa-fw" style="font-size:22px; width:34px;"></i><span class="zhou-name">fa-fw 等宽</span></div>
+                <div class="zhou-size-item" style="flex-direction:row; gap:14px;"><i class="fa-solid fa-phone fa-fw" style="font-size:22px; width:34px;"></i><span class="zhou-name">fa-fw 等宽</span></div>
+            </div>
+        </section>
+
+        <section class="zhou-section">
+            <h2 class="zhou-section-title"><span class="zhou-num">05</span>旋转动画</h2>
+            <p class="zhou-section-desc">fa-spin 匀速旋转，fa-pulse 步进脉冲，常用于加载状态。</p>
+            <div class="zhou-row" style="gap:56px;">
+                <div class="zhou-size-item"><i class="fa-solid fa-rotate-right fa-spin" style="font-size:28px; color:#244e47;"></i><span class="zhou-name">fa-spin</span></div>
+                <div class="zhou-size-item"><i class="fa-solid fa-star fa-spin" style="font-size:28px; color:#c98f1b;"></i><span class="zhou-name">fa-spin</span></div>
+                <div class="zhou-size-item"><i class="fa-solid fa-gear fa-spin" style="font-size:28px; color:#c4553d;"></i><span class="zhou-name">fa-spin</span></div>
+                <div class="zhou-size-item"><span class="zhou-anim"><i class="fa-solid fa-circle-notch fa-spin"></i></span><span class="zhou-name">加载 spinner</span></div>
+                <div class="zhou-size-item"><i class="fa-solid fa-heart fa-pulse" style="font-size:28px; color:#c4553d;"></i><span class="zhou-name">fa-pulse</span></div>
+            </div>
+        </section>
+
+        <section class="zhou-section">
+            <h2 class="zhou-section-title"><span class="zhou-num">06</span>列表图标（fa-ul / fa-li）</h2>
+            <p class="zhou-section-desc">配合 ul.fa-ul 与 i.fa-li 自动对齐项目符号。</p>
+            <ul class="zhou-list-demo">
+                <li><i class="fa-solid fa-check"></i>字体图标即字符，颜色继承 color</li>
+                <li><i class="fa-solid fa-check"></i>大小由 font-size 决定</li>
+                <li><i class="fa-solid fa-check"></i>本地文件：cdn/fontawesome/css/all.min.css</li>
+                <li><i class="fa-solid fa-check"></i>字体文件：cdn/fontawesome/webfonts/</li>
+            </ul>
+        </section>
+
+        <section class="zhou-section">
+            <h2 class="zhou-section-title"><span class="zhou-num">07</span>字体图标原理与用法</h2>
+            <p class="zhou-section-desc">引入 CSS 后，图标本质上是「特殊字体里的字符」，由 ::before 的 content 码点渲染。</p>
+            <div class="zhou-code"><span class="zhou-tag">&lt;link</span> <span class="zhou-attr">rel</span>=<span class="zhou-attr">"stylesheet"</span> <span class="zhou-attr">href</span>=<span class="zhou-attr">"cdn/fontawesome/css/all.min.css"</span><span class="zhou-tag">&gt;</span>
+
+<span class="zhou-tag">&lt;i</span> <span class="zhou-attr">class</span>=<span class="zhou-attr">"fa-solid fa-heart fa-2x"</span><span class="zhou-tag">&gt;&lt;/i&gt;</span>   <span style="color:#5c6f6a;">&lt;!-- 渲染为红色爱心 --&gt;</span>
+
+CSS 等价于：
+.fa-heart::before { content: "\f004"; }   <span style="color:#5c6f6a;">/* Unicode 私有区码点 */</span>
+@font-face { font-family: "Font Awesome 6 Free";
+             src: url("../webfonts/fa-solid-900.woff2") format("woff2"); }</div>
+            <p class="zhou-note">字体图标的优缺点：矢量无限缩放、可用 CSS 控制颜色/阴影/动画、一次加载全站可用；但单色（duotone 除外）、依赖字体文件加载、语义需自行补 aria-label。</p>
+        </section>
+    </div>
+</body>
+</html>

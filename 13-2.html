@@ -1,0 +1,636 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13-2 · Lucide SVG 图标</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #f4efe6;
+            color: #192725;
+            font-family: Georgia, "Times New Roman", "Noto Serif SC", "Microsoft YaHei", serif;
+        }
+
+        .zhou-page {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+        }
+
+        .zhou-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(25, 39, 37, .16);
+        }
+
+        .zhou-head h1 {
+            margin: 0;
+            font-size: clamp(28px, 4vw, 44px);
+            font-weight: 500;
+            letter-spacing: -.03em;
+        }
+
+        .zhou-head p {
+            margin: 6px 0 0;
+            color: #6d7c76;
+            font-size: 15px;
+        }
+
+        .zhou-back {
+            flex-shrink: 0;
+            display: inline-block;
+            padding: 10px 18px;
+            border: 1px solid #192725;
+            border-radius: 999px;
+            color: #192725;
+            font: 700 13px/1 Arial, sans-serif;
+            text-decoration: none;
+            transition: background .2s ease, color .2s ease;
+        }
+
+        .zhou-back:hover {
+            color: #fff;
+            background: #244e47;
+            border-color: #244e47;
+        }
+
+        .zhou-section {
+            margin-top: 44px;
+        }
+
+        .zhou-section-title {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            margin: 0 0 6px;
+            font-size: 22px;
+            font-weight: 500;
+        }
+
+        .zhou-section-title .zhou-num {
+            color: #c4553d;
+            font: 700 13px/1 Arial, sans-serif;
+            letter-spacing: .15em;
+        }
+
+        .zhou-section-desc {
+            margin: 0 0 22px;
+            color: #6d7c76;
+            font-size: 14px;
+        }
+
+        .zhou-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .zhou-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 22px 12px 16px;
+            border: 1px solid rgba(25, 39, 37, .16);
+            border-radius: 14px;
+            background: rgba(255, 253, 248, .76);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .zhou-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 30px rgba(25, 39, 37, .12);
+        }
+
+        .zhou-card .zhou-icon {
+            width: 32px;
+            height: 32px;
+            color: #244e47;
+        }
+
+        .zhou-card .zhou-icon.zhou-red { color: #c4553d; }
+        .zhou-card .zhou-icon.zhou-gold { color: #c98f1b; }
+
+        .zhou-card .zhou-label {
+            color: #192725;
+            font-size: 13px;
+        }
+
+        .zhou-card .zhou-class {
+            color: #6d7c76;
+            font: 11px/1.4 Consolas, monospace;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .zhou-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 18px 40px;
+            padding: 28px 30px;
+            border: 1px solid rgba(25, 39, 37, .16);
+            border-radius: 14px;
+            background: rgba(255, 253, 248, .76);
+        }
+
+        .zhou-size-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .zhou-size-item .zhou-icon { display: block; }
+
+        .zhou-size-item .zhou-name {
+            color: #6d7c76;
+            font: 11px/1 Consolas, monospace;
+        }
+
+        .zhou-code {
+            margin: 22px 0 0;
+            padding: 20px 24px;
+            border-radius: 12px;
+            background: #192725;
+            color: #a8d5c5;
+            font: 13px/1.8 Consolas, monospace;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .zhou-code .zhou-tag { color: #e2a595; }
+        .zhou-code .zhou-attr { color: #7fc8e8; }
+
+        .zhou-note {
+            margin: 18px 0 0;
+            padding: 14px 18px;
+            border-left: 3px solid #c4553d;
+            background: rgba(196, 85, 61, .07);
+            color: #6d7c76;
+            font-size: 14px;
+        }
+
+        .zhou-img-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .zhou-img-box {
+            display: grid;
+            place-items: center;
+            width: 64px;
+            height: 64px;
+            border: 1px dashed rgba(25, 39, 37, .3);
+            border-radius: 12px;
+        }
+
+        .zhou-img-box img {
+            width: 28px;
+            height: 28px;
+            filter: invert(24%) sepia(14%) saturate(1035%) hue-rotate(116deg) brightness(92%) contrast(92%);
+        }
+    </style>
+</head>
+<body>
+    <div class="zhou-page">
+        <header class="zhou-head">
+            <div>
+                <h1>Lucide SVG 图标</h1>
+                <p>以内联 SVG（inline SVG）方式使用图标，矢量、可被 CSS 完全控制</p>
+            </div>
+            <a class="zhou-back" href="index.html">← 返回索引</a>
+        </header>
+
+        <section class="zhou-section">
+            <h2 class="zhou-section-title"><span class="zhou-num">01</span>内联 SVG 图标</h2>
+            <p class="zhou-section-desc">SVG 标记直接写入 HTML，stroke="currentColor" 使颜色由 CSS 的 color 控制。</p>
+            <div class="zhou-grid"><div class="zhou-card"><svg
+  class="lucide lucide-home zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+  <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+</svg><span class="zhou-label">首页</span><span class="zhou-class">home.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-search zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="m21 21-4.34-4.34" />
+  <circle cx="11" cy="11" r="8" />
+</svg><span class="zhou-label">搜索</span><span class="zhou-class">search.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-settings zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
+  <circle cx="12" cy="12" r="3" />
+</svg><span class="zhou-label">设置</span><span class="zhou-class">settings.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-user zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+  <circle cx="12" cy="7" r="4" />
+</svg><span class="zhou-label">用户</span><span class="zhou-class">user.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-bell zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M10.268 21a2 2 0 0 0 3.464 0" />
+  <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
+</svg><span class="zhou-label">通知</span><span class="zhou-class">bell.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-trash zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M10 11v6" />
+  <path d="M14 11v6" />
+  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+  <path d="M3 6h18" />
+  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+</svg><span class="zhou-label">删除</span><span class="zhou-class">trash.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-mail zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
+  <rect x="2" y="4" rx="2" />
+</svg><span class="zhou-label">邮件</span><span class="zhou-class">mail.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-phone zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" />
+</svg><span class="zhou-label">电话</span><span class="zhou-class">phone.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-message-circle zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
+</svg><span class="zhou-label">消息</span><span class="zhou-class">message-circle.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-share-2 zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <circle cx="18" cy="5" r="3" />
+  <circle cx="6" cy="12" r="3" />
+  <circle cx="18" cy="19" r="3" />
+  <line x1="8.59" x2="15.42" y1="13.51" y2="17.49" />
+  <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" />
+</svg><span class="zhou-label">分享</span><span class="zhou-class">share-2.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-globe zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <circle cx="12" cy="12" r="10" />
+  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+  <path d="M2 12h20" />
+</svg><span class="zhou-label">全球</span><span class="zhou-class">globe.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-camera zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" />
+  <circle cx="12" cy="13" r="3" />
+</svg><span class="zhou-label">相机</span><span class="zhou-class">camera.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-music zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M21 16V3a1 1 0 0 0-1.28-.96l-10 2.917a1 1 0 0 0-.72.96V19" />
+  <circle cx="18" cy="16" r="3" />
+  <circle cx="6" cy="19" r="3" />
+</svg><span class="zhou-label">音乐</span><span class="zhou-class">music.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-eye zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+  <circle cx="12" cy="12" r="3" />
+</svg><span class="zhou-label">查看</span><span class="zhou-class">eye.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-download zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M12 15V3" />
+  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+  <path d="m7 10 5 5 5-5" />
+</svg><span class="zhou-label">下载</span><span class="zhou-class">download.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-upload zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M12 3v12" />
+  <path d="m17 8-5-5-5 5" />
+  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+</svg><span class="zhou-label">上传</span><span class="zhou-class">upload.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-heart zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+</svg><span class="zhou-label">心</span><span class="zhou-class">heart.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-star zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
+</svg><span class="zhou-label">星</span><span class="zhou-class">star.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-thumbs-up zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" />
+  <path d="M7 10v12" />
+</svg><span class="zhou-label">点赞</span><span class="zhou-class">thumbs-up.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-sun zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <circle cx="12" cy="12" r="4" />
+  <path d="M12 2v2" />
+  <path d="M12 20v2" />
+  <path d="m4.93 4.93 1.41 1.41" />
+  <path d="m17.66 17.66 1.41 1.41" />
+  <path d="M2 12h2" />
+  <path d="M20 12h2" />
+  <path d="m6.34 17.66-1.41 1.41" />
+  <path d="m19.07 4.93-1.41 1.41" />
+</svg><span class="zhou-label">太阳</span><span class="zhou-class">sun.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-moon zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
+</svg><span class="zhou-label">月亮</span><span class="zhou-class">moon.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-clock zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <circle cx="12" cy="12" r="10" />
+  <path d="M12 6v6l4 2" />
+</svg><span class="zhou-label">时钟</span><span class="zhou-class">clock.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-calendar zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M8 2v3" />
+  <path d="M16 2v3" />
+  <rect x="3" y="3" rx="2" />
+  <path d="M3 9h18" />
+</svg><span class="zhou-label">日历</span><span class="zhou-class">calendar.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-bookmark zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z" />
+</svg><span class="zhou-label">收藏</span><span class="zhou-class">bookmark.svg</span></div><div class="zhou-card"><svg
+  class="lucide lucide-zap zhou-icon"
+  xmlns="http://www.w3.org/2000/svg"
+ 
+ 
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z" />
+</svg><span class="zhou-label">闪电</span><span class="zhou-class">zap.svg</span></div></div>
+        </section>
+
+        <section class="zhou-section">
+            <h2 class="zhou-section-title"><span class="zhou-num">02</span>尺寸由 CSS 决定</h2>
+            <p class="zhou-section-desc">去掉 SVG 的 width/height 属性后，尺寸完全由外部 CSS 控制，同一图标任意缩放。</p>
+            <div class="zhou-row">
+                <div class="zhou-size-item"><svg class="zhou-icon" style="width:16px;height:16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span class="zhou-name">16px</span></div>
+                <div class="zhou-size-item"><svg class="zhou-icon" style="width:24px;height:24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span class="zhou-name">24px</span></div>
+                <div class="zhou-size-item"><svg class="zhou-icon" style="width:32px;height:32px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span class="zhou-name">32px</span></div>
+                <div class="zhou-size-item"><svg class="zhou-icon" style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span class="zhou-name">48px</span></div>
+                <div class="zhou-size-item"><svg class="zhou-icon" style="width:64px;height:64px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span class="zhou-name">64px</span></div>
+            </div>
+        </section>
+
+        <section class="zhou-section">
+            <h2 class="zhou-section-title"><span class="zhou-num">03</span>描边样式可调</h2>
+            <p class="zhou-section-desc">stroke-width、stroke-linecap 等属性都可被 CSS 覆盖，轻松换肤。</p>
+            <div class="zhou-row">
+                <div class="zhou-size-item"><svg class="zhou-icon" style="width:36px;height:36px;stroke-width:1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span class="zhou-name">stroke-width:1</span></div>
+                <div class="zhou-size-item"><svg class="zhou-icon" style="width:36px;height:36px;stroke-width:2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span class="zhou-name">stroke-width:2</span></div>
+                <div class="zhou-size-item"><svg class="zhou-icon" style="width:36px;height:36px;stroke-width:3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span class="zhou-name">stroke-width:3</span></div>
+                <div class="zhou-size-item"><svg class="zhou-icon" style="width:36px;height:36px;stroke:#c4553d" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span class="zhou-name">stroke 换色</span></div>
+                <div class="zhou-size-item"><svg class="zhou-icon" style="width:36px;height:36px" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span class="zhou-name">fill 实心</span></div>
+            </div>
+        </section>
+
+        <section class="zhou-section">
+            <h2 class="zhou-section-title"><span class="zhou-num">04</span>对比：&lt;img&gt; 引用 SVG 文件</h2>
+            <p class="zhou-section-desc">用 &lt;img src="..."&gt; 引用 cdn/lide/icons/ 下的 .svg 文件，简单但无法用 CSS 修改内部颜色（此处用 filter 染色）。</p>
+            <div class="zhou-img-row">
+                <span class="zhou-img-box"><img src="cdn/lucide/icons/heart.svg" alt="heart"></span>
+                <span class="zhou-img-box"><img src="cdn/lucide/icons/star.svg" alt="star"></span>
+                <span class="zhou-img-box"><img src="cdn/lucide/icons/home.svg" alt="home"></span>
+                <span class="zhou-img-box"><img src="cdn/lucide/icons/settings.svg" alt="settings"></span>
+                <span class="zhou-img-box"><img src="cdn/lucide/icons/bell.svg" alt="bell"></span>
+                <span class="zhou-img-box"><img src="cdn/lucide/icons/search.svg" alt="search"></span>
+                <span class="zhou-img-box"><img src="cdn/lucide/icons/moon.svg" alt="moon"></span>
+                <span class="zhou-img-box"><img src="cdn/lucide/icons/sun.svg" alt="sun"></span>
+            </div>
+        </section>
+
+        <section class="zhou-section">
+            <h2 class="zhou-section-title"><span class="zhou-num">05</span>SVG 图标原理与用法</h2>
+            <p class="zhou-section-desc">SVG 是纯文本矢量标记，直接内联进 DOM 后即成为页面的一部分。</p>
+            <div class="zhou-code"><span class="zhou-tag">&lt;svg</span> <span class="zhou-attr">class</span>=<span class="zhou-attr">"zhou-icon"</span> <span class="zhou-attr">viewBox</span>=<span class="zhou-attr">"0 0 24 24"</span>
+     <span class="zhou-attr">fill</span>=<span class="zhou-attr">"none"</span> <span class="zhou-attr">stroke</span>=<span class="zhou-attr">"currentColor"</span> <span class="zhou-attr">stroke-width</span>=<span class="zhou-attr">"2"</span><span class="zhou-tag">&gt;</span>
+  <span class="zhou-tag">&lt;path</span> <span class="zhou-attr">d</span>=<span class="zhou-attr">"M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"</span><span class="zhou-tag">/&gt;</span>
+<span class="zhou-tag">&lt;/svg&gt;</span>
+
+<span style="color:#5c6f6a;">/* 尺寸与颜色全部由外部 CSS 控制 */</span>
+.zhou-icon { width: 32px; height: 32px; color: #244e47; }</div>
+            <p class="zhou-note">SVG 图标的优缺点：矢量无损缩放、CSS 完全可控（颜色/描边/动画）、可用 JS 操作、利于SEO与无障碍；内联会增大 HTML 体积，可用 &lt;symbol&gt; + &lt;use&gt; 雪碧图复用。本地 SVG 文件：cdn/lucide/icons/</p>
+        </section>
+    </div>
+</body>
+</html>
+
+
