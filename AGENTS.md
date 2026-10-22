@@ -2,7 +2,17 @@
 
 ## Project type
 
-Static HTML/CSS course practice site (高级网页设计). No build step, no dependencies, no CDN, no package manager. Open files directly in a browser.
+Static HTML/CSS course practice site (高级网页设计). Native (vanilla) HTML/CSS/JavaScript only — no third-party libraries or frameworks, no remote CDN. No build step, no dependencies, no package manager. Open files directly in a browser.
+
+## Icon rule
+
+Icons must use the iconfont set from the `font` directory (iconfont.css / iconfont.js / iconfont.ttf / iconfont.woff / iconfont.woff2). The in-repo copy lives at `cdn/iconfont/` — reference it from there so pages stay self-contained. Do not introduce icon libraries (FontAwesome, Lucide, etc.) or fetch them from a CDN.
+
+Legacy exception: pages 13-1–13-4 were built earlier with local FontAwesome/Lucide copies under `cdn/`; leave them unchanged unless asked to refactor.
+
+## Data fetching rule
+
+When a page needs server-side data, obtain it with the native `fetch` API (part of the browser, consistent with the no-library rule). Local static JSON files may be fetched directly; there is no backend in this project.
 
 ## Entry point
 

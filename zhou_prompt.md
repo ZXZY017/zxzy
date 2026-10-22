@@ -47,3 +47,18 @@
 - prompt: 需要提交
 - model: GLM-5.3-Flash (Trae)
 
+
+## 2026-10-22 14:43:19
+- prompt: 设置项目规则，使用原生的html、css和javascript实现，图标使用font目录下的iconfont图标，不适用第三方库和cdn
+- model: GLM-5.3-Flash (Trae)
+
+
+## 2026-10-22 14:44:46
+- prompt: 设置项目规则，使用原生的html、css和javascript实现，图标使用font目录下的iconfont图标，不适用第三方库和cdn，使用fetch获取服务器端数据
+- model: GLM-5.3-Flash (Trae)
+
+
+## 2026-10-22 14:45:15
+- prompt: 好的，提交吧
+- model: GLM-5.3-Flash (Trae)
+
