@@ -17,7 +17,15 @@ Static HTML/CSS course practice site (高级网页设计). No build step, no dep
 
 ## Naming convention
 
-All CSS class names, ID names, and JS variables must start with `zhou` (e.g. `zhou-page`, `zhou-unit-card`).
+All variable names, CSS class names, and ID names must start with `zxzy_` (e.g. `zxzy_page`, `zxzy_unit_card`). Legacy pages may still use the older `zhou-` prefix — do not mass-rename unless asked.
+
+## Page comment rule
+
+Every HTML page must include a header comment immediately after `<!DOCTYPE html>`, filled in with the actual date and a short description of the page's feature:
+
+```html
+<!-- 姓名：周徐倬玚，日期：YYYY-MM-DD，功能名称：<页面功能简述> -->
+```
 
 ## Prompt log
 

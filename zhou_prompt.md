@@ -32,3 +32,18 @@
 - prompt: 提交项目。
 - model: GLM-5.3 (Trae)
 
+
+## 2026-10-22 14:27:41
+- prompt: 设置项目规则，所有变量名称、css类、id名称都以zxzy_开始，所有html页面中都包含注释：姓名：周徐倬玚，日期：功能名称。
+- model: GLM-5.3 (Trae)
+
+
+## 2026-10-22 14:31:40
+- prompt: 完成网页14-2.html，演示javascript基本的6种数据类型
+- model: GLM-5.3-Flash (Trae)
+
+
+## 2026-10-22 14:37:10
+- prompt: 需要提交
+- model: GLM-5.3-Flash (Trae)
+
