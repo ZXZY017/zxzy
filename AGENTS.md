@@ -31,11 +31,13 @@ All variable names, CSS class names, and ID names must start with `zxzy_` (e.g. 
 
 ## Page comment rule
 
-Every HTML page must include a header comment immediately after `<!DOCTYPE html>`, filled in with the actual date and a short description of the page's feature:
+Every NEW HTML file must include a header comment immediately after `<!DOCTYPE html>`, containing the author name, creation time, the AI model used to build it, and a short description of the page's feature:
 
 ```html
-<!-- 姓名：周徐倬玚，日期：YYYY-MM-DD，功能名称：<页面功能简述> -->
+<!-- 姓名：周徐倬玚，建立时间：YYYY-MM-DD HH:mm，大模型：<模型名，如 GLM-5.3-Flash>，功能名称：<页面功能简述> -->
 ```
+
+Existing pages keep their current comments; do not retroactively edit them unless asked.
 
 ## Prompt log
 
