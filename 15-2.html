@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，建立时间：2026-10-26 14:40，大模型：GLM-5.3-Flash，功能名称：JavaScript 程序结构演示（条件分支与循环） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15-2 · JavaScript 程序结构</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(160deg, #182140 0%, #1d2850 100%);
+            color: #eef1fb;
+            padding: 28px 16px 44px;
+            min-height: 100vh;
+        }
+        .zxzy_wrap { max-width: 680px; margin: 0 auto; }
+
+        /* ===== 顶部英雄卡片 ===== */
+        .zxzy_hero {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 28px;
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .zxzy_badge {
+            background: #86b9f2;
+            color: #14264d;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .zxzy_home {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            color: #dfe4f3;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 5px 16px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #354478; }
+        .zxzy_h1 { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+        .zxzy_intro { font-size: 14px; line-height: 2.1; color: #aab4d4; }
+        .zxzy_t {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .zxzy_t_if    { background: rgba(192, 132, 252, .14); color: #c084fc; }
+        .zxzy_t_for   { background: rgba(96, 165, 250, .14);  color: #60a5fa; }
+        .zxzy_t_while { background: rgba(74, 222, 128, .14);  color: #4ade80; }
+        .zxzy_b { color: #eef1fb; font-weight: bold; }
+
+        /* ===== 区块标题与演示卡片 ===== */
+        .zxzy_h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 26px 2px 14px;
+        }
+        .zxzy_card {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 20px 24px 24px;
+            margin-bottom: 16px;
+        }
+        .zxzy_tip { font-size: 13.5px; color: #aab4d4; margin-bottom: 12px; line-height: 1.9; }
+        .zxzy_code {
+            background: #141c36;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 12.5px;
+            color: #e2e8f0;
+            white-space: pre;
+            overflow-x: auto;
+            line-height: 1.8;
+            margin-bottom: 14px;
+        }
+        .zxzy_kw  { color: #c084fc; }
+        .zxzy_kwd { color: #60a5fa; }
+        .zxzy_kwv { color: #4ade80; }
+        .zxzy_com { color: #6b7490; }
+        .zxzy_row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .zxzy_input {
+            flex: 1;
+            min-width: 160px;
+            background: #1b2547;
+            border: 1px solid #3a4a7d;
+            border-radius: 999px;
+            color: #eef1fb;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            padding: 8px 16px;
+            outline: none;
+        }
+        .zxzy_input:focus { border-color: #7dd3fc; }
+        .zxzy_btn {
+            background: #1b2547;
+            border: 1px solid #3a4a7d;
+            color: #dfe4f3;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            padding: 8px 18px;
+            border-radius: 999px;
+            cursor: pointer;
+        }
+        .zxzy_btn:hover { border-color: #7dd3fc; color: #7dd3fc; }
+        .zxzy_result {
+            background: #141c36;
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-family: Consolas, monospace;
+            font-size: 13.5px;
+            color: #d8e0f5;
+            line-height: 1.9;
+            min-height: 46px;
+        }
+        .zxzy_hl { color: #7dd3fc; font-weight: bold; }
+
+        /* ===== 九九乘法表 ===== */
+        .zxzy_table { display: flex; flex-direction: column; gap: 6px; }
+        .zxzy_trow { display: flex; flex-wrap: wrap; gap: 6px; }
+        .zxzy_cell {
+            background: #141c36;
+            border: 1px solid #2c3865;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-family: Consolas, monospace;
+            font-size: 12px;
+            color: #d8e0f5;
+        }
+        .zxzy_cell b { color: #60a5fa; font-weight: normal; }
+
+        @media (max-width: 660px) {
+            .zxzy_hero { padding: 20px; }
+            .zxzy_card { padding: 16px; }
+            .zxzy_h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶部英雄卡片 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第15课 · JavaScript 循环</span>
+                <a class="zxzy_home" href="index.html">← 返回首页</a>
+            </div>
+            <h1 class="zxzy_h1">JavaScript 程序结构 · 条件与循环</h1>
+            <p class="zxzy_intro">
+                程序有三种基本控制结构：<span class="zxzy_b">顺序</span>、<span class="zxzy_b">条件（分支）</span>和<span class="zxzy_b">循环</span>。本页通过两个小例子演示<span class="zxzy_t zxzy_t_if">if / else if / else</span> 条件结构和 <span class="zxzy_t zxzy_t_for">for</span>、<span class="zxzy_t zxzy_t_while">while</span> 两种循环结构的用法。
+            </p>
+        </header>
+
+        <!-- 条件结构演示 -->
+        <h2 class="zxzy_h2">条件结构：if / else if / else</h2>
+        <section class="zxzy_card">
+            <p class="zxzy_tip">输入一个 0 ~ 100 的分数，程序从上往下依次判断条件，命中哪个分支就执行哪段代码：</p>
+            <pre class="zxzy_code"><span class="zxzy_kwd">if</span> (zxzy_score &gt;= 90)      { zxzy_level = <span class="zxzy_com">"优秀"</span>; }
+<span class="zxzy_kwd">else if</span> (zxzy_score &gt;= 80) { zxzy_level = <span class="zxzy_com">"良好"</span>; }
+<span class="zxzy_kwd">else if</span> (zxzy_score &gt;= 60) { zxzy_level = <span class="zxzy_com">"及格"</span>; }
+<span class="zxzy_kwd">else</span>                       { zxzy_level = <span class="zxzy_com">"不及格"</span>; }</pre>
+            <div class="zxzy_row">
+                <input class="zxzy_input" id="zxzy_scoreInput" type="number" min="0" max="100" placeholder="请输入 0 ~ 100 的分数">
+                <button class="zxzy_btn" onclick="zxzy_judge()">评定等级</button>
+            </div>
+            <p class="zxzy_result" id="zxzy_gradeResult">等待输入分数…</p>
+        </section>
+
+        <!-- 循环结构演示 -->
+        <h2 class="zxzy_h2">循环结构：for 与 while</h2>
+        <section class="zxzy_card">
+            <p class="zxzy_tip">用 for 循环的嵌套打印九九乘法表，外层循环控制行，内层循环控制每行的列：</p>
+            <pre class="zxzy_code"><span class="zxzy_kwv">for</span> (<span class="zxzy_kwd">var</span> zxzy_i = 1; zxzy_i &lt;= 9; zxzy_i++) {
+    <span class="zxzy_kwv">for</span> (<span class="zxzy_kwd">var</span> zxzy_j = 1; zxzy_j &lt;= zxzy_i; zxzy_j++) {
+        <span class="zxzy_com">// 每次内层循环生成一个算式 zxzy_j × zxzy_i</span>
+    }
+}</pre>
+            <div class="zxzy_row">
+                <button class="zxzy_btn" onclick="zxzy_showTable()">生成九九乘法表</button>
+            </div>
+            <div class="zxzy_table" id="zxzy_tableBox"><p class="zxzy_tip">点击按钮，由 for 循环自动生成…</p></div>
+        </section>
+
+        <section class="zxzy_card">
+            <p class="zxzy_tip">用 while 循环把 1 ~ 100 逐个累加，先执行条件判断，条件成立就一直循环：</p>
+            <pre class="zxzy_code"><span class="zxzy_kwd">while</span> (zxzy_i &lt;= 100) {
+    zxzy_total = zxzy_total + zxzy_i;
+    zxzy_i = zxzy_i + 1;
+}</pre>
+            <div class="zxzy_row">
+                <button class="zxzy_btn" onclick="zxzy_sum()">开始累加 1 + 2 + … + 100</button>
+            </div>
+            <p class="zxzy_result" id="zxzy_sumResult">等待计算…</p>
+        </section>
+
+    </div>
+
+    <script>
+        // ===== 条件结构：评定分数等级 =====
+        function zxzy_judge() {
+            var zxzy_input = document.getElementById("zxzy_scoreInput").value;
+            var zxzy_score = Number(zxzy_input);
+            var zxzy_box = document.getElementById("zxzy_gradeResult");
+
+            // 先判断输入是否有效
+            if (zxzy_input === "" || isNaN(zxzy_score) || zxzy_score < 0 || zxzy_score > 100) {
+                zxzy_box.innerHTML = "请输入 0 ~ 100 之间的有效分数。";
+                return;
+            }
+
+            // if / else if / else 从上往下依次判断，命中即止
+            var zxzy_level;
+            if (zxzy_score >= 90) {
+                zxzy_level = "优秀";
+            } else if (zxzy_score >= 80) {
+                zxzy_level = "良好";
+            } else if (zxzy_score >= 60) {
+                zxzy_level = "及格";
+            } else {
+                zxzy_level = "不及格";
+            }
+
+            zxzy_box.innerHTML =
+                zxzy_score + " 分 → 等级：<span class=\"zxzy_hl\">" + zxzy_level + "</span>" +
+                "（命中的条件已用 if / else if / else 依次判断）";
+            console.log("条件判断：", zxzy_score, "分，等级", zxzy_level);
+        }
+
+        // ===== 循环结构 1：for 嵌套生成九九乘法表 =====
+        function zxzy_showTable() {
+            var zxzy_html = "";
+            for (var zxzy_i = 1; zxzy_i <= 9; zxzy_i++) {        // 外层：行
+                zxzy_html += '<div class="zxzy_trow">';
+                for (var zxzy_j = 1; zxzy_j <= zxzy_i; zxzy_j++) {  // 内层：列
+                    zxzy_html += '<span class="zxzy_cell"><b>' + zxzy_j + "×" + zxzy_i + "</b>=" + (zxzy_i * zxzy_j) + "</span>";
+                }
+                zxzy_html += "</div>";
+            }
+            document.getElementById("zxzy_tableBox").innerHTML = zxzy_html;
+            console.log("for 循环：九九乘法表已生成");
+        }
+
+        // ===== 循环结构 2：while 累加 1 ~ 100 =====
+        function zxzy_sum() {
+            var zxzy_i = 1;       // 循环变量
+            var zxzy_total = 0;   // 累加和
+            var zxzy_times = 0;   // 循环次数
+
+            while (zxzy_i <= 100) {
+                zxzy_total = zxzy_total + zxzy_i;
+                zxzy_i = zxzy_i + 1;
+                zxzy_times = zxzy_times + 1;
+            }
+
+            document.getElementById("zxzy_sumResult").innerHTML =
+                "1 + 2 + … + 100 = <span class=\"zxzy_hl\">" + zxzy_total + "</span>（while 循环执行了 " + zxzy_times + " 次）";
+            console.log("while 循环：累加结果", zxzy_total);
+        }
+    </script>
+</body>
+</html>
