@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-10-26，功能名称：数七游戏（逢七过）百盒演示 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15-1 · 数七游戏（逢七过）</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(160deg, #182140 0%, #1d2850 100%);
+            color: #eef1fb;
+            padding: 28px 16px 44px;
+            min-height: 100vh;
+        }
+        .zxzy_wrap { max-width: 680px; margin: 0 auto; }
+
+        /* ===== 顶部英雄卡片 ===== */
+        .zxzy_hero {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 28px;
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .zxzy_badge {
+            background: #86b9f2;
+            color: #14264d;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .zxzy_home {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            color: #dfe4f3;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 5px 16px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #354478; }
+        .zxzy_h1 { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+        .zxzy_intro {
+            font-size: 14px;
+            line-height: 2.1;
+            color: #aab4d4;
+        }
+        .zxzy_t {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .zxzy_t_rule { background: rgba(74, 222, 128, .14); color: #4ade80; }
+        .zxzy_b { color: #eef1fb; font-weight: bold; }
+
+        /* ===== 区块标题与统计条 ===== */
+        .zxzy_h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 26px 2px 14px;
+        }
+        .zxzy_stat {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 13.5px;
+            color: #aab4d4;
+            line-height: 1.9;
+            margin-bottom: 18px;
+        }
+        .zxzy_stat b {
+            color: #7dd3fc;
+            font-family: Consolas, monospace;
+            font-size: 15px;
+        }
+
+        /* ===== 一百个盒子 ===== */
+        .zxzy_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+            gap: 8px;
+        }
+        .zxzy_box {
+            height: 50px;
+            background: #212c50;
+            border: 1px solid #2c3865;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            color: #dfe4f3;
+        }
+        .zxzy_box:hover { border-color: #7dd3fc; }
+        /* 满足“逢七过”规则的空盒子：绿色虚线边框、无数字 */
+        .zxzy_pass {
+            background: rgba(74, 222, 128, .05);
+            border: 1px dashed rgba(74, 222, 128, .45);
+        }
+        .zxzy_pass:hover { border-color: rgba(74, 222, 128, .9); }
+
+        @media (max-width: 660px) {
+            .zxzy_hero { padding: 20px; }
+            .zxzy_h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶部英雄卡片 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第15课 · JavaScript 循环</span>
+                <a class="zxzy_home" href="index.html">← 返回首页</a>
+            </div>
+            <h1 class="zxzy_h1">数七游戏 · 逢七过</h1>
+            <p class="zxzy_intro">
+                从 1 数到 100，凡是<span class="zxzy_t zxzy_t_rule">7 的倍数</span>、<span class="zxzy_t zxzy_t_rule">个位是 7</span>或<span class="zxzy_t zxzy_t_rule">十位是 7</span>的数字都要“过”——满足规则的显示<span class="zxzy_b">空盒子</span>，不满足规则的盒子正常显示数字。把鼠标悬停在空盒子上可以查看它“过”的原因。
+            </p>
+        </header>
+
+        <!-- 统计结果（由 JavaScript 计算填充） -->
+        <h2 class="zxzy_h2">统计结果</h2>
+        <p class="zxzy_stat" id="zxzy_statBox">正在计算…</p>
+
+        <!-- 一百个盒子（由 JavaScript 循环生成） -->
+        <h2 class="zxzy_h2">1 ~ 100 的盒子</h2>
+        <section class="zxzy_grid" id="zxzy_grid"></section>
+
+    </div>
+
+    <script>
+        // 判断一个数字是否要“过”（逢七过规则）
+        function zxzy_isPass(zxzy_n) {
+            if (zxzy_n % 7 === 0) { return true; }                    // 7 的倍数
+            if (zxzy_n % 10 === 7) { return true; }                   // 个位是 7
+            if (Math.floor(zxzy_n / 10) % 10 === 7) { return true; }  // 十位是 7
+            return false;
+        }
+
+        // 收集“过”的原因，用于悬停提示
+        function zxzy_reasons(zxzy_n) {
+            var zxzy_list = [];
+            if (zxzy_n % 7 === 0) { zxzy_list.push("7 的倍数"); }
+            if (zxzy_n % 10 === 7) { zxzy_list.push("个位是 7"); }
+            if (Math.floor(zxzy_n / 10) % 10 === 7) { zxzy_list.push("十位是 7"); }
+            return zxzy_list.join("、");
+        }
+
+        // 循环生成 1 ~ 100 共 100 个盒子
+        var zxzy_grid = document.getElementById("zxzy_grid");
+        var zxzy_passCount = 0;
+
+        for (var zxzy_i = 1; zxzy_i <= 100; zxzy_i++) {
+            var zxzy_box = document.createElement("div");
+            if (zxzy_isPass(zxzy_i)) {
+                zxzy_box.className = "zxzy_box zxzy_pass";   // 满足规则：空盒子
+                zxzy_box.title = zxzy_i + "：" + zxzy_reasons(zxzy_i) + "，要过";
+                zxzy_passCount++;
+            } else {
+                zxzy_box.className = "zxzy_box";             // 不满足：显示数字
+                zxzy_box.textContent = zxzy_i;
+                zxzy_box.title = zxzy_i + "：不含 7，也不是 7 的倍数";
+            }
+            zxzy_grid.appendChild(zxzy_box);
+        }
+
+        // 输出统计结果到页面和控制台
+        document.getElementById("zxzy_statBox").innerHTML =
+            "1 ~ 100 中共有 <b>" + zxzy_passCount + "</b> 个数字要“过”（空盒子），其余 <b>" +
+            (100 - zxzy_passCount) + "</b> 个盒子正常显示数字。";
+        console.log("逢七过统计：", zxzy_passCount, "个空盒子 / 共 100 个盒子");
+    </script>
+</body>
+</html>

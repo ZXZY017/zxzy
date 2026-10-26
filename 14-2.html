@@ -4,139 +4,320 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>14-2 · JavaScript 六种基本数据类型</title>
+    <title>14-2 · JavaScript 基本数据类型</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-            background: #f4f1ea;
-            color: #232a2e;
-            padding: 24px 16px;
+            background: linear-gradient(160deg, #182140 0%, #1d2850 100%);
+            color: #eef1fb;
+            padding: 28px 16px 44px;
+            min-height: 100vh;
         }
-        .zxzy_wrap { max-width: 860px; margin: 0 auto; }
-        .zxzy_back {
-            display: inline-block;
-            margin-bottom: 16px;
-            color: #4a6b5d;
+        .zxzy_wrap { max-width: 680px; margin: 0 auto; }
+
+        /* ===== 顶部英雄卡片 ===== */
+        .zxzy_hero {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 28px;
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .zxzy_badge {
+            background: #86b9f2;
+            color: #14264d;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .zxzy_home {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            color: #dfe4f3;
+            font-size: 13px;
             text-decoration: none;
+            padding: 5px 16px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #354478; }
+        .zxzy_h1 { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+        .zxzy_intro {
             font-size: 14px;
+            line-height: 2.1;
+            color: #aab4d4;
         }
-        .zxzy_back:hover { text-decoration: underline; }
-        .zxzy_card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 28px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
-        }
-        .zxzy_title { font-size: 26px; margin-bottom: 6px; }
-        .zxzy_subtitle { color: #7a8288; font-size: 14px; margin-bottom: 20px; }
-        .zxzy_table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        .zxzy_table th, .zxzy_table td {
-            border-bottom: 1px solid #ececec;
-            padding: 10px 8px;
-            text-align: left;
-        }
-        .zxzy_table th { background: #f0f5f2; color: #33544a; }
-        .zxzy_tag {
+        .zxzy_t {
             display: inline-block;
-            background: #e3efe8;
-            color: #2f6d4f;
-            border-radius: 4px;
-            padding: 1px 8px;
+            padding: 0 8px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .zxzy_t_string { background: rgba(74, 222, 128, .14);  color: #4ade80; }
+        .zxzy_t_number { background: rgba(96, 165, 250, .14);  color: #60a5fa; }
+        .zxzy_t_bool   { background: rgba(192, 132, 252, .14); color: #c084fc; }
+        .zxzy_t_undef  { background: rgba(244, 114, 182, .14); color: #f472b6; }
+        .zxzy_t_null   { background: rgba(250, 204, 21, .14);  color: #facc15; }
+        .zxzy_t_obj    { background: rgba(34, 211, 238, .14);  color: #22d3ee; }
+        .zxzy_inline {
+            background: #2c3865;
+            color: #c9d4f5;
+            padding: 1px 7px;
+            border-radius: 5px;
             font-family: Consolas, monospace;
             font-size: 13px;
         }
-        .zxzy_code { font-family: Consolas, "Courier New", monospace; color: #94502c; }
-        .zxzy_demo { margin-top: 26px; }
-        .zxzy_demo h2 { font-size: 18px; margin-bottom: 6px; }
-        .zxzy_tip { font-size: 13px; color: #7a8288; margin-bottom: 12px; }
-        .zxzy_btns { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+
+        /* ===== 区块标题 ===== */
+        .zxzy_h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 26px 2px 14px;
+        }
+
+        /* ===== 六种数据类型一览：卡片网格 ===== */
+        .zxzy_grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+        .zxzy_card {
+            --zxzy_accent: #7dd3fc;
+            background: #212c50;
+            border: 1px solid #2c3865;
+            border-top: 3px solid var(--zxzy_accent);
+            border-radius: 12px;
+            padding: 16px 16px 18px;
+        }
+        .zxzy_c_string { --zxzy_accent: #4ade80; }
+        .zxzy_c_number { --zxzy_accent: #60a5fa; }
+        .zxzy_c_bool   { --zxzy_accent: #c084fc; }
+        .zxzy_c_undef  { --zxzy_accent: #f472b6; }
+        .zxzy_c_null   { --zxzy_accent: #facc15; }
+        .zxzy_c_obj    { --zxzy_accent: #22d3ee; }
+
+        .zxzy_head {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .zxzy_head h3 { font-size: 15px; }
+        .zxzy_head h3 span {
+            color: #8d99c0;
+            font-size: 12.5px;
+            font-weight: normal;
+            margin-left: 4px;
+        }
+        .zxzy_typeof {
+            font-family: Consolas, monospace;
+            font-size: 11px;
+            color: var(--zxzy_accent);
+            background: color-mix(in srgb, var(--zxzy_accent) 10%, transparent);
+            border: 1px solid color-mix(in srgb, var(--zxzy_accent) 40%, transparent);
+            padding: 3px 10px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+        .zxzy_code {
+            background: #141c36;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 12.5px;
+            color: #e2e8f0;
+            white-space: pre;
+            overflow-x: auto;
+            margin-bottom: 10px;
+        }
+        .zxzy_kw     { color: #82aaff; }
+        .zxzy_strlit { color: #4ade80; }
+        .zxzy_numlit { color: #93c5fd; }
+        .zxzy_com    { color: #6b7490; }
+        .zxzy_value { font-size: 13px; color: #aab4d4; }
+        .zxzy_value b {
+            color: var(--zxzy_accent);
+            font-family: Consolas, monospace;
+            font-weight: 600;
+        }
+        .zxzy_desc {
+            font-size: 12.5px;
+            color: #8d99c0;
+            line-height: 1.9;
+            margin-top: 6px;
+        }
+
+        /* ===== 试一试：动态类型演示 ===== */
+        .zxzy_demo {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 28px;
+            margin-top: 22px;
+        }
+        .zxzy_demo .zxzy_h2 { margin: 0 0 8px; }
+        .zxzy_tip { font-size: 13.5px; color: #aab4d4; margin-bottom: 16px; }
+        .zxzy_btns { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
         .zxzy_btn {
-            border: 1px solid #d7ddd8;
-            background: #fbfcfb;
-            border-radius: 6px;
-            padding: 6px 14px;
+            background: #1b2547;
+            border: 1px solid #3a4a7d;
+            color: #dfe4f3;
+            font-family: Consolas, monospace;
             font-size: 13px;
+            padding: 7px 18px;
+            border-radius: 999px;
             cursor: pointer;
         }
-        .zxzy_btn:hover { background: #e3efe8; }
-        .zxzy_result {
-            background: #20272b;
-            color: #d8e4de;
-            border-radius: 8px;
-            padding: 14px;
-            font-family: Consolas, monospace;
-            font-size: 14px;
-            min-height: 48px;
-            line-height: 1.7;
+        .zxzy_btn:hover {
+            border-color: #7dd3fc;
+            color: #7dd3fc;
         }
-        .zxzy_highlight { color: #7fd1a8; font-weight: bold; }
-        .zxzy_note {
-            margin-top: 18px;
-            font-size: 13px;
-            color: #8a6d3b;
-            background: #fdf6e3;
-            border: 1px dashed #e0c98d;
-            border-radius: 8px;
-            padding: 10px 14px;
+        .zxzy_result {
+            background: #141c36;
+            border-radius: 10px;
+            padding: 16px;
+            font-family: Consolas, monospace;
+            font-size: 13.5px;
+            color: #d8e0f5;
+            line-height: 1.9;
+            min-height: 56px;
+        }
+        .zxzy_hl { color: #7dd3fc; font-weight: bold; }
+
+        @media (max-width: 660px) {
+            .zxzy_grid { grid-template-columns: 1fr; }
+            .zxzy_hero, .zxzy_demo { padding: 20px; }
+            .zxzy_h1 { font-size: 24px; }
         }
     </style>
 </head>
 <body>
     <div class="zxzy_wrap">
-        <a class="zxzy_back" href="index.html">← 返回索引</a>
-        <div class="zxzy_card">
-            <h1 class="zxzy_title">JavaScript 六种基本数据类型</h1>
-            <p class="zxzy_subtitle">使用 typeof 运算符查看每个值所属的数据类型</p>
-            <table class="zxzy_table">
-                <thead>
-                    <tr>
-                        <th>数据类型</th>
-                        <th>示例值</th>
-                        <th>typeof 结果</th>
-                        <th>说明</th>
-                    </tr>
-                </thead>
-                <tbody id="zxzy_tableBody"></tbody>
-            </table>
 
-            <div class="zxzy_demo">
-                <h2>动态类型演示</h2>
-                <p class="zxzy_tip">同一个变量 zxzy_demoValue 可以先后保存不同类型的值，点击按钮试试：</p>
-                <div class="zxzy_btns" id="zxzy_btnGroup"></div>
-                <p class="zxzy_result" id="zxzy_resultBox">点击上方按钮，观察变量值与类型的变化…</p>
+        <!-- 顶部英雄卡片 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第14课 · JavaScript 基础</span>
+                <a class="zxzy_home" href="index.html">← 返回首页</a>
             </div>
+            <h1 class="zxzy_h1">JavaScript 基本数据类型</h1>
+            <p class="zxzy_intro">
+                JavaScript 共有 6 种基本数据类型：<span class="zxzy_t zxzy_t_string">String</span>（字符串型）、<span class="zxzy_t zxzy_t_number">Number</span>（数值型）、<span class="zxzy_t zxzy_t_bool">Boolean</span>（布尔型）、<span class="zxzy_t zxzy_t_undef">Undefined</span>（未定义）、<span class="zxzy_t zxzy_t_null">Null</span>（空型）和 <span class="zxzy_t zxzy_t_obj">Object</span>（对象型）。其中前 5 种为简单数据类型，Object 为引用数据类型。使用 <code class="zxzy_inline">typeof</code> 运算符可以检测变量所属的数据类型，下面每种类型的示例变量都以 <code class="zxzy_inline">zxzy_</code> 前缀命名。
+            </p>
+        </header>
 
-            <p class="zxzy_note">小知识：typeof null 的结果是 "object"，这是 JavaScript 早期设计遗留的历史缺陷，判断 null 应使用 zxzy_v === null。</p>
-        </div>
+        <!-- 六种数据类型一览 -->
+        <h2 class="zxzy_h2">六种数据类型一览</h2>
+        <section class="zxzy_grid">
+
+            <article class="zxzy_card zxzy_c_string">
+                <div class="zxzy_head">
+                    <h3>字符串型 <span>String</span></h3>
+                    <span class="zxzy_typeof">typeof → "string"</span>
+                </div>
+                <pre class="zxzy_code"><span class="zxzy_kw">var</span> zxzy_str = <span class="zxzy_strlit">"周徐倬玚"</span>;</pre>
+                <p class="zxzy_value">实际值: <b>"周徐倬玚"</b></p>
+                <p class="zxzy_desc">用于表示文本数据，值需要使用单引号或双引号包裹。</p>
+            </article>
+
+            <article class="zxzy_card zxzy_c_number">
+                <div class="zxzy_head">
+                    <h3>数值型 <span>Number</span></h3>
+                    <span class="zxzy_typeof">typeof → "number"</span>
+                </div>
+                <pre class="zxzy_code"><span class="zxzy_kw">var</span> zxzy_num = <span class="zxzy_numlit">2026</span>;</pre>
+                <p class="zxzy_value">实际值: <b>2026</b></p>
+                <p class="zxzy_desc">用于表示整数或浮点数，特殊值还有 NaN（非数值）和 Infinity（无穷大）。</p>
+            </article>
+
+            <article class="zxzy_card zxzy_c_bool">
+                <div class="zxzy_head">
+                    <h3>布尔型 <span>Boolean</span></h3>
+                    <span class="zxzy_typeof">typeof → "boolean"</span>
+                </div>
+                <pre class="zxzy_code"><span class="zxzy_kw">var</span> zxzy_bool = <span class="zxzy_numlit">true</span>;</pre>
+                <p class="zxzy_value">实际值: <b>true</b></p>
+                <p class="zxzy_desc">只有 true 和 false 两个值，常用于逻辑判断和条件控制。</p>
+            </article>
+
+            <article class="zxzy_card zxzy_c_undef">
+                <div class="zxzy_head">
+                    <h3>未定义型 <span>Undefined</span></h3>
+                    <span class="zxzy_typeof">typeof → "undefined"</span>
+                </div>
+                <pre class="zxzy_code"><span class="zxzy_kw">var</span> zxzy_undef;  <span class="zxzy_com">// 声明后未赋值</span></pre>
+                <p class="zxzy_value">实际值: <b>undefined</b></p>
+                <p class="zxzy_desc">变量声明后未赋值时的默认值，表示"未定义"。</p>
+            </article>
+
+            <article class="zxzy_card zxzy_c_null">
+                <div class="zxzy_head">
+                    <h3>空型 <span>Null</span></h3>
+                    <span class="zxzy_typeof">typeof → "object"</span>
+                </div>
+                <pre class="zxzy_code"><span class="zxzy_kw">var</span> zxzy_null = <span class="zxzy_numlit">null</span>;</pre>
+                <p class="zxzy_value">实际值: <b>null</b></p>
+                <p class="zxzy_desc">表示"空值"，可以主动赋值给变量。注意：typeof 检测 null 返回 object，这是 JavaScript 的历史遗留问题。</p>
+            </article>
+
+            <article class="zxzy_card zxzy_c_obj">
+                <div class="zxzy_head">
+                    <h3>对象型 <span>Object</span></h3>
+                    <span class="zxzy_typeof">typeof → "object"</span>
+                </div>
+                <pre class="zxzy_code"><span class="zxzy_kw">var</span> zxzy_obj = { zxzy_name: <span class="zxzy_strlit">"周徐倬玚"</span>, zxzy_course: <span class="zxzy_strlit">"高级网页设计"</span> };</pre>
+                <p class="zxzy_value">实际值: <b>zxzy_obj.zxzy_name = 周徐倬玚</b></p>
+                <p class="zxzy_desc">引用数据类型，由键值对组成，用于描述复杂的数据结构。</p>
+            </article>
+
+        </section>
+
+        <!-- 试一试：动态类型演示 -->
+        <section class="zxzy_demo">
+            <h2 class="zxzy_h2">试一试：改变量的值，观察 typeof 结果</h2>
+            <p class="zxzy_tip">点击按钮给同一个变量 <code class="zxzy_inline">zxzy_demoValue</code> 赋予不同类型的值，观察 typeof 的检测结果：</p>
+            <div class="zxzy_btns">
+                <button class="zxzy_btn" onclick="zxzy_assign('string')">string</button>
+                <button class="zxzy_btn" onclick="zxzy_assign('number')">number</button>
+                <button class="zxzy_btn" onclick="zxzy_assign('boolean')">boolean</button>
+                <button class="zxzy_btn" onclick="zxzy_assign('undefined')">undefined</button>
+                <button class="zxzy_btn" onclick="zxzy_assign('null')">null</button>
+                <button class="zxzy_btn" onclick="zxzy_assign('object')">object</button>
+            </div>
+            <p class="zxzy_result" id="zxzy_resultBox">点击上方按钮，观察变量值与类型的变化…</p>
+        </section>
+
     </div>
 
     <script>
-        // ===== 六种基本数据类型 =====
-        var zxzy_numValue = 100;                                        // number 数值型
-        var zxzy_strValue = "周徐倬玚";                                  // string 字符串型
-        var zxzy_boolValue = true;                                      // boolean 布尔型
-        var zxzy_undefValue;                                            // undefined 未定义型
-        var zxzy_nullValue = null;                                      // null 空型
-        var zxzy_objValue = { zxzy_name: "周徐倬玚", zxzy_age: 20 };      // object 对象型
+        // ===== 六种基本数据类型示例 =====
+        var zxzy_str = "周徐倬玚";      // string 字符串型
+        var zxzy_num = 2026;           // number 数值型
+        var zxzy_bool = true;          // boolean 布尔型
+        var zxzy_undef;                // undefined 未定义型
+        var zxzy_null = null;          // null 空型
+        var zxzy_obj = { zxzy_name: "周徐倬玚", zxzy_course: "高级网页设计" };  // object 对象型
 
-        // 在控制台输出每个值及其类型
-        console.log("number：", zxzy_numValue, "→", typeof zxzy_numValue);
-        console.log("string：", zxzy_strValue, "→", typeof zxzy_strValue);
-        console.log("boolean：", zxzy_boolValue, "→", typeof zxzy_boolValue);
-        console.log("undefined：", zxzy_undefValue, "→", typeof zxzy_undefValue);
-        console.log("null：", zxzy_nullValue, "→", typeof zxzy_nullValue);
-        console.log("object：", zxzy_objValue, "→", typeof zxzy_objValue);
+        // 在控制台观察每个值及其类型
+        console.log("string：", zxzy_str, "→", typeof zxzy_str);
+        console.log("number：", zxzy_num, "→", typeof zxzy_num);
+        console.log("boolean：", zxzy_bool, "→", typeof zxzy_bool);
+        console.log("undefined：", zxzy_undef, "→", typeof zxzy_undef);
+        console.log("null：", zxzy_null, "→", typeof zxzy_null);
+        console.log("object：", zxzy_obj, "→", typeof zxzy_obj);
 
-        // ===== 类型数据列表 =====
-        var zxzy_typeList = [
-            { zxzy_name: "number",    zxzy_sample: zxzy_numValue,   zxzy_desc: "数值型：整数与小数，如 100、3.14" },
-            { zxzy_name: "string",    zxzy_sample: zxzy_strValue,   zxzy_desc: "字符串型：用引号包裹的一串文本" },
-            { zxzy_name: "boolean",   zxzy_sample: zxzy_boolValue,  zxzy_desc: "布尔型：只有 true 和 false 两个值" },
-            { zxzy_name: "undefined", zxzy_sample: zxzy_undefValue, zxzy_desc: "未定义型：变量已声明但尚未赋值" },
-            { zxzy_name: "null",      zxzy_sample: zxzy_nullValue,  zxzy_desc: "空型：表示“空值”，常用于清空对象引用" },
-            { zxzy_name: "object",    zxzy_sample: zxzy_objValue,   zxzy_desc: "对象型：属性和方法的集合，数组、函数也属于对象" }
-        ];
+        // ===== 试一试：动态类型演示 =====
+        var zxzy_demoValue;
 
         // 把值变成适合显示的文本
         function zxzy_format(zxzy_v) {
@@ -145,46 +326,18 @@
             return String(zxzy_v);
         }
 
-        // 渲染类型表格
-        var zxzy_tbody = document.getElementById("zxzy_tableBody");
-        for (var zxzy_i = 0; zxzy_i < zxzy_typeList.length; zxzy_i++) {
-            var zxzy_item = zxzy_typeList[zxzy_i];
-            var zxzy_tr = document.createElement("tr");
-            zxzy_tr.innerHTML =
-                '<td><span class="zxzy_tag">' + zxzy_item.zxzy_name + '</span></td>' +
-                '<td class="zxzy_code">' + zxzy_format(zxzy_item.zxzy_sample) + '</td>' +
-                '<td class="zxzy_code">' + typeof zxzy_item.zxzy_sample + '</td>' +
-                '<td>' + zxzy_item.zxzy_desc + '</td>';
-            zxzy_tbody.appendChild(zxzy_tr);
-        }
-
-        // ===== 动态类型演示：同一个变量先后保存不同类型的值 =====
-        var zxzy_demoValue;
-
-        function zxzy_showType(zxzy_index) {
-            var zxzy_t = zxzy_typeList[zxzy_index].zxzy_name;
-            if (zxzy_t === "number")         { zxzy_demoValue = 100; }
-            else if (zxzy_t === "string")    { zxzy_demoValue = "你好，JavaScript"; }
-            else if (zxzy_t === "boolean")   { zxzy_demoValue = false; }
-            else if (zxzy_t === "undefined") { zxzy_demoValue = undefined; }
-            else if (zxzy_t === "null")      { zxzy_demoValue = null; }
-            else                             { zxzy_demoValue = { zxzy_city: "北京" }; }
+        // 给同一个变量赋不同类型的值并显示
+        function zxzy_assign(zxzy_type) {
+            if (zxzy_type === "string")         { zxzy_demoValue = "你好，JavaScript"; }
+            else if (zxzy_type === "number")    { zxzy_demoValue = 2026; }
+            else if (zxzy_type === "boolean")   { zxzy_demoValue = false; }
+            else if (zxzy_type === "undefined") { zxzy_demoValue = undefined; }
+            else if (zxzy_type === "null")      { zxzy_demoValue = null; }
+            else                                { zxzy_demoValue = { zxzy_city: "北京" }; }
 
             document.getElementById("zxzy_resultBox").innerHTML =
                 'zxzy_demoValue = ' + zxzy_format(zxzy_demoValue) +
-                '<br>typeof zxzy_demoValue → <span class="zxzy_highlight">' + typeof zxzy_demoValue + '</span>';
-        }
-
-        // 生成演示按钮
-        var zxzy_btnGroup = document.getElementById("zxzy_btnGroup");
-        for (var zxzy_j = 0; zxzy_j < zxzy_typeList.length; zxzy_j++) {
-            (function (zxzy_k) {
-                var zxzy_btn = document.createElement("button");
-                zxzy_btn.className = "zxzy_btn";
-                zxzy_btn.textContent = zxzy_typeList[zxzy_k].zxzy_name;
-                zxzy_btn.onclick = function () { zxzy_showType(zxzy_k); };
-                zxzy_btnGroup.appendChild(zxzy_btn);
-            })(zxzy_j);
+                '<br>typeof zxzy_demoValue → <span class="zxzy_hl">"' + typeof zxzy_demoValue + '"</span>';
         }
     </script>
 </body>
