@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-10-29，功能名称：JavaScript 数组主要方法形象演示 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16-1 · JavaScript 数组主要方法</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(160deg, #182140 0%, #1d2850 100%);
+            color: #eef1fb;
+            padding: 28px 16px 44px;
+            min-height: 100vh;
+        }
+        .zxzy_wrap { max-width: 760px; margin: 0 auto; }
+
+        /* ===== 顶部英雄卡片 ===== */
+        .zxzy_hero {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 28px;
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .zxzy_badge {
+            background: #86b9f2;
+            color: #14264d;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .zxzy_home {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            color: #dfe4f3;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 5px 16px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #354478; }
+        .zxzy_h1 { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+        .zxzy_intro {
+            font-size: 14px;
+            line-height: 2.1;
+            color: #aab4d4;
+        }
+        .zxzy_t {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .zxzy_t_mut  { background: rgba(251, 146, 60, .14); color: #fb923c; }
+        .zxzy_t_new  { background: rgba(74, 222, 128, .14); color: #4ade80; }
+        .zxzy_b { color: #eef1fb; font-weight: bold; }
+
+        /* ===== 区块标题 ===== */
+        .zxzy_h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 26px 2px 14px;
+        }
+
+        /* ===== 数组大舞台 ===== */
+        .zxzy_stage {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 22px;
+        }
+        .zxzy_track {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 10px;
+            min-height: 118px;
+            padding: 12px 6px 6px;
+            background: #1a2344;
+            border: 1px dashed #3a4878;
+            border-radius: 12px;
+        }
+        .zxzy_cell { text-align: center; }
+        .zxzy_fruit {
+            width: 62px;
+            height: 62px;
+            background: #2a3760;
+            border: 2px solid #46558a;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            animation: zxzy_in .35s ease;
+        }
+        .zxzy_fruit_hot {
+            border-color: #7dd3fc;
+            box-shadow: 0 0 14px rgba(125, 211, 252, .45);
+        }
+        .zxzy_fruit_out { animation: zxzy_out .3s ease forwards; }
+        .zxzy_idx {
+            margin-top: 6px;
+            font-family: Consolas, monospace;
+            font-size: 12px;
+            color: #6b78a3;
+        }
+        @keyframes zxzy_in {
+            from { transform: translateY(-18px) scale(.6); opacity: 0; }
+            to   { transform: none; opacity: 1; }
+        }
+        @keyframes zxzy_out {
+            to { transform: translateY(26px) scale(.5); opacity: 0; }
+        }
+        .zxzy_len {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 13.5px;
+            color: #aab4d4;
+        }
+        .zxzy_len b {
+            color: #7dd3fc;
+            font-family: Consolas, monospace;
+            font-size: 15px;
+        }
+
+        /* ===== 方法按钮 ===== */
+        .zxzy_btns {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 16px;
+        }
+        .zxzy_btn {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            border-radius: 10px;
+            color: #eef1fb;
+            font-family: inherit;
+            font-size: 13px;
+            padding: 10px 8px;
+            cursor: pointer;
+            text-align: center;
+            line-height: 1.6;
+            transition: transform .12s ease, background .12s ease;
+        }
+        .zxzy_btn:hover { background: #354478; transform: translateY(-2px); }
+        .zxzy_btn:active { transform: translateY(0); }
+        .zxzy_btn code {
+            display: block;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            font-weight: bold;
+            color: #7dd3fc;
+        }
+        .zxzy_btn_mut { border-color: #8a5a34; }
+        .zxzy_btn_mut code { color: #fb923c; }
+        .zxzy_btn span { color: #aab4d4; font-size: 12px; }
+
+        /* ===== 控制台日志 ===== */
+        .zxzy_log {
+            margin-top: 16px;
+            background: #131b36;
+            border: 1px solid #2c3865;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            line-height: 2;
+            min-height: 118px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .zxzy_log .zxzy_code { color: #7dd3fc; }
+        .zxzy_log .zxzy_ret  { color: #4ade80; }
+        .zxzy_log .zxzy_warn { color: #fbbf24; }
+
+        /* ===== 静态演示卡片 ===== */
+        .zxzy_cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 14px;
+        }
+        .zxzy_card {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 14px;
+            padding: 16px 18px;
+        }
+        .zxzy_card_head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .zxzy_card_head code {
+            font-family: Consolas, monospace;
+            font-size: 15px;
+            font-weight: bold;
+            color: #7dd3fc;
+        }
+        .zxzy_tag {
+            font-size: 11.5px;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+        .zxzy_tag_mut { background: rgba(251, 146, 60, .14); color: #fb923c; }
+        .zxzy_tag_new { background: rgba(74, 222, 128, .14); color: #4ade80; }
+        .zxzy_desc { font-size: 13px; color: #aab4d4; line-height: 1.9; margin-bottom: 10px; }
+        .zxzy_demo {
+            background: #1a2344;
+            border: 1px solid #2c3865;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 2;
+            color: #dfe4f3;
+        }
+        .zxzy_demo .c { color: #7dd3fc; }
+        .zxzy_demo .r { color: #4ade80; }
+        .zxzy_chips { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 5px; }
+        .zxzy_chip {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-size: 12px;
+        }
+        .zxzy_chip_hot { border-color: #7dd3fc; color: #7dd3fc; }
+        .zxzy_arrow { color: #6b78a3; padding: 2px 2px; }
+
+        @media (max-width: 660px) {
+            .zxzy_hero { padding: 20px; }
+            .zxzy_h1 { font-size: 24px; }
+            .zxzy_fruit { width: 50px; height: 50px; font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶部英雄卡片 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第16课 · JavaScript 数组</span>
+                <a class="zxzy_home" href="index.html">← 返回首页</a>
+            </div>
+            <h1 class="zxzy_h1">数组方法大舞台</h1>
+            <p class="zxzy_intro">
+                把数组想象成一排<span class="zxzy_b">装水果的盒子</span>，每个盒子都有自己的<span class="zxzy_b">下标</span>（从 0 开始）。
+                点击下面的按钮，亲眼看一看每个方法是如何操作这排盒子的：
+                <span class="zxzy_t zxzy_t_mut">橙色方法</span>会<span class="zxzy_b">修改原数组</span>，
+                <span class="zxzy_t zxzy_t_new">绿色方法</span>则<span class="zxzy_b">返回新数组</span>、原数组保持不变。
+            </p>
+        </header>
+
+        <!-- 数组大舞台 -->
+        <h2 class="zxzy_h2">一、动手试一试（点击按钮）</h2>
+        <section class="zxzy_stage">
+            <div class="zxzy_track" id="zxzy_track"></div>
+            <p class="zxzy_len">当前数组：<b id="zxzy_lenText"></b></p>
+
+            <div class="zxzy_btns">
+                <button class="zxzy_btn zxzy_btn_mut" onclick="zxzy_doPush()"><code>push('🍒')</code><span>尾部添加一个</span></button>
+                <button class="zxzy_btn zxzy_btn_mut" onclick="zxzy_doPop()"><code>pop()</code><span>尾部取出一个</span></button>
+                <button class="zxzy_btn zxzy_btn_mut" onclick="zxzy_doUnshift()"><code>unshift('🍒')</code><span>头部插入一个</span></button>
+                <button class="zxzy_btn zxzy_btn_mut" onclick="zxzy_doShift()"><code>shift()</code><span>头部取出一个</span></button>
+                <button class="zxzy_btn zxzy_btn_mut" onclick="zxzy_doSpliceDel()"><code>splice(1, 1)</code><span>从下标 1 删 1 个</span></button>
+                <button class="zxzy_btn zxzy_btn_mut" onclick="zxzy_doSpliceAdd()"><code>splice(1, 0, '🍍')</code><span>在下标 1 插入 🍍</span></button>
+                <button class="zxzy_btn zxzy_btn_mut" onclick="zxzy_doReverse()"><code>reverse()</code><span>整排翻转</span></button>
+                <button class="zxzy_btn zxzy_btn_mut" onclick="zxzy_doSort()"><code>sort()</code><span>按编码排序</span></button>
+                <button class="zxzy_btn" onclick="zxzy_doJoin()"><code>join(' - ')</code><span>拼成一串文字</span></button>
+                <button class="zxzy_btn" onclick="zxzy_doSlice()"><code>slice(1, 3)</code><span>切出一段副本</span></button>
+                <button class="zxzy_btn" onclick="zxzy_doReset()"><code>reset()</code><span>恢复初始数组</span></button>
+            </div>
+
+            <div class="zxzy_log" id="zxzy_log"></div>
+        </section>
+
+        <!-- 静态演示卡片 -->
+        <h2 class="zxzy_h2">二、更多方法（图解示例）</h2>
+        <section class="zxzy_cards">
+
+            <div class="zxzy_card">
+                <div class="zxzy_card_head"><code>indexOf / includes</code><span class="zxzy_tag zxzy_tag_new">返回新值</span></div>
+                <p class="zxzy_desc">indexOf 查找元素的<span class="zxzy_b">下标</span>（找不到返回 -1）；includes 判断<span class="zxzy_b">是否存在</span>，返回 true / false。</p>
+                <div class="zxzy_demo">
+                    <span class="c">var arr = ['🍎','🍌','🍇'];</span><br>
+                    <span class="c">arr.indexOf('🍇')</span> → <span class="r">2</span><br>
+                    <span class="c">arr.includes('🍌')</span> → <span class="r">true</span>
+                </div>
+                <div class="zxzy_chips">
+                    <span class="zxzy_chip">🍎 0</span><span class="zxzy_chip">🍌 1</span>
+                    <span class="zxzy_chip zxzy_chip_hot">🍇 2 ← 找到了</span>
+                </div>
+            </div>
+
+            <div class="zxzy_card">
+                <div class="zxzy_card_head"><code>concat</code><span class="zxzy_tag zxzy_tag_new">返回新数组</span></div>
+                <p class="zxzy_desc">把两个数组<span class="zxzy_b">拼接</span>成一个新数组，就像把两排盒子接到一起，原来的两排都不变。</p>
+                <div class="zxzy_demo">
+                    <span class="c">var a = ['🍎','🍌'], b = ['🍇','🍓'];</span><br>
+                    <span class="c">a.concat(b)</span> → <span class="r">['🍎','🍌','🍇','🍓']</span>
+                </div>
+                <div class="zxzy_chips">
+                    <span class="zxzy_chip">🍎</span><span class="zxzy_chip">🍌</span>
+                    <span class="zxzy_chip zxzy_chip_hot">＋</span>
+                    <span class="zxzy_chip">🍇</span><span class="zxzy_chip">🍓</span>
+                </div>
+            </div>
+
+            <div class="zxzy_card">
+                <div class="zxzy_card_head"><code>map</code><span class="zxzy_tag zxzy_tag_new">返回新数组</span></div>
+                <p class="zxzy_desc">对每个元素<span class="zxzy_b">逐一加工</span>，得到一个长度相同的新数组，就像流水线给每个水果贴价签。</p>
+                <div class="zxzy_demo">
+                    <span class="c">var arr = [1, 2, 3];</span><br>
+                    <span class="c">arr.map(function (x) { return x * 10; })</span><br>
+                    → <span class="r">[10, 20, 30]</span>
+                </div>
+                <div class="zxzy_chips">
+                    <span class="zxzy_chip">1 →</span><span class="zxzy_chip zxzy_chip_hot">10</span>
+                    <span class="zxzy_chip">2 →</span><span class="zxzy_chip zxzy_chip_hot">20</span>
+                    <span class="zxzy_chip">3 →</span><span class="zxzy_chip zxzy_chip_hot">30</span>
+                </div>
+            </div>
+
+            <div class="zxzy_card">
+                <div class="zxzy_card_head"><code>filter</code><span class="zxzy_tag zxzy_tag_new">返回新数组</span></div>
+                <p class="zxzy_desc">按条件<span class="zxzy_b">筛选</span>，只留下满足条件的元素，就像用筛子把大水果留下来。</p>
+                <div class="zxzy_demo">
+                    <span class="c">var arr = [5, 12, 8, 20, 3];</span><br>
+                    <span class="c">arr.filter(function (x) { return x > 6; })</span><br>
+                    → <span class="r">[12, 8, 20]</span>
+                </div>
+                <div class="zxzy_chips">
+                    <span class="zxzy_chip">5 ✕</span><span class="zxzy_chip zxzy_chip_hot">12 ✓</span>
+                    <span class="zxzy_chip zxzy_chip_hot">8 ✓</span><span class="zxzy_chip zxzy_chip_hot">20 ✓</span>
+                    <span class="zxzy_chip">3 ✕</span>
+                </div>
+            </div>
+
+            <div class="zxzy_card">
+                <div class="zxzy_card_head"><code>find / findIndex</code><span class="zxzy_tag zxzy_tag_new">返回新值</span></div>
+                <p class="zxzy_desc">find 返回<span class="zxzy_b">第一个</span>满足条件的元素（找不到返回 undefined）；findIndex 返回它的下标。</p>
+                <div class="zxzy_demo">
+                    <span class="c">var arr = [3, 9, 15, 22];</span><br>
+                    <span class="c">arr.find(function (x) { return x > 10; })</span><br>
+                    → <span class="r">15</span>（第一个大于 10 的）
+                </div>
+                <div class="zxzy_chips">
+                    <span class="zxzy_chip">3</span><span class="zxzy_chip">9</span>
+                    <span class="zxzy_chip zxzy_chip_hot">15 ← 第一个</span><span class="zxzy_chip">22</span>
+                </div>
+            </div>
+
+            <div class="zxzy_card">
+                <div class="zxzy_card_head"><code>reduce</code><span class="zxzy_tag zxzy_tag_new">返回新值</span></div>
+                <p class="zxzy_desc">把所有元素<span class="zxzy_b">累积汇总</span>成一个值，就像把整排水果逐个装进同一个篮子里。</p>
+                <div class="zxzy_demo">
+                    <span class="c">var arr = [1, 2, 3, 4];</span><br>
+                    <span class="c">arr.reduce(function (sum, x) { return sum + x; })</span><br>
+                    → <span class="r">10</span>（1+2+3+4）
+                </div>
+                <div class="zxzy_chips">
+                    <span class="zxzy_chip">1</span><span class="zxzy_arrow">＋</span>
+                    <span class="zxzy_chip">2</span><span class="zxzy_arrow">＋</span>
+                    <span class="zxzy_chip">3</span><span class="zxzy_arrow">＋</span>
+                    <span class="zxzy_chip">4</span><span class="zxzy_arrow">＝</span>
+                    <span class="zxzy_chip zxzy_chip_hot">10</span>
+                </div>
+            </div>
+
+            <div class="zxzy_card">
+                <div class="zxzy_card_head"><code>forEach</code><span class="zxzy_tag zxzy_tag_new">无返回值</span></div>
+                <p class="zxzy_desc">对每个元素<span class="zxzy_b">执行一次操作</span>，不产生新数组，就像挨个检查每个盒子。</p>
+                <div class="zxzy_demo">
+                    <span class="c">var arr = ['🍎','🍌','🍇'];</span><br>
+                    <span class="c">arr.forEach(function (x, i) {</span><br>
+                    <span class="c">&nbsp;&nbsp;console.log(i, x); // 0 🍎 / 1 🍌 / 2 🍇</span><br>
+                    <span class="c">});</span>
+                </div>
+                <div class="zxzy_chips">
+                    <span class="zxzy_chip">→ 🍎</span><span class="zxzy_chip">→ 🍌</span><span class="zxzy_chip">→ 🍇</span>
+                </div>
+            </div>
+
+            <div class="zxzy_card">
+                <div class="zxzy_card_head"><code>Array.isArray</code><span class="zxzy_tag zxzy_tag_new">返回新值</span></div>
+                <p class="zxzy_desc">判断一个变量<span class="zxzy_b">是不是数组</span>，比 typeof 更准确（typeof 数组会返回 "object"）。</p>
+                <div class="zxzy_demo">
+                    <span class="c">Array.isArray(['🍎'])</span> → <span class="r">true</span><br>
+                    <span class="c">Array.isArray('🍎')</span> → <span class="r">false</span>
+                </div>
+                <div class="zxzy_chips">
+                    <span class="zxzy_chip zxzy_chip_hot">['🍎'] 是数组 ✓</span>
+                    <span class="zxzy_chip">'🍎' 不是数组 ✕</span>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+    <script>
+        // ===== 初始数组：一排水果盒子 =====
+        var zxzy_start = ["🍉", "🍎", "🍇", "🍓", "🍊"];
+        var zxzy_arr = zxzy_start.slice();   // 用副本作为工作数组
+
+        // ===== 渲染数组到舞台上 =====
+        var zxzy_track = document.getElementById("zxzy_track");
+
+        function zxzy_render(hotIndex) {
+            zxzy_track.innerHTML = "";
+            for (var zxzy_i = 0; zxzy_i < zxzy_arr.length; zxzy_i++) {
+                var zxzy_cell = document.createElement("div");
+                zxzy_cell.className = "zxzy_cell";
+
+                var zxzy_fruit = document.createElement("div");
+                zxzy_fruit.className = "zxzy_fruit" + (zxzy_i === hotIndex ? " zxzy_fruit_hot" : "");
+                zxzy_fruit.textContent = zxzy_arr[zxzy_i];
+
+                var zxzy_idx = document.createElement("div");
+                zxzy_idx.className = "zxzy_idx";
+                zxzy_idx.textContent = zxzy_i;
+
+                zxzy_cell.appendChild(zxzy_fruit);
+                zxzy_cell.appendChild(zxzy_idx);
+                zxzy_track.appendChild(zxzy_cell);
+            }
+            document.getElementById("zxzy_lenText").textContent =
+                "[" + zxzy_arr.join(", ") + "]　length = " + zxzy_arr.length;
+        }
+
+        // ===== 控制台日志 =====
+        var zxzy_logBox = document.getElementById("zxzy_log");
+
+        function zxzy_log(zxzy_code, zxzy_result) {
+            var zxzy_line = document.createElement("div");
+            if (zxzy_result === null) {
+                zxzy_line.innerHTML = '<span class="zxzy_warn">⚠ 数组已空，' + zxzy_code + ' 无法继续取出</span>';
+            } else {
+                zxzy_line.innerHTML =
+                    '<span class="zxzy_code">&gt; ' + zxzy_code + '</span>　返回 ' +
+                    '<span class="zxzy_ret">' + zxzy_result + '</span>';
+            }
+            zxzy_logBox.appendChild(zxzy_line);
+            zxzy_logBox.scrollTop = zxzy_logBox.scrollHeight;
+        }
+
+        // 数组为空时的提示
+        function zxzy_ifEmpty() {
+            if (zxzy_arr.length === 0) {
+                zxzy_log("取元素", null);
+                return true;
+            }
+            return false;
+        }
+
+        // ===== 各方法的真实操作 =====
+        function zxzy_doPush() {
+            var zxzy_r = zxzy_arr.push("🍒");
+            zxzy_render(zxzy_arr.length - 1);
+            zxzy_log("arr.push('🍒')", zxzy_r + "（新长度）");
+        }
+
+        function zxzy_doPop() {
+            if (zxzy_ifEmpty()) { return; }
+            var zxzy_last = zxzy_track.lastElementChild.querySelector(".zxzy_fruit");
+            zxzy_last.classList.add("zxzy_fruit_out");            // 先播放飞出动画
+            var zxzy_r = zxzy_arr[zxzy_arr.length - 1];
+            setTimeout(function () {
+                zxzy_arr.pop();
+                zxzy_render(-1);
+            }, 300);
+            zxzy_log("arr.pop()", "'" + zxzy_r + "'（被取出的元素）");
+        }
+
+        function zxzy_doShift() {
+            if (zxzy_ifEmpty()) { return; }
+            var zxzy_first = zxzy_track.firstElementChild.querySelector(".zxzy_fruit");
+            zxzy_first.classList.add("zxzy_fruit_out");
+            var zxzy_r = zxzy_arr[0];
+            setTimeout(function () {
+                zxzy_arr.shift();
+                zxzy_render(-1);
+            }, 300);
+            zxzy_log("arr.shift()", "'" + zxzy_r + "'（被取出的元素）");
+        }
+
+        function zxzy_doUnshift() {
+            var zxzy_r = zxzy_arr.unshift("🍒");
+            zxzy_render(0);
+            zxzy_log("arr.unshift('🍒')", zxzy_r + "（新长度）");
+        }
+
+        function zxzy_doSpliceDel() {
+            if (zxzy_ifEmpty()) { return; }
+            var zxzy_r = zxzy_arr.splice(1, 1);
+            zxzy_render(-1);
+            zxzy_log("arr.splice(1, 1)", "[" + zxzy_r + "]（被删除的元素）");
+        }
+
+        function zxzy_doSpliceAdd() {
+            var zxzy_r = zxzy_arr.splice(1, 0, "🍍");
+            zxzy_render(1);
+            zxzy_log("arr.splice(1, 0, '🍍')", "[" + zxzy_r + "]（空数组，没删东西）");
+        }
+
+        function zxzy_doReverse() {
+            zxzy_arr.reverse();
+            zxzy_render(-1);
+            zxzy_log("arr.reverse()", "[" + zxzy_arr.join(", ") + "]");
+        }
+
+        function zxzy_doSort() {
+            zxzy_arr.sort();
+            zxzy_render(-1);
+            zxzy_log("arr.sort()", "[" + zxzy_arr.join(", ") + "]");
+        }
+
+        function zxzy_doJoin() {
+            var zxzy_r = zxzy_arr.join(" - ");
+            zxzy_render(-1);
+            zxzy_log("arr.join(' - ')", '"' + zxzy_r + '"');
+        }
+
+        function zxzy_doSlice() {
+            var zxzy_r = zxzy_arr.slice(1, 3);
+            zxzy_render(-1);
+            zxzy_log("arr.slice(1, 3)", "[" + zxzy_r.join(", ") + "]（新数组，原数组不变）");
+        }
+
+        function zxzy_doReset() {
+            zxzy_arr = zxzy_start.slice();
+            zxzy_render(-1);
+            zxzy_log("arr = start.slice()", "数组已恢复为初始状态");
+        }
+
+        // 页面加载后先渲染一次
+        zxzy_render(-1);
+    </script>
+</body>
+</html>

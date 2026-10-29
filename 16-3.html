@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-10-29，功能名称：网帖翻译列表页（图标来自 font 目录 iconfont） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16-3 · 网帖翻译</title>
+    <link rel="stylesheet" href="../font/zxzy/font_5244731_rbd6yksrikj/iconfont.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            padding: 20px 0 50px;
+        }
+        .zxzy_wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
+
+        /* ===== 顶栏 ===== */
+        .zxzy_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 4px 16px;
+        }
+        .zxzy_title { font-size: 19px; font-weight: bold; }
+        .zxzy_help {
+            color: #e64d3d;
+            font-size: 14px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .zxzy_help .iconfont { font-size: 16px; }
+        .zxzy_help:hover { text-decoration: underline; }
+
+        /* ===== 帖子列表 ===== */
+        .zxzy_item {
+            display: flex;
+            gap: 12px;
+            padding: 18px 4px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .zxzy_item:hover { background: #fafbfd; }
+
+        /* 左侧：国旗 + 金币徽章 */
+        .zxzy_left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            width: 34px;
+        }
+        .zxzy_flag { font-size: 26px; line-height: 1.2; }
+        .zxzy_coin {
+            margin-top: 4px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #e64d3d;
+            color: #fff;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 右侧：正文与元信息 */
+        .zxzy_body { flex: 1; min-width: 0; }
+        .zxzy_text {
+            font-size: 16px;
+            line-height: 1.75;
+            color: #1a1a1a;
+        }
+        .zxzy_meta {
+            margin-top: 9px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 26px;
+            font-size: 14px;
+            color: #999;
+        }
+        .zxzy_meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .zxzy_meta .iconfont { font-size: 15px; color: #b8b8b8; }
+        .zxzy_author { color: #5178c4; cursor: pointer; }
+        .zxzy_author:hover { text-decoration: underline; }
+
+        @media (max-width: 560px) {
+            .zxzy_meta { gap: 16px; }
+            .zxzy_text { font-size: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶栏 -->
+        <header class="zxzy_header">
+            <h1 class="zxzy_title">网帖翻译</h1>
+            <a class="zxzy_help" href="javascript:void(0)">
+                <span class="iconfont icon-zhuanti"></span>新手翻译说明
+            </a>
+        </header>
+
+        <!-- 帖子列表（由 JavaScript 渲染） -->
+        <main id="zxzy_list"></main>
+
+    </div>
+
+    <script>
+        // ===== 帖子数据：对象数组，一帖一项 =====
+        var zxzy_posts = [
+            {
+                flag: "🇹🇷",
+                title: "土耳其网友晒出伊斯坦布尔街头的猫咪咖啡馆，墙壁上贴满了各国游客的合影，帖子下大家纷纷留言：想去撸猫的请举手。",
+                author: "神花家一只兔",
+                views: 6703,
+                comments: 51
+            },
+            {
+                flag: "🇯🇵",
+                title: "日本网友讨论为什么中国的夜市小吃这么有吸引力，说是在东京刷到烤冷面的视频后，深夜饿得睡不着，评论区已变成美食许愿池。",
+                author: "熊猫永不为奴",
+                views: 3871,
+                comments: 33
+            },
+            {
+                flag: "🇺🇸",
+                title: "美国网友热议中国三轮电动车短视频，问这种\"老乐\"哪里能买到；下面有人回复：先练好倒车，再谈骑行自由。",
+                author: "荤菳子",
+                views: 5500,
+                comments: 22
+            },
+            {
+                flag: "🇻🇳",
+                title: "越南网友研究东南亚咖啡地图，从河内蛋咖啡聊到越南滴漏壶，感叹每一座城市的清晨都值得被一杯咖啡叫醒。",
+                author: "分格里",
+                views: 1639,
+                comments: 16
+            },
+            {
+                flag: "🇫🇷",
+                title: "法国网友庆祝面包节：法棍的100种吃法盘点，网友辣评：领面包的队可比领福利的队伍积极多了。",
+                author: "熊猫永不为奴",
+                views: 1387,
+                comments: 9
+            },
+            {
+                flag: "🇰🇷",
+                title: "韩国网友盘点各国泡面的辣度排行榜，一条关于中国螺纹粉的评论被顶上热门：为什么这些\"辣王\"在中国越来越受欢迎？",
+                author: "文学准青年",
+                views: 2926,
+                comments: 22
+            },
+            {
+                flag: "🇦🇺",
+                title: "澳大利亚网友分享袋鼠海滩晨跑的奇遇，引发网友共鸣：难得看到如此治愈系的海岸线，评论区一片云打卡。",
+                author: "碧波荡漾恒河…",
+                views: 8026,
+                comments: 38
+            }
+        ];
+
+        // ===== 渲染：forEach 遍历数组生成帖子列表 =====
+        var zxzy_list = document.getElementById("zxzy_list");
+        var zxzy_date = "2026-10-29";
+
+        zxzy_posts.forEach(function (zxzy_p) {
+            var zxzy_item = document.createElement("article");
+            zxzy_item.className = "zxzy_item";
+
+            // 模板字符串拼装：图标取自 font 目录的 iconfont 字体
+            zxzy_item.innerHTML =
+                '<div class="zxzy_left">' +
+                    '<div class="zxzy_flag">' + zxzy_p.flag + '</div>' +
+                    '<div class="zxzy_coin">币</div>' +
+                '</div>' +
+                '<div class="zxzy_body">' +
+                    '<p class="zxzy_text">' + zxzy_p.title + '</p>' +
+                    '<div class="zxzy_meta">' +
+                        '<span><span class="iconfont icon-gengxin"></span>' + zxzy_date + '</span>' +
+                        '<span class="zxzy_author">' + zxzy_p.author + '</span>' +
+                        '<span><span class="iconfont icon-sousuo"></span>' + zxzy_p.views + '</span>' +
+                        '<span><span class="iconfont icon-pinglun"></span>' + zxzy_p.comments + '</span>' +
+                    '</div>' +
+                '</div>';
+
+            zxzy_list.appendChild(zxzy_item);
+        });
+
+        console.log("共渲染", zxzy_posts.length, "条网帖");
+    </script>
+</body>
+</html>

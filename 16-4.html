@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-10-29，功能名称：影视剧排行榜（每日/每周/每月/全部 选项卡切换） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16-4 · 影视剧排行榜</title>
+    <link rel="stylesheet" href="../font/zxzy/font_5244731_rbd6yksrikj/iconfont.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #f2f2f2;
+            padding: 30px 16px;
+        }
+        .zxzy_card {
+            width: 340px;
+            margin: 0 auto;
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+        }
+
+        /* ===== 选项卡 ===== */
+        .zxzy_tabs {
+            display: flex;
+            border-top: 3px solid #e64d3d;   /* 顶部的红色细条 */
+        }
+        .zxzy_tab {
+            flex: 1;
+            background: #c6c6c6;
+            color: #5f5f5f;
+            font-size: 14px;
+            text-align: center;
+            padding: 10px 0;
+            cursor: pointer;
+            user-select: none;
+            transition: background .15s ease, color .15s ease;
+        }
+        .zxzy_tab:hover { background: #d5d5d5; }
+        .zxzy_tab_on {
+            background: #ffffff;
+            color: #1a1a1a;
+            font-weight: bold;
+        }
+        .zxzy_tab_on:hover { background: #ffffff; }
+
+        /* ===== 排行列表 ===== */
+        .zxzy_list {
+            display: flex;
+            padding: 16px 14px 20px;
+            gap: 8px;
+        }
+        .zxzy_col { flex: 1; min-width: 0; }
+        .zxzy_row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            line-height: 2.6;
+        }
+        /* 名次小方块：前三名红色，其余灰色 */
+        .zxzy_no {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            background: #b3b3b3;
+            color: #ffffff;
+            font-size: 12px;
+            font-family: Consolas, "Microsoft YaHei", sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .zxzy_no_top { background: #e64d3d; }
+        .zxzy_name {
+            font-size: 14px;
+            color: #333333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
+        .zxzy_name:hover { color: #e64d3d; }
+    </style>
+</head>
+<body>
+    <div class="zxzy_card">
+
+        <!-- 选项卡（由 JavaScript 生成并绑定切换） -->
+        <div class="zxzy_tabs" id="zxzy_tabs"></div>
+
+        <!-- 排行列表（由 JavaScript 渲染） -->
+        <div class="zxzy_list" id="zxzy_list"></div>
+
+    </div>
+
+    <script>
+        // ===== 四种情况对应的数据 =====
+        var zxzy_data = {
+            "每日": [
+                "最美的时光", "咱们结婚吧", "渗透", "继承者们", "烽火佳人",
+                "极品女士第2季", "爱闪亮", "海女（2013）", "铁多多疼爱记", "带刀女捕快"
+            ],
+            "每周": [
+                "咱们结婚吧", "继承者们", "最美的时光", "爱闪亮", "渗透",
+                "海女（2013）", "三十岁，你好", "铁多多疼爱记", "特种兵之火凤凰", "极品女士第2季"
+            ],
+            "每月": [
+                "特种兵之火凤凰", "咱们结婚吧", "继承者们", "金玉满堂", "王的女人",
+                "爱闪亮", "爱情面前谁怕谁", "英雄联盟", "小爸爸", "我们这拨人"
+            ],
+            "全部": [
+                "永不磨灭的番号", "特种兵之火凤凰", "新还珠格格", "咱们结婚吧", "小爸爸",
+                "心术", "乡村爱情5", "天天有喜", "一不小心爱上你", "夏日甜心"
+            ]
+        };
+
+        var zxzy_tabs = document.getElementById("zxzy_tabs");
+        var zxzy_list = document.getElementById("zxzy_list");
+        var zxzy_current = "每日";
+
+        // ===== 生成四个选项卡 =====
+        Object.keys(zxzy_data).forEach(function (zxzy_key) {
+            var zxzy_tab = document.createElement("div");
+            zxzy_tab.className = "zxzy_tab";
+            zxzy_tab.textContent = zxzy_key;
+            zxzy_tab.onclick = function () {
+                zxzy_current = zxzy_key;
+                zxzy_renderTabs();
+                zxzy_renderList();
+            };
+            zxzy_tabs.appendChild(zxzy_tab);
+        });
+
+        // ===== 高亮当前选项卡 =====
+        function zxzy_renderTabs() {
+            var zxzy_all = zxzy_tabs.children;
+            for (var zxzy_i = 0; zxzy_i < zxzy_all.length; zxzy_i++) {
+                var zxzy_isOn = zxzy_all[zxzy_i].textContent === zxzy_current;
+                zxzy_all[zxzy_i].className = "zxzy_tab" + (zxzy_isOn ? " zxzy_tab_on" : "");
+            }
+        }
+
+        // ===== 渲染排行榜：前 5 名左列，后 5 名右列 =====
+        function zxzy_renderList() {
+            var zxzy_names = zxzy_data[zxzy_current];
+            zxzy_list.innerHTML = "";
+
+            var zxzy_colL = document.createElement("div");
+            var zxzy_colR = document.createElement("div");
+            zxzy_colL.className = "zxzy_col";
+            zxzy_colR.className = "zxzy_col";
+
+            zxzy_names.forEach(function (zxzy_name, zxzy_i) {
+                var zxzy_row = document.createElement("div");
+                zxzy_row.className = "zxzy_row";
+
+                var zxzy_no = document.createElement("span");
+                zxzy_no.className = "zxzy_no" + (zxzy_i < 3 ? " zxzy_no_top" : "");
+                zxzy_no.textContent = zxzy_i + 1;
+
+                var zxzy_text = document.createElement("span");
+                zxzy_text.className = "zxzy_name";
+                zxzy_text.textContent = zxzy_name;
+
+                zxzy_row.appendChild(zxzy_no);
+                zxzy_row.appendChild(zxzy_text);
+                (zxzy_i < 5 ? zxzy_colL : zxzy_colR).appendChild(zxzy_row);
+            });
+
+            zxzy_list.appendChild(zxzy_colL);
+            zxzy_list.appendChild(zxzy_colR);
+        }
+
+        // 首次渲染：默认“每日”
+        zxzy_renderTabs();
+        zxzy_renderList();
+    </script>
+</body>
+</html>

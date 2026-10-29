@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-10-29，功能名称：JavaScript 对象形象演示 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16-2 · JavaScript 对象</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(160deg, #182140 0%, #1d2850 100%);
+            color: #eef1fb;
+            padding: 28px 16px 44px;
+            min-height: 100vh;
+        }
+        .zxzy_wrap { max-width: 760px; margin: 0 auto; }
+
+        /* ===== 顶部英雄卡片 ===== */
+        .zxzy_hero {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 28px;
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .zxzy_badge {
+            background: #86b9f2;
+            color: #14264d;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .zxzy_home {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            color: #dfe4f3;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 5px 16px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #354478; }
+        .zxzy_h1 { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+        .zxzy_intro {
+            font-size: 14px;
+            line-height: 2.1;
+            color: #aab4d4;
+        }
+        .zxzy_t {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .zxzy_t_dot   { background: rgba(125, 211, 252, .14); color: #7dd3fc; }
+        .zxzy_t_brk   { background: rgba(192, 132, 252, .14); color: #c084fc; }
+        .zxzy_t_this  { background: rgba(74, 222, 128, .14);  color: #4ade80; }
+        .zxzy_b { color: #eef1fb; font-weight: bold; }
+
+        /* ===== 区块标题 ===== */
+        .zxzy_h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 26px 2px 14px;
+        }
+
+        /* ===== 对象大舞台 ===== */
+        .zxzy_stage {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 22px;
+        }
+        .zxzy_obj {
+            background: #1a2344;
+            border: 1px dashed #3a4878;
+            border-radius: 12px;
+            padding: 16px 18px;
+            font-family: Consolas, monospace;
+            font-size: 13.5px;
+            line-height: 2.1;
+            min-height: 150px;
+        }
+        .zxzy_obj .k { color: #7dd3fc; }
+        .zxzy_obj .v { color: #4ade80; }
+        .zxzy_obj .fn { color: #fb923c; }
+        .zxzy_obj .hot { background: rgba(125, 211, 252, .18); border-radius: 4px; }
+        .zxzy_obj_name {
+            color: #c084fc;
+            font-weight: bold;
+        }
+        .zxzy_obj_tip {
+            margin-top: 8px;
+            text-align: center;
+            font-size: 13px;
+            color: #aab4d4;
+        }
+        .zxzy_obj_tip b {
+            color: #7dd3fc;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+        }
+
+        /* ===== 方法按钮 ===== */
+        .zxzy_btns {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+            gap: 10px;
+            margin-top: 16px;
+        }
+        .zxzy_btn {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            border-radius: 10px;
+            color: #eef1fb;
+            font-family: inherit;
+            font-size: 13px;
+            padding: 10px 8px;
+            cursor: pointer;
+            text-align: center;
+            line-height: 1.6;
+            transition: transform .12s ease, background .12s ease;
+        }
+        .zxzy_btn:hover { background: #354478; transform: translateY(-2px); }
+        .zxzy_btn:active { transform: translateY(0); }
+        .zxzy_btn code {
+            display: block;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            font-weight: bold;
+            color: #7dd3fc;
+        }
+        .zxzy_btn span { color: #aab4d4; font-size: 12px; }
+        .zxzy_btn_mut { border-color: #8a5a34; }
+        .zxzy_btn_mut code { color: #fb923c; }
+        .zxzy_btn_pur { border-color: #6b4a8f; }
+        .zxzy_btn_pur code { color: #c084fc; }
+
+        /* ===== 控制台日志 ===== */
+        .zxzy_log {
+            margin-top: 16px;
+            background: #131b36;
+            border: 1px solid #2c3865;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            line-height: 2;
+            min-height: 118px;
+            max-height: 210px;
+            overflow-y: auto;
+        }
+        .zxzy_log .zxzy_code { color: #7dd3fc; }
+        .zxzy_log .zxzy_ret  { color: #4ade80; }
+        .zxzy_log .zxzy_warn { color: #fbbf24; }
+
+        /* ===== 静态演示卡片 ===== */
+        .zxzy_cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 14px;
+        }
+        .zxzy_card {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 14px;
+            padding: 16px 18px;
+        }
+        .zxzy_card_head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .zxzy_card_head code {
+            font-family: Consolas, monospace;
+            font-size: 15px;
+            font-weight: bold;
+            color: #7dd3fc;
+        }
+        .zxzy_tag {
+            font-size: 11.5px;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+        .zxzy_tag_a { background: rgba(125, 211, 252, .14); color: #7dd3fc; }
+        .zxzy_tag_b { background: rgba(74, 222, 128, .14);  color: #4ade80; }
+        .zxzy_tag_c { background: rgba(251, 146, 60, .14);  color: #fb923c; }
+        .zxzy_desc { font-size: 13px; color: #aab4d4; line-height: 1.9; margin-bottom: 10px; }
+        .zxzy_demo {
+            background: #1a2344;
+            border: 1px solid #2c3865;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 2;
+            color: #dfe4f3;
+        }
+        .zxzy_demo .c { color: #7dd3fc; }
+        .zxzy_demo .r { color: #4ade80; }
+        .zxzy_demo .p { color: #c084fc; }
+        .zxzy_demo .o { color: #fb923c; }
+        .zxzy_chips { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 5px; }
+        .zxzy_chip {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-size: 12px;
+        }
+        .zxzy_chip_hot { border-color: #7dd3fc; color: #7dd3fc; }
+        .zxzy_chip_pur { border-color: #c084fc; color: #c084fc; }
+
+        @media (max-width: 660px) {
+            .zxzy_hero { padding: 20px; }
+            .zxzy_h1 { font-size: 24px; }
+            .zxzy_obj { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶部英雄卡片 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第16课 · JavaScript 对象</span>
+                <a class="zxzy_home" href="index.html">← 返回首页</a>
+            </div>
+            <h1 class="zxzy_h1">对象大舞台：属性与方法</h1>
+            <p class="zxzy_intro">
+                对象就像一张<span class="zxzy_b">学生档案卡</span>，上面写着一组一组的<span class="zxzy_b">属性（键 : 值）</span>，
+                有的属性值是函数，就叫<span class="zxzy_b">方法</span>。
+                点击下面的按钮，试试怎么<span class="zxzy_t zxzy_t_dot">用点读取</span>、
+                <span class="zxzy_t zxzy_t_brk">用方括号读取</span>、增删属性，以及让方法用
+                <span class="zxzy_t zxzy_t_this">this</span> 说出自己的名字。
+            </p>
+        </header>
+
+        <!-- 对象大舞台 -->
+        <h2 class="zxzy_h2">一、动手试一试（点击按钮）</h2>
+        <section class="zxzy_stage">
+            <div class="zxzy_obj" id="zxzy_objBox"></div>
+            <p class="zxzy_obj_tip">当前对象：<b id="zxzy_keysText"></b></p>
+
+            <div class="zxzy_btns">
+                <button class="zxzy_btn" onclick="zxzy_doDot()"><code>stu.name</code><span>用点语法读属性</span></button>
+                <button class="zxzy_btn zxzy_btn_pur" onclick="zxzy_doBracket()"><code>stu['name']</code><span>用方括号读属性</span></button>
+                <button class="zxzy_btn zxzy_btn_mut" onclick="zxzy_doAdd()"><code>stu.grade = '三班'</code><span>添加新属性</span></button>
+                <button class="zxzy_btn zxzy_btn_mut" onclick="zxzy_doChange()"><code>stu.age = 11</code><span>修改已有属性</span></button>
+                <button class="zxzy_btn zxzy_btn_mut" onclick="zxzy_doDelete()"><code>delete stu.hobby</code><span>删除一个属性</span></button>
+                <button class="zxzy_btn" onclick="zxzy_doForIn()"><code>for...in</code><span>遍历所有属性</span></button>
+                <button class="zxzy_btn" onclick="zxzy_doKeys()"><code>Object.keys()</code><span>拿到全部键名</span></button>
+                <button class="zxzy_btn" onclick="zxzy_doCall()"><code>stu.sayHi()</code><span>调用方法（this）</span></button>
+                <button class="zxzy_btn" onclick="zxzy_doReset()"><code>reset()</code><span>恢复初始对象</span></button>
+            </div>
+
+            <div class="zxzy_log" id="zxzy_log"></div>
+        </section>
+
+        <!-- 静态演示卡片 -->
+        <h2 class="zxzy_h2">二、更多知识（图解示例）</h2>
+        <section class="zxzy_cards">
+
+            <div class="zxzy_card">
+                <div class="zxzy_card_head"><code>创建对象</code><span class="zxzy_tag zxzy_tag_a">两种写法</span></div>
+                <p class="zxzy_desc">最常用的是<span class="zxzy_b">对象字面量</span>，用大括号把一组组"键 : 值"装进去；也可以用 <span class="zxzy_b">new Object()</span> 再逐个添加属性。</p>
+                <div class="zxzy_demo">
+                    <span class="c">var stu = {</span><br>
+                    <span class="c">&nbsp;&nbsp;name: '小明', age: 10,</span><br>
+                    <span class="c">&nbsp;&nbsp;hobby: '画画'</span><br>
+                    <span class="c">};</span><br>
+                    <span class="p">var dog = new Object();</span><br>
+                    <span class="p">dog.name = '旺财';</span>
+                </div>
+                <div class="zxzy_chips">
+                    <span class="zxzy_chip">键 name</span><span class="zxzy_chip">值 '小明'</span>
+                    <span class="zxzy_chip zxzy_chip_hot">键值成对出现</span>
+                </div>
+            </div>
+
+            <div class="zxzy_card">
+                <div class="zxzy_card_head"><code>点语法 / 方括号</code><span class="zxzy_tag zxzy_tag_a">读取属性</span></div>
+                <p class="zxzy_desc">点语法简单直观；方括号里可以放<span class="zxzy_b">变量</span>或带特殊字符的键名，更灵活。</p>
+                <div class="zxzy_demo">
+                    <span class="c">stu.name</span> → <span class="r">'小明'</span><br>
+                    <span class="c">stu['name']</span> → <span class="r">'小明'</span><br>
+                    <span class="p">var key = 'age';</span><br>
+                    <span class="p">stu[key]</span> → <span class="r">10</span>（方括号可用变量）
+                </div>
+                <div class="zxzy_chips">
+                    <span class="zxzy_chip zxzy_chip_hot">stu.name</span>
+                    <span class="zxzy_chip zxzy_chip_pur">stu['name']</span>
+                    <span class="zxzy_chip">stu[key] ✓</span>
+                </div>
+            </div>
+
+            <div class="zxzy_card">
+                <div class="zxzy_card_head"><code>方法与 this</code><span class="zxzy_tag zxzy_tag_b">对象的行为</span></div>
+                <p class="zxzy_desc">属性值是函数时就叫<span class="zxzy_b">方法</span>，方法里用 <span class="zxzy_b">this</span> 指向<span class="zxzy_b">当前这个对象</span>自己，就像说"我"。</p>
+                <div class="zxzy_demo">
+                    <span class="c">var stu = {</span><br>
+                    <span class="c">&nbsp;&nbsp;name: '小明',</span><br>
+                    <span class="o">&nbsp;&nbsp;sayHi: function () {</span><br>
+                    <span class="o">&nbsp;&nbsp;&nbsp;&nbsp;return '我是' + this.name;</span><br>
+                    <span class="o">&nbsp;&nbsp;}</span><br>
+                    <span class="c">};</span><br>
+                    <span class="c">stu.sayHi()</span> → <span class="r">'我是小明'</span>
+                </div>
+                <div class="zxzy_chips">
+                    <span class="zxzy_chip">this → stu 自己</span>
+                    <span class="zxzy_chip zxzy_chip_hot">谁调用，this 就指向谁</span>
+                </div>
+            </div>
+
+            <div class="zxzy_card">
+                <div class="zxzy_card_head"><code>for...in 遍历</code><span class="zxzy_tag zxzy_tag_b">逐个访问</span></div>
+                <p class="zxzy_desc">用 for...in 循环把对象的每个<span class="zxzy_b">键名</span>挨个取出来，再用方括号取出对应的值。</p>
+                <div class="zxzy_demo">
+                    <span class="c">for (var k in stu) {</span><br>
+                    <span class="c">&nbsp;&nbsp;console.log(k, stu[k]);</span><br>
+                    <span class="c">}</span><br>
+                    <span class="r">// name 小明 / age 10 / hobby 画画</span>
+                </div>
+                <div class="zxzy_chips">
+                    <span class="zxzy_chip">k = 'name'</span>
+                    <span class="zxzy_chip">k = 'age'</span>
+                    <span class="zxzy_chip">k = 'hobby'</span>
+                </div>
+            </div>
+
+            <div class="zxzy_card">
+                <div class="zxzy_card_head"><code>Object.keys / values</code><span class="zxzy_tag zxzy_tag_b">批量取键值</span></div>
+                <p class="zxzy_desc">Object.keys 拿到<span class="zxzy_b">全部键名</span>组成的新数组，Object.values 拿到<span class="zxzy_b">全部值</span>。</p>
+                <div class="zxzy_demo">
+                    <span class="c">Object.keys(stu)</span><br>
+                    → <span class="r">['name', 'age', 'hobby']</span><br>
+                    <span class="c">Object.values(stu)</span><br>
+                    → <span class="r">['小明', 10, '画画']</span>
+                </div>
+                <div class="zxzy_chips">
+                    <span class="zxzy_chip">keys → 键名数组</span>
+                    <span class="zxzy_chip">values → 值数组</span>
+                </div>
+            </div>
+
+            <div class="zxzy_card">
+                <div class="zxzy_card_head"><code>delete / 添加</code><span class="zxzy_tag zxzy_tag_c">增删属性</span></div>
+                <p class="zxzy_desc">对象随时可以<span class="zxzy_b">添加</span>新属性（直接赋值）、用 <span class="zxzy_b">delete</span> 删除已有属性。</p>
+                <div class="zxzy_demo">
+                    <span class="c">stu.grade = '三班';</span> <span class="r">// 添加</span><br>
+                    <span class="c">stu['age'] = 11;</span> <span class="r">// 修改</span><br>
+                    <span class="o">delete stu.hobby;</span> <span class="r">// 删除</span><br>
+                    <span class="c">stu</span> → <span class="r">{ name:'小明', age:11, grade:'三班' }</span>
+                </div>
+                <div class="zxzy_chips">
+                    <span class="zxzy_chip">＋ 添加</span>
+                    <span class="zxzy_chip">↻ 修改</span>
+                    <span class="zxzy_chip">－ delete 删除</span>
+                </div>
+            </div>
+
+            <div class="zxzy_card">
+                <div class="zxzy_card_head"><code>内置对象 Math / Date</code><span class="zxzy_tag zxzy_tag_c">现成能用</span></div>
+                <p class="zxzy_desc">JavaScript 自带很多<span class="zxzy_b">内置对象</span>，Math 管数学计算，Date 管日期时间，不用创建直接调用。</p>
+                <div class="zxzy_demo">
+                    <span class="c">Math.max(3, 9, 6)</span> → <span class="r">9</span><br>
+                    <span class="c">Math.round(4.6)</span> → <span class="r">5</span><br>
+                    <span class="c">var d = new Date();</span><br>
+                    <span class="c">d.getFullYear()</span> → <span class="r">2026</span>
+                </div>
+                <div class="zxzy_chips">
+                    <span class="zxzy_chip">Math 随取随用</span>
+                    <span class="zxzy_chip">new Date() 创建日期对象</span>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+    <script>
+        // ===== 初始对象：一张学生档案卡 =====
+        function zxzy_makeStudent() {
+            return {
+                name: "小明",
+                age: 10,
+                hobby: "画画",
+                sayHi: function () {
+                    return "大家好，我是 " + this.name + "，今年 " + this.age + " 岁，爱好是 " + this.hobby + "。";
+                }
+            };
+        }
+        var zxzy_start = zxzy_makeStudent();
+        var zxzy_stu = zxzy_makeStudent();   // 用副本作为工作对象
+
+        // ===== 渲染对象到舞台上 =====
+        var zxzy_objBox = document.getElementById("zxzy_objBox");
+
+        function zxzy_render(hotKey) {
+            var zxzy_html = '<span class="zxzy_obj_name">stu</span> = {<br>';
+            var zxzy_keys = [];
+            for (var zxzy_k in zxzy_stu) {
+                zxzy_keys.push(zxzy_k);
+            }
+            for (var zxzy_i = 0; zxzy_i < zxzy_keys.length; zxzy_i++) {
+                var zxzy_k = zxzy_keys[zxzy_i];
+                var zxzy_v = zxzy_stu[zxzy_k];
+                var zxzy_mark = (zxzy_k === hotKey) ? ' zxzy_hot' : '';
+                var zxzy_comma = (zxzy_i < zxzy_keys.length - 1) ? ',' : '';
+                if (typeof zxzy_v === "function") {
+                    zxzy_html += '&nbsp;&nbsp;<span class="k' + zxzy_mark + '">' + zxzy_k + '</span>: <span class="fn">function () { … return this.name … }</span>' + zxzy_comma + '<br>';
+                } else {
+                    zxzy_html += '&nbsp;&nbsp;<span class="k' + zxzy_mark + '">' + zxzy_k + '</span>: <span class="v">' + zxzy_v + '</span>' + zxzy_comma + '<br>';
+                }
+            }
+            zxzy_html += '}';
+            zxzy_objBox.innerHTML = zxzy_html;
+
+            // 顶部显示除方法外的键名列表
+            var zxzy_names = [];
+            for (var zxzy_j = 0; zxzy_j < zxzy_keys.length; zxzy_j++) {
+                if (typeof zxzy_stu[zxzy_keys[zxzy_j]] !== "function") {
+                    zxzy_names.push(zxzy_keys[zxzy_j]);
+                }
+            }
+            document.getElementById("zxzy_keysText").textContent =
+                "[" + zxzy_names.join(", ") + "]　共 " + zxzy_names.length + " 个数据属性 + 1 个方法";
+        }
+
+        // ===== 控制台日志 =====
+        var zxzy_logBox = document.getElementById("zxzy_log");
+
+        function zxzy_log(zxzy_code, zxzy_result) {
+            var zxzy_line = document.createElement("div");
+            if (zxzy_result === null) {
+                zxzy_line.innerHTML = '<span class="zxzy_warn">⚠ ' + zxzy_code + ' 无法执行：该属性不存在啦</span>';
+            } else {
+                zxzy_line.innerHTML =
+                    '<span class="zxzy_code">&gt; ' + zxzy_code + '</span>　返回 ' +
+                    '<span class="zxzy_ret">' + zxzy_result + '</span>';
+            }
+            zxzy_logBox.appendChild(zxzy_line);
+            zxzy_logBox.scrollTop = zxzy_logBox.scrollHeight;
+        }
+
+        // ===== 各操作的真实逻辑 =====
+        function zxzy_doDot() {
+            var zxzy_r = zxzy_stu.name;
+            zxzy_render("name");
+            zxzy_log("stu.name", "'" + zxzy_r + "'（点语法：对象.属性名）");
+        }
+
+        function zxzy_doBracket() {
+            var zxzy_r = zxzy_stu["name"];
+            zxzy_render("name");
+            zxzy_log("stu['name']", "'" + zxzy_r + "'（方括号语法：键名要加引号）");
+        }
+
+        function zxzy_doAdd() {
+            if ("grade" in zxzy_stu) {
+                zxzy_render("grade");
+                zxzy_log("stu.grade = '三班'", "属性已存在，本次赋值相当于修改");
+                return;
+            }
+            zxzy_stu.grade = "三班";
+            zxzy_render("grade");
+            zxzy_log("stu.grade = '三班'", "已添加新属性 grade，原来没有的就直接加进去");
+        }
+
+        function zxzy_doChange() {
+            zxzy_stu.age = 11;
+            zxzy_render("age");
+            zxzy_log("stu.age = 11", "age 已由 10 改为 11（同名赋值就是修改）");
+        }
+
+        function zxzy_doDelete() {
+            if (!("hobby" in zxzy_stu)) {
+                zxzy_render(-1);
+                zxzy_log("delete stu.hobby", null);
+                return;
+            }
+            delete zxzy_stu.hobby;
+            zxzy_render(-1);
+            zxzy_log("delete stu.hobby", "hobby 已被删除，对象里不再有这个属性");
+        }
+
+        function zxzy_doForIn() {
+            zxzy_render(-1);
+            var zxzy_parts = [];
+            for (var zxzy_k in zxzy_stu) {
+                var zxzy_v = zxzy_stu[zxzy_k];
+                if (typeof zxzy_v !== "function") {
+                    zxzy_parts.push(zxzy_k + " = " + zxzy_v);
+                }
+            }
+            zxzy_log("for (var k in stu)", zxzy_parts.join("；") + "（每一圈 k 是键名，stu[k] 是值）");
+        }
+
+        function zxzy_doKeys() {
+            zxzy_render(-1);
+            var zxzy_r = Object.keys(zxzy_stu);
+            zxzy_log("Object.keys(stu)", "[" + zxzy_r.join(", ") + "]（键名数组，注意 sayHi 也在里面）");
+        }
+
+        function zxzy_doCall() {
+            var zxzy_r = zxzy_stu.sayHi();
+            zxzy_render(-1);
+            zxzy_log("stu.sayHi()", "'" + zxzy_r + "'（方法里的 this 就是 stu 自己）");
+        }
+
+        function zxzy_doReset() {
+            zxzy_stu = zxzy_makeStudent();
+            zxzy_render(-1);
+            zxzy_log("stu = 原始对象副本", "对象已恢复为初始状态");
+        }
+
+        // 页面加载后先渲染一次
+        zxzy_render(-1);
+    </script>
+</body>
+</html>
