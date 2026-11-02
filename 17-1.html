@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-11-02，功能名称：JSON 数据格式形象演示 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-1 · JSON 数据格式</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(160deg, #182140 0%, #1d2850 100%);
+            color: #eef1fb;
+            padding: 28px 16px 44px;
+            min-height: 100vh;
+        }
+        .zxzy_wrap { max-width: 780px; margin: 0 auto; }
+
+        /* ===== 顶部英雄卡片 ===== */
+        .zxzy_hero {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 28px;
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .zxzy_badge {
+            background: #86b9f2;
+            color: #14264d;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .zxzy_home {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            color: #dfe4f3;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 5px 16px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #354478; }
+        .zxzy_h1 { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+        .zxzy_intro { font-size: 14px; line-height: 2.1; color: #aab4d4; }
+        .zxzy_t {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .zxzy_t_str { background: rgba(74, 222, 128, .14); color: #4ade80; }
+        .zxzy_t_fn  { background: rgba(125, 211, 252, .14); color: #7dd3fc; }
+        .zxzy_b { color: #eef1fb; font-weight: bold; }
+
+        /* ===== 区块标题 ===== */
+        .zxzy_h2 { font-size: 18px; font-weight: bold; margin: 26px 2px 14px; }
+
+        /* ===== 代码区 ===== */
+        .zxzy_code {
+            background: #131b36;
+            border: 1px solid #2c3865;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.9;
+            color: #dfe4f3;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .zxzy_code .k { color: #7dd3fc; }    /* 键 */
+        .zxzy_code .s { color: #4ade80; }    /* 字符串 */
+        .zxzy_code .n { color: #fbbf24; }    /* 数字/布尔/null */
+        .zxzy_code .p { color: #6b78a3; }    /* 标点 */
+
+        /* ===== 对比两块代码 ===== */
+        .zxzy_pair {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 14px;
+        }
+        .zxzy_box {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 14px;
+            padding: 16px 18px;
+        }
+        .zxzy_box_head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .zxzy_tag {
+            font-size: 11.5px;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+        .zxzy_tag_js { background: rgba(125, 211, 252, .14); color: #7dd3fc; }
+        .zxzy_tag_json { background: rgba(74, 222, 128, .14); color: #4ade80; }
+
+        /* ===== 规则卡片 ===== */
+        .zxzy_rules {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 14px;
+        }
+        .zxzy_rule {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 14px;
+            padding: 15px 18px;
+        }
+        .zxzy_rule h3 { font-size: 15px; margin-bottom: 8px; }
+        .zxzy_rule p { font-size: 13px; color: #aab4d4; line-height: 1.9; margin-bottom: 8px; }
+        .zxzy_bad, .zxzy_good {
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            padding: 3px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            margin: 2px 4px 2px 0;
+        }
+        .zxzy_bad {
+            background: rgba(248, 113, 113, .12);
+            color: #f87171;
+            text-decoration: line-through;
+        }
+        .zxzy_good { background: rgba(74, 222, 128, .12); color: #4ade80; }
+
+        /* ===== 互动区 ===== */
+        .zxzy_stage {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 22px;
+        }
+        .zxzy_btns {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .zxzy_btn {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            border-radius: 10px;
+            color: #eef1fb;
+            font-family: inherit;
+            font-size: 13px;
+            padding: 10px 8px;
+            cursor: pointer;
+            line-height: 1.6;
+            text-align: center;
+            transition: transform .12s ease, background .12s ease;
+        }
+        .zxzy_btn:hover { background: #354478; transform: translateY(-2px); }
+        .zxzy_btn:active { transform: translateY(0); }
+        .zxzy_btn code {
+            display: block;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            font-weight: bold;
+            color: #7dd3fc;
+        }
+        .zxzy_btn span { color: #aab4d4; font-size: 12px; }
+        .zxzy_btn_err code { color: #f87171; }
+
+        /* 控制台输出 */
+        .zxzy_log {
+            margin-top: 16px;
+            background: #131b36;
+            border: 1px solid #2c3865;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.95;
+            min-height: 120px;
+            max-height: 240px;
+            overflow-y: auto;
+        }
+        .zxzy_log .c { color: #7dd3fc; }
+        .zxzy_log .r { color: #4ade80; }
+        .zxzy_log .e { color: #f87171; }
+
+        /* ===== 学生卡片 ===== */
+        .zxzy_cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+        .zxzy_card {
+            background: #1a2344;
+            border: 1px solid #2c3865;
+            border-radius: 12px;
+            padding: 14px 16px;
+            animation: zxzy_in .35s ease;
+        }
+        .zxzy_card_name { font-size: 15px; font-weight: bold; margin-bottom: 6px; }
+        .zxzy_card_sub { font-size: 12.5px; color: #aab4d4; line-height: 1.9; }
+        .zxzy_card_sub b {
+            color: #fbbf24;
+            font-family: Consolas, monospace;
+        }
+        @keyframes zxzy_in {
+            from { transform: translateY(-12px); opacity: 0; }
+            to   { transform: none; opacity: 1; }
+        }
+
+        @media (max-width: 660px) {
+            .zxzy_hero { padding: 20px; }
+            .zxzy_h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶部英雄卡片 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第17课 · JSON</span>
+                <a class="zxzy_home" href="index.html">← 返回首页</a>
+            </div>
+            <h1 class="zxzy_h1">JSON：数据的“包裹盒”</h1>
+            <p class="zxzy_intro">
+                JSON 是一种<span class="zxzy_b">纯文本</span>的数据交换格式，长得和 JavaScript 对象很像，但它本质上是一串<span class="zxzy_t zxzy_t_str">字符串</span>——
+                就像把数据装进盒子里再快递出去，收到后用
+                <span class="zxzy_t zxzy_t_fn">JSON.parse()</span> 拆包、发出前用
+                <span class="zxzy_t zxzy_t_fn">JSON.stringify()</span> 打包。
+                它只支持 6 种数据类型：<span class="zxzy_b">字符串、数字、布尔、null、对象、数组</span>。
+            </p>
+        </header>
+
+        <!-- 一、JS 对象 vs JSON -->
+        <h2 class="zxzy_h2">一、JS 对象 与 JSON 字符串 的区别</h2>
+        <section class="zxzy_pair">
+            <div class="zxzy_box">
+                <div class="zxzy_box_head">JavaScript 对象<span class="zxzy_tag zxzy_tag_js">键值对 · 可操作</span></div>
+                <div class="zxzy_code">{
+  <span class="k">name</span>: <span class="s">"张三"</span>,
+  <span class="k">age</span>: <span class="n">16</span>,
+  <span class="k">isBoy</span>: <span class="n">true</span>
+}
+<span class="p">// 键可以不加引号，还能写注释</span></div>
+            </div>
+            <div class="zxzy_box">
+                <div class="zxzy_box_head">JSON 字符串<span class="zxzy_tag zxzy_tag_json">文本 · 用于传输</span></div>
+                <div class="zxzy_code">{
+  <span class="k">"name"</span>: <span class="s">"张三"</span>,
+  <span class="k">"age"</span>: <span class="n">16</span>,
+  <span class="k">"isBoy"</span>: <span class="n">true</span>
+}
+<span class="p">// 键必须加双引号，不能写注释</span></div>
+            </div>
+        </section>
+
+        <!-- 二、语法规则 -->
+        <h2 class="zxzy_h2">二、JSON 的四条硬性规则</h2>
+        <section class="zxzy_rules">
+            <div class="zxzy_rule">
+                <h3>① 键必须用双引号</h3>
+                <p>单引号或无引号都会被拒绝。</p>
+                <span class="zxzy_bad">{ name: "张三" }</span>
+                <span class="zxzy_bad">{ 'name': "张三" }</span>
+                <span class="zxzy_good">{ "name": "张三" }</span>
+            </div>
+            <div class="zxzy_rule">
+                <h3>② 字符串只能用双引号</h3>
+                <p>字符串值同样不能写成单引号。</p>
+                <span class="zxzy_bad">"city": '北京'</span>
+                <span class="zxzy_good">"city": "北京"</span>
+            </div>
+            <div class="zxzy_rule">
+                <h3>③ 末尾不能多一个逗号</h3>
+                <p>最后一项后面不能再写逗号。</p>
+                <span class="zxzy_bad">{ "a": 1, }</span>
+                <span class="zxzy_good">{ "a": 1 }</span>
+            </div>
+            <div class="zxzy_rule">
+                <h3>④ 不能出现注释、undefined、函数</h3>
+                <p>JSON 只存数据，不存代码逻辑。</p>
+                <span class="zxzy_bad">{ "fn": function(){} }</span>
+                <span class="zxzy_good">{ "score": 92 }</span>
+            </div>
+        </section>
+
+        <!-- 三、互动演练 -->
+        <h2 class="zxzy_h2">三、动手拆包与打包</h2>
+        <section class="zxzy_stage">
+            <p style="font-size:13px;color:#aab4d4;">下面是一段完整的 JSON 文本（一个班级的成绩单）：</p>
+            <div class="zxzy_code" id="zxzy_source" style="margin-top:8px;"></div>
+
+            <div class="zxzy_btns">
+                <button class="zxzy_btn" onclick="zxzy_parse()"><code>JSON.parse()</code><span>拆包：文本 → 对象</span></button>
+                <button class="zxzy_btn" onclick="zxzy_read()"><code>obj.students[1]</code><span>按路径取数据</span></button>
+                <button class="zxzy_btn" onclick="zxzy_stringify(0)"><code>JSON.stringify()</code><span>打包：对象 → 文本</span></button>
+                <button class="zxzy_btn" onclick="zxzy_stringify(2)"><code>stringify(obj,null,2)</code><span>美化排版后再打包</span></button>
+                <button class="zxzy_btn" onclick="zxzy_render()"><code>forEach()</code><span>遍历数组渲染卡片</span></button>
+                <button class="zxzy_btn zxzy_btn_err" onclick="zxzy_wrong()"><code>JSON.parse(错误文本)</code><span>故意写错看报错</span></button>
+            </div>
+
+            <div class="zxzy_log" id="zxzy_log"></div>
+            <div class="zxzy_cards" id="zxzy_cards"></div>
+        </section>
+
+    </div>
+
+    <script>
+        // ===== 一段标准的 JSON 文本（注意：它是字符串） =====
+        var zxzy_json = '{"className":"高一(3)班","count":3,"students":[' +
+            '{"name":"张三","age":16,"isBoy":true,"scores":{"语文":92,"数学":88}},' +
+            '{"name":"李四","age":15,"isBoy":false,"scores":{"语文":80,"数学":95}},' +
+            '{"name":"王五","age":16,"isBoy":true,"scores":{"语文":76,"数学":70}}]}';
+
+        var zxzy_obj = null;   // 解析后得到的 JS 对象
+
+        // ===== JSON 语法高亮（把纯文本变成彩色） =====
+        function zxzy_hl(zxzy_s) {
+            return zxzy_s
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/"([^"]*)"\s*:/g, '<span class="k">"$1"</span>:')
+                .replace(/:\s*"([^"]*)"/g, ': <span class="s">"$1"</span>')
+                .replace(/:\s*(true|false|null)/g, ': <span class="n">$1</span>')
+                .replace(/:\s*(-?\d+)/g, ': <span class="n">$1</span>');
+        }
+
+        // 页面上先展示原始 JSON（美化排版后展示，便于阅读）
+        document.getElementById("zxzy_source").innerHTML =
+            zxzy_hl(JSON.stringify(JSON.parse(zxzy_json), null, 2));
+
+        // ===== 控制台输出 =====
+        var zxzy_logBox = document.getElementById("zxzy_log");
+
+        function zxzy_log(zxzy_code, zxzy_result, zxzy_isErr) {
+            var zxzy_line = document.createElement("div");
+            zxzy_line.innerHTML =
+                '<span class="c">&gt; ' + zxzy_code + '</span>　→　' +
+                '<span class="' + (zxzy_isErr ? "e" : "r") + '">' + zxzy_result + '</span>';
+            zxzy_logBox.appendChild(zxzy_line);
+            zxzy_logBox.scrollTop = zxzy_logBox.scrollHeight;
+        }
+
+        // ===== ① 拆包：JSON 文本 → JS 对象 =====
+        function zxzy_parse() {
+            zxzy_obj = JSON.parse(zxzy_json);
+            zxzy_log('JSON.parse(json)',
+                '得到对象，typeof 为 ' + typeof zxzy_obj +
+                '，班级 = ' + zxzy_obj.className +
+                '，学生 ' + zxzy_obj.students.length + ' 人');
+        }
+
+        // ===== ② 按路径取数据 =====
+        function zxzy_read() {
+            if (zxzy_obj === null) { zxzy_obj = JSON.parse(zxzy_json); }
+            var zxzy_s = zxzy_obj.students[1];
+            zxzy_log('obj.students[1].scores.数学',
+                zxzy_s.name + ' 的数学 = ' + zxzy_s.scores["数学"] + '，年龄 ' + zxzy_s.age);
+        }
+
+        // ===== ③ 打包：JS 对象 → JSON 文本 =====
+        function zxzy_stringify(zxzy_indent) {
+            if (zxzy_obj === null) { zxzy_obj = JSON.parse(zxzy_json); }
+            var zxzy_text = (zxzy_indent === 0)
+                ? JSON.stringify(zxzy_obj)
+                : JSON.stringify(zxzy_obj, null, zxzy_indent);
+            zxzy_log('JSON.stringify(obj' + (zxzy_indent === 0 ? '' : ', null, ' + zxzy_indent) + ')',
+                zxzy_text.length + ' 个字符：' + zxzy_hl(zxzy_text));
+        }
+
+        // ===== ④ 遍历数组，渲染学生卡片 =====
+        function zxzy_render() {
+            if (zxzy_obj === null) { zxzy_obj = JSON.parse(zxzy_json); }
+            var zxzy_box = document.getElementById("zxzy_cards");
+            zxzy_box.innerHTML = "";
+
+            zxzy_obj.students.forEach(function (zxzy_s, zxzy_i) {
+                var zxzy_card = document.createElement("div");
+                zxzy_card.className = "zxzy_card";
+                zxzy_card.innerHTML =
+                    '<div class="zxzy_card_name">' + (zxzy_i + 1) + '. ' + zxzy_s.name +
+                        '　<span style="font-size:12px;color:#aab4d4;">' +
+                        (zxzy_s.isBoy ? '男生' : '女生') + '</span></div>' +
+                    '<div class="zxzy_card_sub">年龄：<b>' + zxzy_s.age + '</b>　语文：<b>' +
+                        zxzy_s.scores["语文"] + '</b>　数学：<b>' + zxzy_s.scores["数学"] + '</b></div>';
+                zxzy_box.appendChild(zxzy_card);
+            });
+
+            zxzy_log('obj.students.forEach()',
+                '渲染出 ' + zxzy_obj.students.length + ' 张学生卡片');
+        }
+
+        // ===== ⑤ 错误演示：用 try...catch 抓住报错 =====
+        function zxzy_wrong() {
+            var zxzy_bad = "{name:'张三', age:16,}";   // 键没加引号 + 单引号 + 末尾逗号
+            try {
+                JSON.parse(zxzy_bad);
+                zxzy_log('JSON.parse("{name:\'张三\', age:16,}")', '居然解析成功了（不该发生）');
+            } catch (zxzy_err) {
+                zxzy_log('JSON.parse("{name:\'张三\', age:16,}")',
+                    '❌ 报错：' + zxzy_err.name + ' —— ' + zxzy_err.message, true);
+            }
+        }
+
+        console.log("JSON 原文：", zxzy_json);
+    </script>
+</body>
+</html>

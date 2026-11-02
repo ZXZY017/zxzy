@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-11-02，功能名称：商品列表页（fetch 接口数据） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-3 · 商品列表</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(160deg, #182140 0%, #1d2850 100%);
+            color: #eef1fb;
+            padding: 28px 16px 44px;
+            min-height: 100vh;
+        }
+        .zxzy_wrap { max-width: 900px; margin: 0 auto; }
+
+        /* ===== 顶部英雄卡片 ===== */
+        .zxzy_hero {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 28px;
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .zxzy_badge {
+            background: #86b9f2;
+            color: #14264d;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .zxzy_links { display: flex; gap: 8px; }
+        .zxzy_home {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            color: #dfe4f3;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 5px 16px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #354478; }
+        .zxzy_h1 { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+        .zxzy_intro { font-size: 14px; line-height: 2.1; color: #aab4d4; }
+        .zxzy_t {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .zxzy_t_url { background: rgba(125, 211, 252, .14); color: #7dd3fc; }
+        .zxzy_t_fn  { background: rgba(74, 222, 128, .14); color: #4ade80; }
+        .zxzy_b { color: #eef1fb; font-weight: bold; }
+
+        /* ===== 区块标题 ===== */
+        .zxzy_h2 { font-size: 18px; font-weight: bold; margin: 26px 2px 14px; }
+
+        /* ===== 接口信息条 ===== */
+        .zxzy_api {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 13.5px;
+            line-height: 2;
+            color: #aab4d4;
+            word-break: break-all;
+        }
+        .zxzy_api code {
+            font-family: Consolas, monospace;
+            color: #7dd3fc;
+            font-size: 13px;
+        }
+
+        /* ===== 操作按钮 ===== */
+        .zxzy_bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .zxzy_btn {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            border-radius: 10px;
+            color: #eef1fb;
+            font-family: inherit;
+            font-size: 13px;
+            padding: 9px 16px;
+            cursor: pointer;
+            transition: background .12s ease, transform .12s ease;
+        }
+        .zxzy_btn:hover { background: #354478; transform: translateY(-2px); }
+        .zxzy_btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+        .zxzy_status { margin-left: auto; font-size: 13px; color: #aab4d4; align-self: center; }
+
+        /* ===== 商品卡片列表 ===== */
+        .zxzy_goods {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+        }
+        .zxzy_card {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 14px;
+            overflow: hidden;
+            text-decoration: none;
+            color: #eef1fb;
+            display: block;
+            animation: zxzy_in .4s ease;
+            transition: transform .15s ease, border-color .15s ease;
+        }
+        .zxzy_card:hover { transform: translateY(-4px); border-color: #7dd3fc; }
+        .zxzy_thumb {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+            background: #1a2344;
+        }
+        .zxzy_info { padding: 12px 14px 14px; }
+        .zxzy_name {
+            font-size: 14.5px;
+            font-weight: bold;
+            line-height: 1.5;
+            margin-bottom: 6px;
+            height: 44px;
+            overflow: hidden;
+        }
+        .zxzy_brand { font-size: 12px; color: #8b97bd; margin-bottom: 8px; }
+        .zxzy_price_row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .zxzy_price {
+            color: #fb923c;
+            font-family: Consolas, monospace;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .zxzy_cut {
+            font-size: 12px;
+            color: #4ade80;
+            background: rgba(74, 222, 128, .12);
+            border-radius: 4px;
+            padding: 1px 6px;
+        }
+        .zxzy_meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #8b97bd;
+        }
+        .zxzy_star { color: #fbbf24; }
+
+        /* 骨架屏 */
+        .zxzy_skel {
+            background: #212c50;
+            border: 1px solid #2c3865;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .zxzy_skel_img {
+            height: 150px;
+            background: linear-gradient(90deg, #1a2344 25%, #222d55 50%, #1a2344 75%);
+            background-size: 200% 100%;
+            animation: zxzy_flash 1.2s linear infinite;
+        }
+        .zxzy_skel_txt {
+            height: 12px;
+            margin: 12px 14px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #1a2344 25%, #222d55 50%, #1a2344 75%);
+            background-size: 200% 100%;
+            animation: zxzy_flash 1.2s linear infinite;
+        }
+        @keyframes zxzy_flash {
+            from { background-position: 200% 0; }
+            to   { background-position: -200% 0; }
+        }
+        @keyframes zxzy_in {
+            from { transform: translateY(-10px); opacity: 0; }
+            to   { transform: none; opacity: 1; }
+        }
+
+        /* ===== 原始 JSON ===== */
+        .zxzy_code {
+            margin-top: 18px;
+            background: #131b36;
+            border: 1px solid #2c3865;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.9;
+            color: #dfe4f3;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 260px;
+            overflow-y: auto;
+            display: none;
+        }
+        .zxzy_code .k { color: #7dd3fc; }
+        .zxzy_code .s { color: #4ade80; }
+        .zxzy_code .n { color: #fbbf24; }
+        .zxzy_code .p { color: #6b78a3; }
+
+        @media (max-width: 660px) {
+            .zxzy_hero { padding: 20px; }
+            .zxzy_h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶部英雄卡片 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第17课 · JSON 与 fetch</span>
+                <div class="zxzy_links">
+                    <a class="zxzy_home" href="17-3-detail.html?id=1">商品详情示例 →</a>
+                    <a class="zxzy_home" href="index.html">← 返回首页</a>
+                </div>
+            </div>
+            <h1 class="zxzy_h1">商品列表（接口数据）</h1>
+            <p class="zxzy_intro">
+                用 <span class="zxzy_t zxzy_t_fn">fetch()</span> 请求
+                <span class="zxzy_t zxzy_t_url">https://dummyjson.com/products?limit=8</span>，
+                接口返回一个 JSON 对象：里面有 <span class="zxzy_b">products</span>（商品数组）、total、skip、limit。
+                拿到数组后 <span class="zxzy_b">forEach</span> 遍历，把每件商品渲染成一张卡片；点击卡片可跳转到详情页。
+            </p>
+        </header>
+
+        <!-- 接口说明 -->
+        <h2 class="zxzy_h2">一、接口信息</h2>
+        <section class="zxzy_api">
+            列表接口：<code>https://dummyjson.com/products?limit=8</code><br>
+            详情接口：<code>https://dummyjson.com/products/1</code>（最后的数字是商品 ID）<br>
+            返回结构：<code>{ "products": [ {...}, {...} ], "total": 100, "skip": 0, "limit": 8 }</code>
+        </section>
+
+        <!-- 商品列表 -->
+        <h2 class="zxzy_h2">二、商品列表（点击卡片看详情）</h2>
+        <div class="zxzy_bar">
+            <button class="zxzy_btn" id="zxzy_reload" onclick="zxzy_load()">重新加载</button>
+            <button class="zxzy_btn" onclick="zxzy_toggleJson()">显示 / 隐藏原始 JSON</button>
+            <span class="zxzy_status" id="zxzy_status">准备请求…</span>
+        </div>
+
+        <section class="zxzy_goods" id="zxzy_goods"></section>
+
+        <div class="zxzy_code" id="zxzy_jsonBox"></div>
+
+    </div>
+
+    <script>
+        // ===== 接口地址 =====
+        var zxzy_url = "https://dummyjson.com/products?limit=8";
+
+        var zxzy_goods = document.getElementById("zxzy_goods");
+        var zxzy_jsonBox = document.getElementById("zxzy_jsonBox");
+        var zxzy_status = document.getElementById("zxzy_status");
+        var zxzy_reload = document.getElementById("zxzy_reload");
+
+        // ===== JSON 语法高亮 =====
+        function zxzy_hl(zxzy_s) {
+            return zxzy_s
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/"([^"]*)"\s*:/g, '<span class="k">"$1"</span>:')
+                .replace(/:\s*"([^"]*)"/g, ': <span class="s">"$1"</span>')
+                .replace(/:\s*(true|false|null)/g, ': <span class="n">$1</span>')
+                .replace(/:\s*(-?\d+\.?\d*)/g, ': <span class="n">$1</span>');
+        }
+
+        // ===== 画星级评价 =====
+        function zxzy_stars(zxzy_rating) {
+            var zxzy_n = Math.round(zxzy_rating);
+            var zxzy_out = "";
+            for (var zxzy_i = 1; zxzy_i <= 5; zxzy_i++) {
+                zxzy_out += (zxzy_i <= zxzy_n ? "★" : "☆");
+            }
+            return zxzy_out + " " + zxzy_rating;
+        }
+
+        // ===== 显示骨架屏 =====
+        function zxzy_skeleton() {
+            zxzy_goods.innerHTML = "";
+            for (var zxzy_i = 0; zxzy_i < 8; zxzy_i++) {
+                var zxzy_s = document.createElement("div");
+                zxzy_s.className = "zxzy_skel";
+                zxzy_s.innerHTML =
+                    '<div class="zxzy_skel_img"></div>' +
+                    '<div class="zxzy_skel_txt" style="width:70%"></div>' +
+                    '<div class="zxzy_skel_txt" style="width:45%"></div>';
+                zxzy_goods.appendChild(zxzy_s);
+            }
+        }
+
+        // ===== 渲染商品卡片 =====
+        function zxzy_render(zxzy_products) {
+            zxzy_goods.innerHTML = "";
+            zxzy_products.forEach(function (zxzy_p) {
+                var zxzy_a = document.createElement("a");
+                zxzy_a.className = "zxzy_card";
+                zxzy_a.href = "17-3-detail.html?id=" + zxzy_p.id;   // 带上 ID 跳转详情
+                zxzy_a.innerHTML =
+                    '<img class="zxzy_thumb" src="' + zxzy_p.thumbnail + '" alt="' + zxzy_p.title + '">' +
+                    '<div class="zxzy_info">' +
+                        '<div class="zxzy_name">' + zxzy_p.title + '</div>' +
+                        '<div class="zxzy_brand">' + zxzy_p.brand + ' · ' + zxzy_p.category + '</div>' +
+                        '<div class="zxzy_price_row">' +
+                            '<span class="zxzy_price">$' + zxzy_p.price + '</span>' +
+                            '<span class="zxzy_cut">-' + Math.round(zxzy_p.discountPercentage) + '%</span>' +
+                        '</div>' +
+                        '<div class="zxzy_meta">' +
+                            '<span class="zxzy_star">' + zxzy_stars(zxzy_p.rating) + '</span>' +
+                            '<span>库存 ' + zxzy_p.stock + '</span>' +
+                        '</div>' +
+                    '</div>';
+                zxzy_goods.appendChild(zxzy_a);
+            });
+        }
+
+        // ===== 请求列表数据 =====
+        async function zxzy_load() {
+            zxzy_reload.disabled = true;
+            zxzy_status.textContent = "正在请求接口…";
+            zxzy_skeleton();
+            try {
+                var zxzy_res = await fetch(zxzy_url);
+                if (zxzy_res.ok === false) {
+                    throw new Error("HTTP 状态码 " + zxzy_res.status);
+                }
+                var zxzy_data = await zxzy_res.json();          // JSON 文本 → 对象
+                zxzy_render(zxzy_data.products);                // 取 products 数组渲染
+                zxzy_jsonBox.innerHTML = zxzy_hl(JSON.stringify(zxzy_data, null, 2));
+                zxzy_status.textContent =
+                    "成功：共 " + zxzy_data.total + " 件商品，本次加载 " + zxzy_data.products.length + " 件";
+                console.log("列表数据：", zxzy_data);
+            } catch (zxzy_err) {
+                zxzy_goods.innerHTML = "";
+                zxzy_status.textContent = "请求失败：" + zxzy_err.message + "（可检查网络后点“重新加载”）";
+                console.error(zxzy_err);
+            } finally {
+                zxzy_reload.disabled = false;
+            }
+        }
+
+        // ===== 原始 JSON 显示开关 =====
+        function zxzy_toggleJson() {
+            zxzy_jsonBox.style.display = (zxzy_jsonBox.style.display === "block") ? "none" : "block";
+        }
+
+        // 页面打开即请求
+        zxzy_load();
+    </script>
+</body>
+</html>

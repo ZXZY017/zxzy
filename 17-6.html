@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-11-02，功能名称：Promise 与 async/await 演示包饺子流程 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-6 · 异步包饺子</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(160deg, #182140 0%, #1d2850 100%);
+            color: #eef1fb;
+            padding: 28px 16px 44px;
+            min-height: 100vh;
+        }
+        .zxzy_wrap { max-width: 780px; margin: 0 auto; }
+
+        /* ===== 顶部英雄卡片 ===== */
+        .zxzy_hero {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 28px;
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .zxzy_badge {
+            background: #86b9f2;
+            color: #14264d;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .zxzy_home {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            color: #dfe4f3;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 5px 16px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #354478; }
+        .zxzy_h1 { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+        .zxzy_intro { font-size: 14px; line-height: 2.1; color: #aab4d4; }
+        .zxzy_t {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .zxzy_t_async { background: rgba(125, 211, 252, .14); color: #7dd3fc; }
+        .zxzy_t_all  { background: rgba(74, 222, 128, .14); color: #4ade80; }
+        .zxzy_b { color: #eef1fb; font-weight: bold; }
+
+        /* ===== 区块标题 ===== */
+        .zxzy_h2 { font-size: 18px; font-weight: bold; margin: 26px 2px 14px; }
+
+        /* ===== 控制条 ===== */
+        .zxzy_bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .zxzy_btn {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            border-radius: 10px;
+            color: #eef1fb;
+            font-family: inherit;
+            font-size: 13.5px;
+            padding: 10px 22px;
+            cursor: pointer;
+            transition: background .12s ease, transform .12s ease;
+        }
+        .zxzy_btn:hover:enabled { background: #354478; transform: translateY(-2px); }
+        .zxzy_btn:disabled { opacity: .45; cursor: not-allowed; }
+        .zxzy_btn_go { background: #3b82f6; border-color: #5b9bfb; font-weight: bold; }
+        .zxzy_btn_go:hover:enabled { background: #2f74e0; }
+        .zxzy_timer {
+            margin-left: auto;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            color: #7dd3fc;
+        }
+
+        /* ===== 流程 ===== */
+        .zxzy_flow { position: relative; }
+        .zxzy_row {
+            display: flex;
+            gap: 14px;
+            position: relative;
+        }
+        .zxzy_row::before {
+            content: "";
+            position: absolute;
+            left: 34px;
+            top: -14px;
+            bottom: -14px;
+            width: 2px;
+            background: repeating-linear-gradient(#3a4878 0 6px, transparent 6px 12px);
+        }
+        .zxzy_row_pair::before { display: none; }
+
+        .zxzy_stage {
+            flex: 1;
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 14px;
+            padding: 14px 16px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            opacity: .62;
+            transition: opacity .25s ease, border-color .25s ease, box-shadow .25s ease;
+        }
+        .zxzy_icon {
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            border-radius: 12px;
+            background: #2a3760;
+            border: 1px solid #46558a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+        .zxzy_stage_main { flex: 1; min-width: 0; }
+        .zxzy_stage_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        .zxzy_name { font-size: 15px; font-weight: bold; flex: 1; }
+        .zxzy_need {
+            font-family: Consolas, monospace;
+            font-size: 11.5px;
+            color: #6b78a3;
+            white-space: nowrap;
+        }
+        .zxzy_tag {
+            font-size: 11.5px;
+            padding: 2px 9px;
+            border-radius: 999px;
+            background: #2a3760;
+            color: #8b97bd;
+            white-space: nowrap;
+        }
+        .zxzy_desc { font-size: 12.5px; color: #8b97bd; line-height: 1.8; }
+        .zxzy_progress {
+            height: 6px;
+            background: #131b36;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .zxzy_progress_in {
+            height: 100%;
+            width: 0;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #38bdf8, #7dd3fc);
+        }
+
+        /* 进行中 */
+        .zxzy_running {
+            opacity: 1;
+            border-color: #7dd3fc;
+            box-shadow: 0 0 16px rgba(125, 211, 252, .22);
+        }
+        .zxzy_running .zxzy_tag { background: rgba(125, 211, 252, .16); color: #7dd3fc; }
+        .zxzy_running .zxzy_icon { border-color: #7dd3fc; }
+        /* 已完成 */
+        .zxzy_done { opacity: 1; border-color: rgba(74, 222, 128, .65); }
+        .zxzy_done .zxzy_tag { background: rgba(74, 222, 128, .14); color: #4ade80; }
+        .zxzy_done .zxzy_icon { border-color: rgba(74, 222, 128, .55); background: rgba(74, 222, 128, .08); }
+        .zxzy_done .zxzy_progress_in { background: linear-gradient(90deg, #22c55e, #4ade80); }
+
+        /* 并行提示 */
+        .zxzy_parallel {
+            text-align: center;
+            font-size: 12px;
+            color: #4ade80;
+            margin: 8px 0;
+            font-family: Consolas, monospace;
+            letter-spacing: 1px;
+        }
+
+        /* 当前步骤条 */
+        .zxzy_now {
+            margin: -6px 2px 16px;
+            font-size: 13px;
+            color: #aab4d4;
+            font-family: Consolas, monospace;
+        }
+        .zxzy_now b { color: #7dd3fc; font-weight: bold; }
+
+        /* ===== 控制台 ===== */
+        .zxzy_log {
+            margin-top: 18px;
+            background: #131b36;
+            border: 1px solid #2c3865;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 2;
+            min-height: 130px;
+            max-height: 240px;
+            overflow-y: auto;
+        }
+        .zxzy_log .c { color: #7dd3fc; }
+        .zxzy_log .r { color: #4ade80; }
+        .zxzy_log .y { color: #fbbf24; }
+        .zxzy_log .g { color: #6b78a3; }
+
+        /* ===== 代码面板 ===== */
+        .zxzy_code {
+            background: #131b36;
+            border: 1px solid #2c3865;
+            border-radius: 12px;
+            padding: 16px 18px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            line-height: 2;
+            color: #dfe4f3;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .zxzy_code .k { color: #7dd3fc; }
+        .zxzy_code .s { color: #4ade80; }
+        .zxzy_code .n { color: #fbbf24; }
+        .zxzy_code .p { color: #6b78a3; }
+
+        @media (max-width: 620px) {
+            .zxzy_hero { padding: 20px; }
+            .zxzy_h1 { font-size: 24px; }
+            .zxzy_row { flex-direction: column; }
+            .zxzy_row::before { left: 21px; }
+            .zxzy_row_pair::before { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶部英雄卡片 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第17课 · Promise 与异步</span>
+                <a class="zxzy_home" href="index.html">← 返回首页</a>
+            </div>
+            <h1 class="zxzy_h1">异步包饺子</h1>
+            <p class="zxzy_intro">
+                包饺子要一步一步来：先<span class="zxzy_b">买原料</span>，再<span class="zxzy_b">取原料</span>；
+                原料到手后，<span class="zxzy_b">和面与和馅可以同时进行</span>（用
+                <span class="zxzy_t zxzy_t_all">Promise.all()</span> 等待两件事都完成）；
+                然后<span class="zxzy_b">包饺子</span>，最后<span class="zxzy_b">吃饺子</span>。
+                每一步都用 <span class="zxzy_b">setTimeout 模拟真实耗时</span>（买原料 6 秒、取原料 2 秒、和面 5 秒、和馅 4 秒、包饺子 6 秒、吃饺子 2 秒），
+                整个流程用 <span class="zxzy_t zxzy_t_async">async / await</span> 串起来，像写同步代码一样清楚。
+            </p>
+        </header>
+
+        <!-- 控制条 -->
+        <h2 class="zxzy_h2">一、开始做一顿饺子</h2>
+        <div class="zxzy_bar">
+            <button class="zxzy_btn zxzy_btn_go" id="zxzy_start" onclick="zxzy_cook()">开始包饺子</button>
+            <button class="zxzy_btn" id="zxzy_reset" onclick="zxzy_resetAll()">重置流程</button>
+            <span class="zxzy_timer" id="zxzy_timer">已用时间 0.0 s</span>
+        </div>
+        <div class="zxzy_now" id="zxzy_now">当前步骤：<b>—</b>　（总用时预计 21.0 秒）</div>
+
+        <!-- 流程 -->
+        <section class="zxzy_flow">
+            <div class="zxzy_row">
+                <div class="zxzy_stage" data-step="buy">
+                    <div class="zxzy_icon">🛒</div>
+                    <div class="zxzy_stage_main">
+                        <div class="zxzy_stage_top">
+                            <span class="zxzy_name">1. 买原料</span>
+                            <span class="zxzy_need">6 秒</span>
+                            <span class="zxzy_tag">等待中</span>
+                        </div>
+                        <div class="zxzy_desc">面粉、猪肉、白菜、葱姜，一样都不能少</div>
+                        <div class="zxzy_progress"><div class="zxzy_progress_in"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="zxzy_row">
+                <div class="zxzy_stage" data-step="take">
+                    <div class="zxzy_icon">🧺</div>
+                    <div class="zxzy_stage_main">
+                        <div class="zxzy_stage_top">
+                            <span class="zxzy_name">2. 取原料</span>
+                            <span class="zxzy_need">2 秒</span>
+                            <span class="zxzy_tag">等待中</span>
+                        </div>
+                        <div class="zxzy_desc">把买好的原料取回家，洗干净、摆上案板</div>
+                        <div class="zxzy_progress"><div class="zxzy_progress_in"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="zxzy_parallel">Promise.all([ 和面, 和馅 ])　↓　同时开工</div>
+            <div class="zxzy_row zxzy_row_pair">
+                <div class="zxzy_stage" data-step="dough">
+                    <div class="zxzy_icon">🥣</div>
+                    <div class="zxzy_stage_main">
+                        <div class="zxzy_stage_top">
+                            <span class="zxzy_name">3. 和面</span>
+                            <span class="zxzy_need">5 秒</span>
+                            <span class="zxzy_tag">等待中</span>
+                        </div>
+                        <div class="zxzy_desc">面粉加水，揉成光滑的面团，醒一会儿</div>
+                        <div class="zxzy_progress"><div class="zxzy_progress_in"></div></div>
+                    </div>
+                </div>
+                <div class="zxzy_stage" data-step="filling">
+                    <div class="zxzy_icon">🥬</div>
+                    <div class="zxzy_stage_main">
+                        <div class="zxzy_stage_top">
+                            <span class="zxzy_name">3. 和馅</span>
+                            <span class="zxzy_need">4 秒</span>
+                            <span class="zxzy_tag">等待中</span>
+                        </div>
+                        <div class="zxzy_desc">猪肉白菜剁碎，加调料顺着一个方向搅上劲</div>
+                        <div class="zxzy_progress"><div class="zxzy_progress_in"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="zxzy_row">
+                <div class="zxzy_stage" data-step="wrap">
+                    <div class="zxzy_icon">🥟</div>
+                    <div class="zxzy_stage_main">
+                        <div class="zxzy_stage_top">
+                            <span class="zxzy_name">4. 包饺子</span>
+                            <span class="zxzy_need">6 秒</span>
+                            <span class="zxzy_tag">等待中</span>
+                        </div>
+                        <div class="zxzy_desc">擀皮、放馅、捏出花边，一个接一个</div>
+                        <div class="zxzy_progress"><div class="zxzy_progress_in"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="zxzy_row">
+                <div class="zxzy_stage" data-step="eat">
+                    <div class="zxzy_icon">🍽️</div>
+                    <div class="zxzy_stage_main">
+                        <div class="zxzy_stage_top">
+                            <span class="zxzy_name">5. 吃饺子</span>
+                            <span class="zxzy_need">2 秒</span>
+                            <span class="zxzy_tag">等待中</span>
+                        </div>
+                        <div class="zxzy_desc">下锅煮熟，捞出蘸醋，趁热开吃</div>
+                        <div class="zxzy_progress"><div class="zxzy_progress_in"></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 控制台 -->
+        <div class="zxzy_log" id="zxzy_log">
+            <div class="c">// 点击“开始包饺子”，观察每个阶段的执行顺序</div>
+        </div>
+
+        <!-- 代码对照 -->
+        <h2 class="zxzy_h2">二、对应的代码</h2>
+        <div class="zxzy_code"><span class="p">// 用 setTimeout 包成 Promise，模拟每一步要花的时间</span>
+<span class="k">function</span> 等待(ms) {
+  <span class="k">return new</span> Promise(<span class="k">function</span> (resolve) {
+    setTimeout(resolve, ms);
+  });
+}
+
+<span class="p">// 各步骤的模拟耗时（毫秒）</span>
+<span class="k">function</span> 买原料() { <span class="k">return</span> 等待(<span class="n">6000</span>); }   <span class="p">// 6 秒</span>
+<span class="k">function</span> 取原料() { <span class="k">return</span> 等待(<span class="n">2000</span>); }   <span class="p">// 2 秒</span>
+<span class="k">function</span> 和面()   { <span class="k">return</span> 等待(<span class="n">5000</span>); }   <span class="p">// 5 秒</span>
+<span class="k">function</span> 和馅()   { <span class="k">return</span> 等待(<span class="n">4000</span>); }   <span class="p">// 4 秒</span>
+<span class="k">function</span> 包饺子() { <span class="k">return</span> 等待(<span class="n">6000</span>); }   <span class="p">// 6 秒</span>
+<span class="k">function</span> 吃饺子() { <span class="k">return</span> 等待(<span class="n">2000</span>); }   <span class="p">// 2 秒</span>
+
+<span class="p">// async 函数里可以用 await，把异步写得像同步</span>
+<span class="k">async function</span> 做一顿饺子() {
+  <span class="k">await</span> 买原料();       <span class="p">// 6 秒，等它完成才走下一步</span>
+  <span class="k">await</span> 取原料();       <span class="p">// 2 秒</span>
+
+  <span class="p">// 和面、和馅互不依赖，交给 Promise.all 同时进行</span>
+  <span class="k">await</span> Promise.all([ 和面(), 和馅() ]);   <span class="p">// 取较慢的 5 秒</span>
+
+  <span class="k">await</span> 包饺子();       <span class="p">// 6 秒</span>
+  <span class="k">await</span> 吃饺子();       <span class="p">// 2 秒</span>
+}</div>
+
+    </div>
+
+    <script>
+        // ===== 每个步骤用 setTimeout 模拟的耗时（毫秒） =====
+        // 买原料 6s、取原料 2s、和面 5s、和馅 4s、包饺子 6s、吃饺子 2s
+        var zxzy_durations = {
+            buy: 6000,
+            take: 2000,
+            dough: 5000,
+            filling: 4000,
+            wrap: 6000,
+            eat: 2000
+        };
+
+        var zxzy_running = false;
+        var zxzy_done = false;
+        var zxzy_startStamp = 0;
+        var zxzy_timerId = null;
+        var zxzy_current = null;        // { label, start, ms } 正在进行的步骤
+
+        var zxzy_logBox = document.getElementById("zxzy_log");
+        var zxzy_startBtn = document.getElementById("zxzy_start");
+        var zxzy_resetBtn = document.getElementById("zxzy_reset");
+
+        // ===== 用 Promise 包住 setTimeout：等待 ms 毫秒 =====
+        function zxzy_sleep(zxzy_ms) {
+            return new Promise(function (resolve) {
+                setTimeout(resolve, zxzy_ms);
+            });
+        }
+
+        // ===== 日志（带相对时间） =====
+        function zxzy_log(zxzy_text, zxzy_type) {
+            var zxzy_sec = ((Date.now() - zxzy_startStamp) / 1000).toFixed(1);
+            var zxzy_line = document.createElement("div");
+            zxzy_line.className = zxzy_type || "c";
+            zxzy_line.textContent = "[" + zxzy_sec + "s] " + zxzy_text;
+            zxzy_logBox.appendChild(zxzy_line);
+            zxzy_logBox.scrollTop = zxzy_logBox.scrollHeight;
+        }
+
+        function zxzy_el(zxzy_step) {
+            return document.querySelector('.zxzy_stage[data-step="' + zxzy_step + '"]');
+        }
+
+        // ===== 更新总耗时与当前步骤（含剩余秒数） =====
+        function zxzy_paintTimer() {
+            document.getElementById("zxzy_timer").textContent =
+                "已用时间 " + ((Date.now() - zxzy_startStamp) / 1000).toFixed(1) + " s";
+
+            var zxzy_now = document.getElementById("zxzy_now");
+            if (zxzy_current !== null) {
+                var zxzy_remain = Math.max(0, zxzy_current.ms - (Date.now() - zxzy_current.start));
+                zxzy_now.innerHTML = "当前步骤：<b>" + zxzy_current.label + "</b>　剩余 " +
+                    (zxzy_remain / 1000).toFixed(1) + " 秒";
+            } else if (zxzy_done === true) {
+                zxzy_now.innerHTML = "当前步骤：<b>全部完成 🥟</b>";
+            } else {
+                zxzy_now.innerHTML = "当前步骤：<b>—</b>　（总用时预计 21.0 秒）";
+            }
+        }
+
+        // ===== 执行一个步骤：用 setTimeout 模拟耗时，返回 Promise 方便 await =====
+        function zxzy_runStep(zxzy_step, zxzy_ms, zxzy_label) {
+            var zxzy_card = zxzy_el(zxzy_step);
+            var zxzy_tag = zxzy_card.querySelector(".zxzy_tag");
+            var zxzy_progress = zxzy_card.querySelector(".zxzy_progress_in");
+
+            zxzy_card.classList.add("zxzy_running");
+            zxzy_tag.textContent = "进行中…";
+            zxzy_current = { label: zxzy_label, start: Date.now(), ms: zxzy_ms };
+            zxzy_log(zxzy_label + "：开始（setTimeout 模拟 " + (zxzy_ms / 1000).toFixed(1) + " 秒）", "c");
+            zxzy_paintTimer();
+
+            return zxzy_sleep(0).then(function () {
+                // 让进度条在规定时间内匀速走满
+                zxzy_progress.style.transition = "width " + zxzy_ms + "ms linear";
+                zxzy_progress.style.width = "100%";
+
+                return zxzy_sleep(zxzy_ms).then(function () {
+                    zxzy_card.classList.remove("zxzy_running");
+                    zxzy_card.classList.add("zxzy_done");
+                    zxzy_tag.textContent = "✓ 完成";
+                    zxzy_current = null;
+                    zxzy_log(zxzy_label + "：完成，用时 " + (zxzy_ms / 1000).toFixed(1) + " 秒", "r");
+                    zxzy_paintTimer();
+                });
+            });
+        }
+
+        // ===== 主流程：async / await =====
+        async function zxzy_cook() {
+            if (zxzy_running === true) { return; }
+            zxzy_resetAll();
+
+            zxzy_running = true;
+            zxzy_done = false;
+            zxzy_startStamp = Date.now();
+            zxzy_startBtn.disabled = true;
+            zxzy_resetBtn.disabled = true;
+            zxzy_paintTimer();
+            zxzy_timerId = setInterval(zxzy_paintTimer, 100);   // 每 100ms 刷新用时和剩余秒数
+
+            try {
+                // 一步一步来：await 会等着上一步完成
+                await zxzy_runStep("buy", zxzy_durations.buy, "买原料");     // setTimeout 6 秒
+                await zxzy_runStep("take", zxzy_durations.take, "取原料");   // setTimeout 2 秒
+
+                // 和面、和馅互不依赖，用 Promise.all 同时进行
+                zxzy_log("原料已备好：和面（5 秒）、和馅（4 秒）同时开始（Promise.all）", "y");
+                await Promise.all([
+                    zxzy_runStep("dough", zxzy_durations.dough, "和面"),
+                    zxzy_runStep("filling", zxzy_durations.filling, "和馅")
+                ]);
+                zxzy_log("面和馅都完成了：两件事并行，只花了 5 秒", "y");
+
+                await zxzy_runStep("wrap", zxzy_durations.wrap, "包饺子");   // setTimeout 6 秒
+                await zxzy_runStep("eat", zxzy_durations.eat, "吃饺子");     // setTimeout 2 秒
+
+                var zxzy_total = ((Date.now() - zxzy_startStamp) / 1000).toFixed(1);
+                var zxzy_serial = 0;
+                for (var zxzy_k in zxzy_durations) { zxzy_serial += zxzy_durations[zxzy_k]; }
+                zxzy_done = true;
+                zxzy_log("🥟 全部完成！实际总耗时 " + zxzy_total + " 秒", "r");
+                zxzy_log("对比：如果每件事排队做，需要 " + (zxzy_serial / 1000).toFixed(1) + " 秒，并行省下 4 秒", "g");
+            } catch (zxzy_err) {
+                zxzy_log("出错：" + zxzy_err.message, "y");
+            } finally {
+                clearInterval(zxzy_timerId);      // 结束后停止计时
+                zxzy_timerId = null;
+                zxzy_running = false;
+                zxzy_startBtn.disabled = false;
+                zxzy_resetBtn.disabled = false;
+                zxzy_paintTimer();
+            }
+        }
+
+        // ===== 重置：清空状态、进度条、日志、计时 =====
+        function zxzy_resetAll() {
+            if (zxzy_running === true) { return; }
+
+            document.querySelectorAll(".zxzy_stage").forEach(function (zxzy_card) {
+                zxzy_card.classList.remove("zxzy_running", "zxzy_done");
+                zxzy_card.querySelector(".zxzy_tag").textContent = "等待中";
+                var zxzy_progress = zxzy_card.querySelector(".zxzy_progress_in");
+                zxzy_progress.style.transition = "none";
+                zxzy_progress.style.width = "0%";
+            });
+
+            zxzy_logBox.innerHTML =
+                '<div class="c">// 点击“开始包饺子”，观察每个阶段的执行顺序</div>';
+            if (zxzy_timerId !== null) {
+                clearInterval(zxzy_timerId);
+                zxzy_timerId = null;
+            }
+            zxzy_startStamp = Date.now();
+            zxzy_current = null;
+            zxzy_done = false;
+            document.getElementById("zxzy_timer").textContent = "已用时间 0.0 s";
+            document.getElementById("zxzy_now").innerHTML =
+                "当前步骤：<b>—</b>　（总用时预计 21.0 秒）";
+        }
+    </script>
+</body>
+</html>

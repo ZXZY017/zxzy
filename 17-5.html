@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-11-02，功能名称：JavaScript 两种定时器 setTimeout 与 setInterval -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-5 · 两种定时器</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(160deg, #182140 0%, #1d2850 100%);
+            color: #eef1fb;
+            padding: 28px 16px 44px;
+            min-height: 100vh;
+        }
+        .zxzy_wrap { max-width: 800px; margin: 0 auto; }
+
+        /* ===== 顶部英雄卡片 ===== */
+        .zxzy_hero {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 28px;
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .zxzy_badge {
+            background: #86b9f2;
+            color: #14264d;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .zxzy_home {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            color: #dfe4f3;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 5px 16px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #354478; }
+        .zxzy_h1 { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+        .zxzy_intro { font-size: 14px; line-height: 2.1; color: #aab4d4; }
+        .zxzy_t {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .zxzy_t_red { background: rgba(251, 146, 60, .14); color: #fb923c; }
+        .zxzy_t_cyan { background: rgba(125, 211, 252, .14); color: #7dd3fc; }
+        .zxzy_b { color: #eef1fb; font-weight: bold; }
+
+        /* ===== 区块标题 ===== */
+        .zxzy_h2 { font-size: 18px; font-weight: bold; margin: 26px 2px 14px; }
+        .zxzy_h3 { font-size: 15px; font-weight: bold; margin-bottom: 4px; }
+        .zxzy_sub { font-size: 12.5px; color: #8b97bd; line-height: 1.8; }
+
+        /* ===== 面板 ===== */
+        .zxzy_panel {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .zxzy_head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .zxzy_badge2 {
+            font-family: Consolas, monospace;
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: rgba(251, 146, 60, .14);
+            color: #fb923c;
+        }
+        .zxzy_badge2_cyan { background: rgba(125, 211, 252, .14); color: #7dd3fc; }
+
+        /* ===== 按钮 ===== */
+        .zxzy_btns { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        .zxzy_btn {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            border-radius: 10px;
+            color: #eef1fb;
+            font-family: inherit;
+            font-size: 13.5px;
+            padding: 9px 20px;
+            cursor: pointer;
+            transition: background .12s ease, transform .12s ease;
+        }
+        .zxzy_btn:hover:enabled { background: #354478; transform: translateY(-2px); }
+        .zxzy_btn:disabled { opacity: .45; cursor: not-allowed; }
+        .zxzy_btn_go { background: #3b82f6; border-color: #5b9bfb; }
+        .zxzy_btn_go:hover:enabled { background: #2f74e0; }
+        .zxzy_num {
+            width: 74px;
+            background: #131b36;
+            border: 1px solid #3a4878;
+            border-radius: 8px;
+            color: #eef1fb;
+            font-family: Consolas, monospace;
+            font-size: 13.5px;
+            padding: 8px 10px;
+            outline: none;
+        }
+        .zxzy_num:focus { border-color: #7dd3fc; }
+
+        /* ===== 进度条 ===== */
+        .zxzy_bar {
+            height: 12px;
+            background: #131b36;
+            border: 1px solid #2c3865;
+            border-radius: 999px;
+            overflow: hidden;
+            margin: 16px 0 10px;
+        }
+        .zxzy_bar_in {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #f59e0b, #fb923c);
+            border-radius: 999px;
+        }
+        .zxzy_bar_cyan .zxzy_bar_in { background: linear-gradient(90deg, #38bdf8, #7dd3fc); }
+
+        /* ===== 秒表 / 时钟 ===== */
+        .zxzy_readout {
+            font-family: Consolas, monospace;
+            font-size: 40px;
+            font-weight: bold;
+            text-align: center;
+            color: #7dd3fc;
+            letter-spacing: 2px;
+            padding: 10px 0 4px;
+        }
+        .zxzy_readout small { font-size: 14px; color: #6b78a3; letter-spacing: 0; }
+        .zxzy_clock {
+            font-family: Consolas, monospace;
+            font-size: 46px;
+            font-weight: bold;
+            text-align: center;
+            color: #eef1fb;
+            letter-spacing: 3px;
+            padding: 6px 0 2px;
+        }
+        .zxzy_clock_date { text-align: center; font-size: 13px; color: #8b97bd; margin-bottom: 4px; }
+
+        /* ===== 状态文字 ===== */
+        .zxzy_state { font-size: 13px; color: #aab4d4; line-height: 1.9; }
+        .zxzy_state b { color: #fb923c; font-family: Consolas, monospace; }
+
+        /* ===== 对比表 ===== */
+        .zxzy_table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+        .zxzy_table th, .zxzy_table td {
+            border: 1px solid #323f6e;
+            padding: 10px 14px;
+            text-align: left;
+            line-height: 1.8;
+        }
+        .zxzy_table th { background: #2a3760; color: #eef1fb; font-weight: bold; }
+        .zxzy_table td { color: #aab4d4; }
+        .zxzy_table td:first-child { color: #dfe4f3; }
+        .zxzy_table code { font-family: Consolas, monospace; color: #7dd3fc; }
+
+        /* ===== 控制台 ===== */
+        .zxzy_log {
+            margin-top: 16px;
+            background: #131b36;
+            border: 1px solid #2c3865;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.95;
+            min-height: 92px;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .zxzy_log .c { color: #7dd3fc; }
+        .zxzy_log .r { color: #4ade80; }
+        .zxzy_log .e { color: #f87171; }
+
+        @media (max-width: 660px) {
+            .zxzy_hero { padding: 20px; }
+            .zxzy_h1 { font-size: 24px; }
+            .zxzy_readout { font-size: 32px; }
+            .zxzy_clock { font-size: 34px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶部英雄卡片 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第17课 · 定时器</span>
+                <a class="zxzy_home" href="index.html">← 返回首页</a>
+            </div>
+            <h1 class="zxzy_h1">两种定时器：一次与循环</h1>
+            <p class="zxzy_intro">
+                <span class="zxzy_t zxzy_t_red">setTimeout</span> 是“闹钟”：<span class="zxzy_b">等一段时间，只响一次</span>；
+                <span class="zxzy_t zxzy_t_cyan">setInterval</span> 是“节拍器”：<span class="zxzy_b">每隔一段时间响一次，直到被清除</span>。
+                两者都会返回一个定时器 ID，分别用 <span class="zxzy_b">clearTimeout(id)</span> 和
+                <span class="zxzy_b">clearInterval(id)</span> 取消。
+            </p>
+        </header>
+
+        <!-- 一、setTimeout -->
+        <h2 class="zxzy_h2">一、setTimeout：只执行一次</h2>
+        <section class="zxzy_panel">
+            <div class="zxzy_head">
+                <div>
+                    <div class="zxzy_h3">延迟提醒</div>
+                    <p class="zxzy_sub">设置若干秒后弹出提示，中途可以取消</p>
+                </div>
+                <span class="zxzy_badge2">只响一次</span>
+            </div>
+
+            <div class="zxzy_btns">
+                <label class="zxzy_sub">延迟（秒）</label>
+                <input class="zxzy_num" id="zxzy_delay" type="number" min="1" max="10" value="3">
+                <button class="zxzy_btn zxzy_btn_go" id="zxzy_startTimeout" onclick="zxzy_startTimeout()">开始定时</button>
+                <button class="zxzy_btn" id="zxzy_cancelTimeout" onclick="zxzy_cancelTimeout()" disabled>取消定时</button>
+            </div>
+
+            <div class="zxzy_bar"><div class="zxzy_bar_in" id="zxzy_barTimeout"></div></div>
+            <p class="zxzy_state" id="zxzy_stateTimeout">状态：<b>空闲</b>　定时器 ID：—</p>
+
+            <div class="zxzy_log" id="zxzy_logA">
+                <div class="c">// setTimeout 演示日志</div>
+            </div>
+        </section>
+
+        <!-- 二、setInterval -->
+        <h2 class="zxzy_h2">二、setInterval：每隔一段时间执行</h2>
+        <section class="zxzy_panel">
+            <div class="zxzy_head">
+                <div>
+                    <div class="zxzy_h3">秒表</div>
+                    <p class="zxzy_sub">每 100 毫秒执行一次，让时间不断累加</p>
+                </div>
+                <span class="zxzy_badge2 zxzy_badge2_cyan">反复执行</span>
+            </div>
+
+            <div class="zxzy_readout" id="zxzy_watch">0.00 <small>秒</small></div>
+            <div class="zxzy_btns">
+                <button class="zxzy_btn zxzy_btn_go" id="zxzy_watchStart" onclick="zxzy_watchStart()">开始 / 继续</button>
+                <button class="zxzy_btn" id="zxzy_watchPause" onclick="zxzy_watchPause()" disabled>暂停</button>
+                <button class="zxzy_btn" onclick="zxzy_watchReset()">清零</button>
+            </div>
+            <p class="zxzy_state" id="zxzy_stateWatch">状态：<b>停止</b>　定时器 ID：—</p>
+
+            <div class="zxzy_log" id="zxzy_logB">
+                <div class="c">// setInterval 演示日志</div>
+            </div>
+        </section>
+
+        <!-- 三、时钟 -->
+        <h2 class="zxzy_h2">三、用 setInterval 做一只时钟</h2>
+        <section class="zxzy_panel">
+            <div class="zxzy_clock_date" id="zxzy_clockDate">—</div>
+            <div class="zxzy_clock" id="zxzy_clock">--:--:--</div>
+            <p class="zxzy_sub" style="text-align:center;margin-top:6px;">
+                每 1000 毫秒刷新一次，页面加载后自动运行（定时器由浏览器管理，刷新页面即清除）
+            </p>
+        </section>
+
+        <!-- 四、对比 -->
+        <h2 class="zxzy_h2">四、两者对比</h2>
+        <section class="zxzy_panel">
+            <table class="zxzy_table">
+                <tr>
+                    <th style="width:110px;">对比项</th>
+                    <th>setTimeout</th>
+                    <th>setInterval</th>
+                </tr>
+                <tr>
+                    <td>执行次数</td>
+                    <td>只执行 <b>1 次</b></td>
+                    <td>每隔一段时间执行，<b>无数次</b></td>
+                </tr>
+                <tr>
+                    <td>写法</td>
+                    <td><code>setTimeout(fn, 毫秒)</code></td>
+                    <td><code>setInterval(fn, 毫秒)</code></td>
+                </tr>
+                <tr>
+                    <td>取消方式</td>
+                    <td><code>clearTimeout(id)</code></td>
+                    <td><code>clearInterval(id)</code></td>
+                </tr>
+                <tr>
+                    <td>典型场景</td>
+                    <td>广告 3 秒后关闭、提示自动消失</td>
+                    <td>时钟、秒表、轮播图自动切换</td>
+                </tr>
+            </table>
+        </section>
+
+    </div>
+
+    <script>
+        // ===== 通用：日志输出 =====
+        function zxzy_log(zxzy_boxId, zxzy_text, zxzy_type) {
+            var zxzy_box = document.getElementById(zxzy_boxId);
+            var zxzy_line = document.createElement("div");
+            zxzy_line.className = zxzy_type || "c";
+            zxzy_line.textContent = zxzy_text;
+            zxzy_box.appendChild(zxzy_line);
+            zxzy_box.scrollTop = zxzy_box.scrollHeight;
+        }
+
+        /* ============================================================
+           ① setTimeout：延迟执行一次，可以取消
+           ============================================================ */
+        var zxzy_timeoutId = null;      // 保存定时器 ID，取消时要用
+        var zxzy_barTimeout = document.getElementById("zxzy_barTimeout");
+        var zxzy_stateTimeout = document.getElementById("zxzy_stateTimeout");
+        var zxzy_startBtn = document.getElementById("zxzy_startTimeout");
+        var zxzy_cancelBtn = document.getElementById("zxzy_cancelTimeout");
+
+        function zxzy_startTimeout() {
+            var zxzy_sec = parseFloat(document.getElementById("zxzy_delay").value) || 3;
+            if (zxzy_sec < 1) { zxzy_sec = 1; }
+            if (zxzy_sec > 10) { zxzy_sec = 10; }
+            document.getElementById("zxzy_delay").value = zxzy_sec;
+
+            var zxzy_ms = zxzy_sec * 1000;
+
+            // 进度条归零后重新开始
+            zxzy_barTimeout.style.transition = "none";
+            zxzy_barTimeout.style.width = "0%";
+            void zxzy_barTimeout.offsetWidth;                     // 强制重排，保证动画从头开始
+            zxzy_barTimeout.style.transition = "width " + zxzy_ms + "ms linear";
+            zxzy_barTimeout.style.width = "100%";
+
+            // 只执行一次：等到时间就触发
+            zxzy_timeoutId = setTimeout(function () {
+                zxzy_log("zxzy_logA", "⏰ " + zxzy_sec + " 秒到！setTimeout 中的代码执行了（只执行这一次）", "r");
+                zxzy_stateTimeout.innerHTML = "状态：<b>已触发</b>　定时器 ID：" + zxzy_timeoutId;
+                zxzy_timeoutId = null;
+                zxzy_startBtn.disabled = false;
+                zxzy_cancelBtn.disabled = true;
+                zxzy_barTimeout.style.transition = "none";
+                zxzy_barTimeout.style.width = "100%";
+            }, zxzy_ms);
+
+            zxzy_stateTimeout.innerHTML = "状态：<b>计时中…</b>　定时器 ID：" + zxzy_timeoutId;
+            zxzy_log("zxzy_logA", "setTimeout(…) 已注册，等待 " + zxzy_ms + " ms，ID = " + zxzy_timeoutId, "c");
+            zxzy_startBtn.disabled = true;
+            zxzy_cancelBtn.disabled = false;
+        }
+
+        function zxzy_cancelTimeout() {
+            if (zxzy_timeoutId !== null) {
+                clearTimeout(zxzy_timeoutId);       // 清除定时器
+                zxzy_log("zxzy_logA", "clearTimeout(" + zxzy_timeoutId + ")，闹钟被取消，代码不会再执行", "e");
+                zxzy_timeoutId = null;
+            }
+            zxzy_barTimeout.style.transition = "none";   // 进度条停在原处
+            zxzy_stateTimeout.innerHTML = "状态：<b>已取消</b>　定时器 ID：—";
+            zxzy_startBtn.disabled = false;
+            zxzy_cancelBtn.disabled = true;
+        }
+
+        /* ============================================================
+           ② setInterval：每 100ms 执行一次，做秒表
+           ============================================================ */
+        var zxzy_intervalId = null;     // setInterval 返回的 ID
+        var zxzy_watchElapsed = 0;      // 已经过去的毫秒数
+        var zxzy_watchStartStamp = 0;   // 本次开始时的时间戳
+        var zxzy_watchEl = document.getElementById("zxzy_watch");
+        var zxzy_stateWatch = document.getElementById("zxzy_stateWatch");
+
+        // 把毫秒显示成“0.00 秒”
+        function zxzy_paintWatch() {
+            zxzy_watchEl.innerHTML = (zxzy_watchElapsed / 1000).toFixed(2) + " <small>秒</small>";
+        }
+
+        function zxzy_watchStart() {
+            if (zxzy_intervalId !== null) { return; }   // 已经在跑了
+            zxzy_watchStartStamp = Date.now() - zxzy_watchElapsed;
+
+            zxzy_intervalId = setInterval(function () {
+                // 用时间戳计算，避免 setInterval 误差不断累积
+                zxzy_watchElapsed = Date.now() - zxzy_watchStartStamp;
+                zxzy_paintWatch();
+            }, 100);
+
+            zxzy_stateWatch.innerHTML = "状态：<b>计时中…</b>　定时器 ID：" + zxzy_intervalId;
+            zxzy_log("zxzy_logB", "setInterval(…, 100) 已启动，ID = " + zxzy_intervalId, "c");
+            document.getElementById("zxzy_watchPause").disabled = false;
+        }
+
+        function zxzy_watchPause() {
+            if (zxzy_intervalId === null) { return; }
+            clearInterval(zxzy_intervalId);             // 清除循环定时器
+            zxzy_log("zxzy_logB", "clearInterval(" + zxzy_intervalId + ")，秒表暂停在 " +
+                (zxzy_watchElapsed / 1000).toFixed(2) + " 秒", "e");
+            zxzy_intervalId = null;
+            zxzy_stateWatch.innerHTML = "状态：<b>已暂停</b>　定时器 ID：—";
+            document.getElementById("zxzy_watchPause").disabled = true;
+        }
+
+        function zxzy_watchReset() {
+            if (zxzy_intervalId !== null) {             // 先清掉定时器再归零
+                clearInterval(zxzy_intervalId);
+                zxzy_intervalId = null;
+            }
+            zxzy_watchElapsed = 0;
+            zxzy_paintWatch();
+            zxzy_stateWatch.innerHTML = "状态：<b>已清零</b>　定时器 ID：—";
+            zxzy_log("zxzy_logB", "清零：clearInterval + 时间归零", "e");
+            document.getElementById("zxzy_watchPause").disabled = true;
+        }
+
+        /* ============================================================
+           ③ 实时时钟：每 1 秒刷新
+           ============================================================ */
+        var zxzy_week = ["日", "一", "二", "三", "四", "五", "六"];
+
+        function zxzy_paintClock() {
+            var zxzy_d = new Date();
+            var zxzy_pad = function (zxzy_n) { return zxzy_n < 10 ? "0" + zxzy_n : "" + zxzy_n; };
+            document.getElementById("zxzy_clock").textContent =
+                zxzy_pad(zxzy_d.getHours()) + ":" +
+                zxzy_pad(zxzy_d.getMinutes()) + ":" +
+                zxzy_pad(zxzy_d.getSeconds());
+            document.getElementById("zxzy_clockDate").textContent =
+                zxzy_d.getFullYear() + " 年 " + (zxzy_d.getMonth() + 1) + " 月 " +
+                zxzy_d.getDate() + " 日　星期" + zxzy_week[zxzy_d.getDay()];
+        }
+
+        zxzy_paintClock();                          // 先执行一次，避免第一秒空白
+        setInterval(zxzy_paintClock, 1000);         // 之后每秒刷新
+    </script>
+</body>
+</html>

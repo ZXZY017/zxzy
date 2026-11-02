@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-11-02，功能名称：fetch 获取随机狗狗图片接口 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-2 · fetch 获取狗狗图片</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(160deg, #182140 0%, #1d2850 100%);
+            color: #eef1fb;
+            padding: 28px 16px 44px;
+            min-height: 100vh;
+        }
+        .zxzy_wrap { max-width: 780px; margin: 0 auto; }
+
+        /* ===== 顶部英雄卡片 ===== */
+        .zxzy_hero {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 28px;
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .zxzy_badge {
+            background: #86b9f2;
+            color: #14264d;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .zxzy_home {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            color: #dfe4f3;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 5px 16px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #354478; }
+        .zxzy_h1 { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+        .zxzy_intro { font-size: 14px; line-height: 2.1; color: #aab4d4; }
+        .zxzy_t {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .zxzy_t_url { background: rgba(125, 211, 252, .14); color: #7dd3fc; }
+        .zxzy_t_fn  { background: rgba(74, 222, 128, .14); color: #4ade80; }
+        .zxzy_b { color: #eef1fb; font-weight: bold; }
+
+        /* ===== 区块标题 ===== */
+        .zxzy_h2 { font-size: 18px; font-weight: bold; margin: 26px 2px 14px; }
+
+        /* ===== 接口信息条 ===== */
+        .zxzy_api {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 13.5px;
+            line-height: 2;
+            color: #aab4d4;
+            word-break: break-all;
+        }
+        .zxzy_api code {
+            font-family: Consolas, monospace;
+            color: #7dd3fc;
+            font-size: 13px;
+        }
+
+        /* ===== 互动区 ===== */
+        .zxzy_stage {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 22px;
+        }
+        .zxzy_btns {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .zxzy_btn {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            border-radius: 10px;
+            color: #eef1fb;
+            font-family: inherit;
+            font-size: 13px;
+            padding: 10px 8px;
+            cursor: pointer;
+            line-height: 1.6;
+            text-align: center;
+            transition: transform .12s ease, background .12s ease;
+        }
+        .zxzy_btn:hover { background: #354478; transform: translateY(-2px); }
+        .zxzy_btn:active { transform: translateY(0); }
+        .zxzy_btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+        .zxzy_btn code {
+            display: block;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            font-weight: bold;
+            color: #7dd3fc;
+        }
+        .zxzy_btn span { color: #aab4d4; font-size: 12px; }
+
+        /* ===== 图片展示区 ===== */
+        .zxzy_gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+        }
+        .zxzy_frame {
+            background: #1a2344;
+            border: 1px solid #2c3865;
+            border-radius: 12px;
+            overflow: hidden;
+            animation: zxzy_in .4s ease;
+        }
+        .zxzy_img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            background: #131b36;
+        }
+        .zxzy_cap {
+            padding: 9px 12px;
+            font-size: 12.5px;
+            color: #aab4d4;
+            line-height: 1.8;
+        }
+        .zxzy_cap b {
+            color: #7dd3fc;
+            font-family: Consolas, monospace;
+        }
+        @keyframes zxzy_in {
+            from { transform: translateY(-10px) scale(.97); opacity: 0; }
+            to   { transform: none; opacity: 1; }
+        }
+
+        /* 加载中的骨架 */
+        .zxzy_loading {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7dd3fc;
+            font-size: 13.5px;
+            background: linear-gradient(90deg, #1a2344 25%, #222d55 50%, #1a2344 75%);
+            background-size: 200% 100%;
+            animation: zxzy_flash 1.2s linear infinite;
+        }
+        @keyframes zxzy_flash {
+            from { background-position: 200% 0; }
+            to   { background-position: -200% 0; }
+        }
+
+        /* ===== 原始 JSON 与日志 ===== */
+        .zxzy_code {
+            margin-top: 16px;
+            background: #131b36;
+            border: 1px solid #2c3865;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.9;
+            color: #dfe4f3;
+            white-space: pre-wrap;
+            word-break: break-all;
+            min-height: 84px;
+        }
+        .zxzy_code .k { color: #7dd3fc; }
+        .zxzy_code .s { color: #4ade80; }
+        .zxzy_code .n { color: #fbbf24; }
+        .zxzy_code .p { color: #6b78a3; }
+
+        .zxzy_log {
+            margin-top: 14px;
+            background: #131b36;
+            border: 1px solid #2c3865;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.95;
+            min-height: 96px;
+            max-height: 240px;
+            overflow-y: auto;
+        }
+        .zxzy_log .c { color: #7dd3fc; }
+        .zxzy_log .r { color: #4ade80; }
+        .zxzy_log .e { color: #f87171; }
+
+        @media (max-width: 660px) {
+            .zxzy_hero { padding: 20px; }
+            .zxzy_h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶部英雄卡片 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第17课 · JSON 与 fetch</span>
+                <a class="zxzy_home" href="index.html">← 返回首页</a>
+            </div>
+            <h1 class="zxzy_h1">随机狗狗图片接口</h1>
+            <p class="zxzy_intro">
+                用原生 <span class="zxzy_t zxzy_t_fn">fetch()</span> 请求公开接口
+                <span class="zxzy_t zxzy_t_url">https://dog.ceo/api/breeds/image/random</span>，
+                该接口允许跨域访问。服务器返回的是一段 JSON 文本：
+                <span class="zxzy_b">{"message":"图片地址","status":"success"}</span>，
+                取出 message 里的图片地址交给 &lt;img&gt; 就能显示狗狗啦。
+            </p>
+        </header>
+
+        <!-- 接口说明 -->
+        <h2 class="zxzy_h2">一、接口信息</h2>
+        <section class="zxzy_api">
+            请求地址：<code>https://dog.ceo/api/breeds/image/random</code><br>
+            请求方式：<code>GET</code>　跨域：<code>Access-Control-Allow-Origin: *</code>（可直接访问）<br>
+            返回示例：<code>{"message":"https://images.dog.ceo/breeds/pug/xxx.jpg","status":"success"}</code>
+        </section>
+
+        <!-- 互动区 -->
+        <h2 class="zxzy_h2">二、动手请求接口</h2>
+        <section class="zxzy_stage">
+            <div class="zxzy_btns">
+                <button class="zxzy_btn" id="zxzy_btnOne" onclick="zxzy_getOne()">
+                    <code>fetch()</code><span>获取 1 只狗狗</span>
+                </button>
+                <button class="zxzy_btn" id="zxzy_btnThree" onclick="zxzy_getThree()">
+                    <code>Promise.all()</code><span>并发获取 3 只狗狗</span>
+                </button>
+                <button class="zxzy_btn" onclick="zxzy_getText()">
+                    <code>res.text()</code><span>查看原始文本再 JSON.parse</span>
+                </button>
+                <button class="zxzy_btn" onclick="zxzy_clear()">
+                    <code>clear()</code><span>清空所有内容</span>
+                </button>
+            </div>
+
+            <!-- 图片展示区 -->
+            <div class="zxzy_gallery" id="zxzy_gallery"></div>
+
+            <!-- 原始 JSON -->
+            <div class="zxzy_code" id="zxzy_jsonBox">点击上方按钮后，这里会显示服务器返回的原始 JSON。</div>
+
+            <!-- 控制台 -->
+            <div class="zxzy_log" id="zxzy_log"></div>
+        </section>
+
+    </div>
+
+    <script>
+        // 接口地址
+        var zxzy_api = "https://dog.ceo/api/breeds/image/random";
+
+        var zxzy_gallery = document.getElementById("zxzy_gallery");
+        var zxzy_jsonBox = document.getElementById("zxzy_jsonBox");
+        var zxzy_logBox = document.getElementById("zxzy_log");
+
+        // ===== 控制台输出 =====
+        function zxzy_log(zxzy_msg, zxzy_isErr) {
+            var zxzy_line = document.createElement("div");
+            zxzy_line.innerHTML = '<span class="' + (zxzy_isErr ? "e" : "c") + '">' + zxzy_msg + '</span>';
+            zxzy_logBox.appendChild(zxzy_line);
+            zxzy_logBox.scrollTop = zxzy_logBox.scrollHeight;
+        }
+
+        // ===== JSON 语法高亮 =====
+        function zxzy_hl(zxzy_s) {
+            return zxzy_s
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/"([^"]*)"\s*:/g, '<span class="k">"$1"</span>:')
+                .replace(/:\s*"([^"]*)"/g, ': <span class="s">"$1"</span>')
+                .replace(/:\s*(true|false|null)/g, ': <span class="n">$1</span>');
+        }
+
+        // ===== 从图片地址里取出品种名 =====
+        // 地址形如 https://images.dog.ceo/breeds/pug/xxx.jpg
+        function zxzy_breed(zxzy_url) {
+            var zxzy_parts = zxzy_url.split("/breeds/");
+            return zxzy_parts.length > 1 ? zxzy_parts[1].split("/")[0] : "未知品种";
+        }
+
+        // ===== 把一只狗狗添加到页面上 =====
+        function zxzy_addDog(zxzy_url, zxzy_status) {
+            var zxzy_frame = document.createElement("figure");
+            zxzy_frame.className = "zxzy_frame";
+            zxzy_frame.innerHTML =
+                '<img class="zxzy_img" src="' + zxzy_url + '" alt="随机狗狗图片">' +
+                '<figcaption class="zxzy_cap">品种：<b>' + zxzy_breed(zxzy_url) +
+                '</b><br>状态：<b>' + zxzy_status + '</b></figcaption>';
+            zxzy_gallery.appendChild(zxzy_frame);
+        }
+
+        // ===== 加载中的骨架屏 =====
+        function zxzy_skeleton(zxzy_n) {
+            for (var zxzy_i = 0; zxzy_i < zxzy_n; zxzy_i++) {
+                var zxzy_frame = document.createElement("div");
+                zxzy_frame.className = "zxzy_frame";
+                zxzy_frame.innerHTML = '<div class="zxzy_loading">正在请求接口…</div>';
+                zxzy_gallery.appendChild(zxzy_frame);
+            }
+        }
+
+        function zxzy_removeSkeleton() {
+            var zxzy_all = zxzy_gallery.querySelectorAll(".zxzy_loading");
+            for (var zxzy_i = 0; zxzy_i < zxzy_all.length; zxzy_i++) {
+                zxzy_gallery.removeChild(zxzy_all[zxzy_i].parentNode);
+            }
+        }
+
+        // ===== ① 获取 1 只狗狗：async + await =====
+        async function zxzy_getOne() {
+            var zxzy_btn = document.getElementById("zxzy_btnOne");
+            zxzy_btn.disabled = true;
+            zxzy_skeleton(1);
+            zxzy_log("① fetch(接口地址) 发出请求…");
+            try {
+                var zxzy_res = await fetch(zxzy_api);                 // 等待响应
+                if (zxzy_res.ok === false) {                          // 状态码不是 2xx
+                    throw new Error("HTTP 状态码 " + zxzy_res.status);
+                }
+                var zxzy_obj = await zxzy_res.json();                 // 直接转成对象
+                zxzy_removeSkeleton();
+                zxzy_addDog(zxzy_obj.message, zxzy_obj.status);
+                zxzy_jsonBox.innerHTML = zxzy_hl(JSON.stringify(zxzy_obj));
+                zxzy_log("② 拿到 JSON，status = " + zxzy_obj.status);
+                zxzy_log("③ 取出 message 图片地址，渲染到页面：");
+                zxzy_log("　 " + zxzy_obj.message);
+            } catch (zxzy_err) {
+                zxzy_removeSkeleton();
+                zxzy_jsonBox.innerHTML = '<span class="p">请求失败，没有拿到数据</span>';
+                zxzy_log("❌ 出错了：" + zxzy_err.message, true);
+            } finally {
+                zxzy_btn.disabled = false;
+            }
+        }
+
+        // ===== ② Promise.all 并发获取 3 只 =====
+        async function zxzy_getThree() {
+            var zxzy_btn = document.getElementById("zxzy_btnThree");
+            zxzy_btn.disabled = true;
+            zxzy_skeleton(3);
+            zxzy_log("Promise.all 同时发出 3 个请求…");
+            try {
+                // 三个请求一起发出，全部完成后再统一处理
+                var zxzy_works = [fetch(zxzy_api), fetch(zxzy_api), fetch(zxzy_api)];
+                var zxzy_resList = await Promise.all(zxzy_works);
+                var zxzy_objList = [];
+                for (var zxzy_i = 0; zxzy_i < zxzy_resList.length; zxzy_i++) {
+                    zxzy_objList.push(await zxzy_resList[zxzy_i].json());
+                }
+                zxzy_removeSkeleton();
+                zxzy_objList.forEach(function (zxzy_o) {
+                    zxzy_addDog(zxzy_o.message, zxzy_o.status);
+                });
+                zxzy_jsonBox.innerHTML = zxzy_hl(JSON.stringify(zxzy_objList, null, 2));
+                zxzy_log("3 个请求全部成功，共拿到 " + zxzy_objList.length + " 张图片");
+            } catch (zxzy_err) {
+                zxzy_removeSkeleton();
+                zxzy_log("❌ 出错了：" + zxzy_err.message, true);
+            } finally {
+                zxzy_btn.disabled = false;
+            }
+        }
+
+        // ===== ③ 先看原始文本，再 JSON.parse 手动拆包 =====
+        async function zxzy_getText() {
+            zxzy_log("用 res.text() 拿到未处理的原始字符串：");
+            try {
+                var zxzy_res = await fetch(zxzy_api);
+                var zxzy_text = await zxzy_res.text();     // 纯文本，还是字符串
+                var zxzy_obj = JSON.parse(zxzy_text);      // 手动拆包成对象
+                zxzy_jsonBox.innerHTML =
+                    '<span class="p">// res.text() 结果，typeof = string</span>\n' +
+                    zxzy_hl(zxzy_text) +
+                    '\n<span class="p">// JSON.parse() 之后，typeof = ' + typeof zxzy_obj +
+                    '，图片地址 = </span><span class="s">' + zxzy_obj.message + '</span>';
+                zxzy_addDog(zxzy_obj.message, zxzy_obj.status);
+                zxzy_log("  " + zxzy_text);
+                zxzy_log("JSON.parse 后 typeof = " + typeof zxzy_obj + "，status = " + zxzy_obj.status);
+            } catch (zxzy_err) {
+                zxzy_log("❌ 出错了：" + zxzy_err.message, true);
+            }
+        }
+
+        // ===== 清空 =====
+        function zxzy_clear() {
+            zxzy_gallery.innerHTML = "";
+            zxzy_logBox.innerHTML = "";
+            zxzy_jsonBox.textContent = "点击上方按钮后，这里会显示服务器返回的原始 JSON。";
+        }
+    </script>
+</body>
+</html>
