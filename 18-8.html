@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-11-05，功能名称：智能客服运营数据大屏（三列 + ECharts 中国地图） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-8 · 智能客服运营数据大屏</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #030913;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            color: #cfe3ff;
+        }
+        body {
+            background-image:
+                radial-gradient(circle at 50% 0%, rgba(20, 80, 160, .28), transparent 55%),
+                linear-gradient(rgba(46, 168, 255, .045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(46, 168, 255, .045) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        /* ===== 整体布局 ===== */
+        .dash {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 10px 14px 14px;
+            gap: 10px;
+        }
+
+        /* ===== 顶部标题 ===== */
+        .hd {
+            position: relative;
+            height: 62px;
+            flex: 0 0 62px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6px;
+            border-bottom: 1px solid rgba(46, 168, 255, .25);
+        }
+        .hd::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -1px;
+            width: 480px;
+            height: 2px;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, transparent, #35d0ff, transparent);
+        }
+        .hd h1 {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 25px;
+            letter-spacing: 4px;
+            font-weight: bold;
+            white-space: nowrap;
+            background: linear-gradient(180deg, #ffffff, #63c8ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 26px rgba(60, 170, 255, .35);
+        }
+        .hd-side {
+            font-size: 12.5px;
+            color: #7fa8cd;
+            font-family: Consolas, monospace;
+            letter-spacing: .5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .hd-side b { color: #9ad8ff; font-weight: normal; }
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #35e0a1;
+            box-shadow: 0 0 10px #35e0a1;
+            animation: zxzy-blink 1.4s infinite;
+        }
+        @keyframes zxzy-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .25; }
+        }
+
+        /* ===== 三列栅格 ===== */
+        .grid {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 340px minmax(0, 1fr) 340px;
+            gap: 12px;
+        }
+        .col { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+
+        /* ===== 面板 ===== */
+        .panel {
+            position: relative;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(180deg, rgba(8, 27, 52, .92), rgba(4, 12, 26, .94));
+            border: 1px solid rgba(44, 120, 190, .38);
+            border-radius: 4px;
+            box-shadow: inset 0 0 34px rgba(20, 80, 160, .16), 0 2px 10px rgba(0, 0, 0, .25);
+        }
+        /* 四角装饰 */
+        .panel::before, .panel::after {
+            content: "";
+            position: absolute;
+            width: 13px;
+            height: 13px;
+            border: 2px solid #2ea8ff;
+            pointer-events: none;
+        }
+        .panel::before { left: -1px; top: -1px; border-right: none; border-bottom: none; }
+        .panel::after { right: -1px; bottom: -1px; border-left: none; border-top: none; }
+
+        .ph {
+            flex: 0 0 auto;
+            height: 34px;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px dashed rgba(46, 168, 255, .18);
+            background: linear-gradient(90deg, rgba(35, 110, 180, .22), transparent 70%);
+        }
+        .ph-t {
+            font-size: 13.5px;
+            font-weight: bold;
+            color: #dceeff;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ph-t::before {
+            content: "";
+            width: 3px;
+            height: 13px;
+            background: linear-gradient(180deg, #35d0ff, #1e6fbf);
+            box-shadow: 0 0 8px rgba(53, 208, 255, .8);
+        }
+        .ph-en {
+            font-family: Consolas, monospace;
+            font-size: 9.5px;
+            color: #4f7ba6;
+            letter-spacing: 1px;
+        }
+
+        .pc { flex: 1; min-height: 0; padding: 4px 6px 6px; }
+
+        /* 中间列比例 */
+        .col-center .panel-map { flex: 1.75; }
+        .col-center .panel-kpi { flex: 1; }
+
+        /* ===== KPI ===== */
+        .kpi-row {
+            flex: 0 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 10px 12px 4px;
+        }
+        .kpi {
+            background: rgba(12, 40, 74, .55);
+            border: 1px solid rgba(46, 168, 255, .22);
+            border-radius: 4px;
+            padding: 8px 10px;
+        }
+        .kpi .v {
+            font-family: Consolas, monospace;
+            font-size: 24px;
+            font-weight: bold;
+            color: #35e0ff;
+            text-shadow: 0 0 14px rgba(53, 224, 255, .45);
+            line-height: 1.2;
+        }
+        .kpi .v small { font-size: 12px; color: #7fa8cd; margin-left: 3px; }
+        .kpi .l { font-size: 11.5px; color: #7fa8cd; margin-top: 2px; }
+
+        /* ===== 告警列表 ===== */
+        .alerts {
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+            padding: 6px 12px 10px;
+        }
+        .alert {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            font-size: 11.5px;
+            color: #9fc2e0;
+            border-bottom: 1px dashed rgba(46, 168, 255, .1);
+            animation: zxzy-slide .45s ease;
+        }
+        .alert .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex: 0 0 6px;
+        }
+        .alert .txt {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .alert .tm { color: #4f7ba6; font-family: Consolas, monospace; font-size: 10.5px; }
+        @keyframes zxzy-slide {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: none; }
+        }
+
+        /* 失败提示 */
+        .fail {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff8080;
+            font-size: 13px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @media (max-width: 1280px) {
+            .grid { grid-template-columns: 300px minmax(0, 1fr) 300px; }
+            .hd h1 { font-size: 21px; letter-spacing: 2px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dash">
+
+        <!-- 顶部 -->
+        <header class="hd">
+            <div class="hd-side">
+                <span class="live-dot"></span>实时数据
+                <span id="zxzyDate">—</span>
+            </div>
+            <h1>智能客服运营数据大屏</h1>
+            <div class="hd-side">
+                <span>全国服务节点 <b>35</b> 个</span>
+                <span id="zxzyTime">--:--:--</span>
+            </div>
+        </header>
+
+        <!-- 主体三列 -->
+        <main class="grid">
+
+            <!-- 左列 -->
+            <aside class="col">
+                <section class="panel">
+                    <div class="ph">
+                        <span class="ph-t">实时会话趋势</span>
+                        <span class="ph-en">SESSION TREND</span>
+                    </div>
+                    <div class="pc" id="zxzy_c1"></div>
+                </section>
+
+                <section class="panel">
+                    <div class="ph">
+                        <span class="ph-t">咨询渠道占比</span>
+                        <span class="ph-en">CHANNEL</span>
+                    </div>
+                    <div class="pc" id="zxzy_c2"></div>
+                </section>
+
+                <section class="panel">
+                    <div class="ph">
+                        <span class="ph-t">热门问题 TOP5</span>
+                        <span class="ph-en">TOP QUESTIONS</span>
+                    </div>
+                    <div class="pc" id="zxzy_c3"></div>
+                </section>
+            </aside>
+
+            <!-- 中列 -->
+            <section class="col col-center">
+                <section class="panel panel-map">
+                    <div class="ph">
+                        <span class="ph-t">全国服务节点分布</span>
+                        <span class="ph-en">SERVICE MAP · CHINA</span>
+                    </div>
+                    <div class="pc" id="zxzy_map"></div>
+                </section>
+
+                <section class="panel panel-kpi">
+                    <div class="ph">
+                        <span class="ph-t">实时服务概览</span>
+                        <span class="ph-en">OVERVIEW</span>
+                    </div>
+                    <div class="kpi-row">
+                        <div class="kpi">
+                            <div class="v" id="zxzy_k1">12,860</div>
+                            <div class="l">今日会话量</div>
+                        </div>
+                        <div class="kpi">
+                            <div class="v" id="zxzy_k2">92.4<small>%</small></div>
+                            <div class="l">一次解决率</div>
+                        </div>
+                        <div class="kpi">
+                            <div class="v" id="zxzy_k3">1.8<small>s</small></div>
+                            <div class="l">平均响应</div>
+                        </div>
+                        <div class="kpi">
+                            <div class="v" id="zxzy_k4">186</div>
+                            <div class="l">在线坐席</div>
+                        </div>
+                    </div>
+                    <div class="pc" id="zxzy_c5"></div>
+                </section>
+            </section>
+
+            <!-- 右列 -->
+            <aside class="col">
+                <section class="panel">
+                    <div class="ph">
+                        <span class="ph-t">用户意图分布</span>
+                        <span class="ph-en">INTENT</span>
+                    </div>
+                    <div class="pc" id="zxzy_c6"></div>
+                </section>
+
+                <section class="panel">
+                    <div class="ph">
+                        <span class="ph-t">客户满意度</span>
+                        <span class="ph-en">SATISFACTION</span>
+                    </div>
+                    <div class="pc" id="zxzy_c7"></div>
+                </section>
+
+                <section class="panel">
+                    <div class="ph">
+                        <span class="ph-t">实时告警</span>
+                        <span class="ph-en">ALERTS</span>
+                    </div>
+                    <div class="alerts" id="zxzy_alerts"></div>
+                </section>
+            </aside>
+
+        </main>
+    </div>
+
+    <!-- 本地依赖 -->
+    <script src="cdn/echarts/echarts.min.js"></script>
+    <script src="cdn/map/china.js"></script>
+    <script>
+        (function () {
+            // ===== 依赖检查 =====
+            if (typeof echarts === "undefined" || typeof window.zxzyChinaGeo === "undefined") {
+                var zxzy_msg = "依赖加载失败：请确认 cdn/echarts/echarts.min.js 与 cdn/map/china.js 存在。";
+                ["zxzy_c1", "zxzy_c2", "zxzy_c3", "zxzy_map", "zxzy_c5", "zxzy_c6", "zxzy_c7"].forEach(function (id) {
+                    var el = document.getElementById(id);
+                    if (el) { el.innerHTML = '<div class="fail">' + zxzy_msg + '</div>'; }
+                });
+                return;
+            }
+
+            // ===== 公共样式常量 =====
+            var zxzy_axisColor = "rgba(70, 130, 190, .35)";
+            var zxzy_textColor = "#8fb4d9";
+            var zxzy_tip = {
+                backgroundColor: "rgba(6, 18, 38, .94)",
+                borderColor: "rgba(46, 168, 255, .5)",
+                borderWidth: 1,
+                textStyle: { color: "#cfe3ff", fontSize: 12 }
+            };
+
+            // 随机整数
+            function zxzy_rand(min, max) {
+                return Math.round(min + Math.random() * (max - min));
+            }
+
+            /* =========================================================
+               1. 实时会话趋势（折线面积）
+               ========================================================= */
+            var zxzy_hours = [];
+            for (var zxzy_h = 0; zxzy_h < 24; zxzy_h++) {
+                zxzy_hours.push((zxzy_h < 10 ? "0" + zxzy_h : zxzy_h) + ":00");
+            }
+
+            var zxzy_trendA = [];   // 咨询量
+            var zxzy_trendB = [];   // 解决量
+            for (var zxzy_i = 0; zxzy_i < 24; zxzy_i++) {
+                zxzy_trendA.push(zxzy_rand(260, 520) + (zxzy_i > 8 && zxzy_i < 21 ? 320 : 0));
+                zxzy_trendB.push(0);
+            }
+            for (var zxzy_j = 0; zxzy_j < 24; zxzy_j++) {
+                zxzy_trendB[zxzy_j] = Math.round(zxzy_trendA[zxzy_j] * (0.82 + Math.random() * 0.12));
+            }
+
+            var zxzy_c1 = echarts.init(document.getElementById("zxzy_c1"));
+            zxzy_c1.setOption({
+                tooltip: Object.assign({ trigger: "axis" }, zxzy_tip),
+                legend: {
+                    data: ["咨询量", "解决量"],
+                    top: 0,
+                    right: 4,
+                    itemWidth: 10,
+                    itemHeight: 8,
+                    textStyle: { color: zxzy_textColor, fontSize: 11 }
+                },
+                grid: { left: 6, right: 12, top: 34, bottom: 4, containLabel: true },
+                xAxis: {
+                    type: "category",
+                    boundaryGap: false,
+                    data: zxzy_hours,
+                    axisLine: { lineStyle: { color: zxzy_axisColor } },
+                    axisTick: { show: false },
+                    axisLabel: { color: zxzy_textColor, fontSize: 9.5, interval: 5 }
+                },
+                yAxis: {
+                    type: "value",
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    axisLabel: { color: zxzy_textColor, fontSize: 9.5 },
+                    splitLine: { lineStyle: { color: "rgba(70, 130, 190, .12)" } }
+                },
+                series: [
+                    {
+                        name: "咨询量",
+                        type: "line",
+                        smooth: true,
+                        symbol: "none",
+                        lineStyle: { width: 2, color: "#35d0ff" },
+                        areaStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: "rgba(53, 208, 255, .45)" },
+                                { offset: 1, color: "rgba(53, 208, 255, 0)" }
+                            ])
+                        },
+                        data: zxzy_trendA
+                    },
+                    {
+                        name: "解决量",
+                        type: "line",
+                        smooth: true,
+                        symbol: "none",
+                        lineStyle: { width: 1.5, color: "#35e0a1" },
+                        data: zxzy_trendB
+                    }
+                ]
+            });
+
+            /* =========================================================
+               2. 咨询渠道占比（南丁格尔玫瑰图）
+               ========================================================= */
+            var zxzy_channels = [
+                { name: "网页", value: 38 },
+                { name: "App", value: 27 },
+                { name: "微信", value: 21 },
+                { name: "电话", value: 9 },
+                { name: "其他", value: 5 }
+            ];
+
+            var zxzy_c2 = echarts.init(document.getElementById("zxzy_c2"));
+            zxzy_c2.setOption({
+                tooltip: Object.assign({ trigger: "item", formatter: "{b}：{c}%" }, zxzy_tip),
+                legend: {
+                    orient: "vertical",
+                    right: 4,
+                    top: "center",
+                    itemWidth: 9,
+                    itemHeight: 9,
+                    textStyle: { color: zxzy_textColor, fontSize: 11 }
+                },
+                color: ["#35d0ff", "#35e0a1", "#f2c14e", "#ef7d9b", "#9a8cf0"],
+                series: [{
+                    type: "pie",
+                    radius: ["34%", "66%"],
+                    center: ["36%", "52%"],
+                    roseType: "radius",
+                    itemStyle: { borderColor: "#04101f", borderWidth: 2 },
+                    label: { show: false },
+                    data: zxzy_channels
+                }]
+            });
+
+            /* =========================================================
+               3. 热门问题 TOP5（横向条形）
+               ========================================================= */
+            var zxzy_topics = ["如何修改收货地址", "退款多久到账", "订单为什么被取消", "优惠券怎么使用", "如何转人工客服"];
+            var zxzy_topicValues = [486, 412, 358, 296, 241];
+
+            var zxzy_c3 = echarts.init(document.getElementById("zxzy_c3"));
+            zxzy_c3.setOption({
+                tooltip: Object.assign({ trigger: "axis", axisPointer: { type: "shadow" } }, zxzy_tip),
+                grid: { left: 6, right: 30, top: 12, bottom: 4, containLabel: true },
+                xAxis: {
+                    type: "value",
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    axisLabel: { show: false },
+                    splitLine: { show: false }
+                },
+                yAxis: {
+                    type: "category",
+                    inverse: true,
+                    data: zxzy_topics,
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    axisLabel: { color: zxzy_textColor, fontSize: 10.5 }
+                },
+                series: [{
+                    type: "bar",
+                    barWidth: 9,
+                    showBackground: true,
+                    backgroundStyle: { color: "rgba(46, 168, 255, .08)" },
+                    itemStyle: {
+                        borderRadius: 5,
+                        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                            { offset: 0, color: "#1e6fbf" },
+                            { offset: 1, color: "#35e0ff" }
+                        ])
+                    },
+                    label: { show: true, position: "right", color: "#9ad8ff", fontSize: 10.5 },
+                    data: zxzy_topicValues
+                }]
+            });
+
+            /* =========================================================
+               4. 全国服务节点分布（地理信息图）
+               ========================================================= */
+            echarts.registerMap("china", window.zxzyChinaGeo);
+
+            var zxzy_cities = [
+                { name: "北京", value: [116.40, 39.90, 1280], label: { position: "right" } },
+                { name: "上海", value: [121.47, 31.23, 1150], label: { position: "right" } },
+                { name: "广州", value: [113.26, 23.13, 980], label: { position: "left" } },
+                { name: "深圳", value: [114.06, 22.55, 1020], label: { position: "bottom" } },
+                { name: "成都", value: [104.07, 30.67, 760], label: { position: "left" } },
+                { name: "杭州", value: [120.15, 30.28, 820], label: { position: "bottom" } },
+                { name: "武汉", value: [114.30, 30.60, 690], label: { position: "left" } },
+                { name: "西安", value: [108.95, 34.27, 540], label: { position: "left" } },
+                { name: "沈阳", value: [123.43, 41.80, 430], label: { position: "right" } },
+                { name: "乌鲁木齐", value: [87.62, 43.82, 260], label: { position: "left" } }
+            ];
+
+            var zxzy_lines = zxzy_cities.slice(1).map(function (zxzy_city) {
+                return { coords: [[116.40, 39.90], [zxzy_city.value[0], zxzy_city.value[1]]] };
+            });
+
+            var zxzy_mapChart = echarts.init(document.getElementById("zxzy_map"));
+            zxzy_mapChart.setOption({
+                tooltip: Object.assign({
+                    trigger: "item",
+                    formatter: function (zxzy_p) {
+                        if (zxzy_p.seriesType === "effectScatter") {
+                            return zxzy_p.name + "<br/>接入会话：" + zxzy_p.value[2] + " 次/日";
+                        }
+                        return "";
+                    }
+                }, zxzy_tip),
+                geo: {
+                    map: "china",
+                    roam: true,
+                    zoom: 1.26,
+                    center: [104.5, 36],
+                    scaleLimit: { min: 0.9, max: 4 },
+                    label: { show: false },
+                    itemStyle: {
+                        areaColor: "#0a2646",
+                        borderColor: "#2a6e9f",
+                        borderWidth: 0.9,
+                        shadowColor: "rgba(35, 140, 220, .45)",
+                        shadowBlur: 16
+                    },
+                    emphasis: {
+                        label: { show: true, color: "#eaf6ff", fontSize: 10 },
+                        itemStyle: { areaColor: "#12497c" }
+                    }
+                },
+                series: [
+                    {
+                        name: "服务节点",
+                        type: "effectScatter",
+                        coordinateSystem: "geo",
+                        zlevel: 3,
+                        symbolSize: function (zxzy_v) {
+                            return Math.max(7, Math.min(18, zxzy_v[2] / 80));
+                        },
+                        rippleEffect: { brushType: "stroke", scale: 3.2, period: 4 },
+                        itemStyle: {
+                            color: "#35e0ff",
+                            shadowBlur: 12,
+                            shadowColor: "rgba(53, 224, 255, .9)"
+                        },
+                        label: {
+                            show: true,
+                            position: "right",
+                            distance: 6,
+                            formatter: "{b}",
+                            color: "#a9d8ff",
+                            fontSize: 10
+                        },
+                        data: zxzy_cities
+                    },
+                    {
+                        name: "调度链路",
+                        type: "lines",
+                        coordinateSystem: "geo",
+                        zlevel: 2,
+                        effect: {
+                            show: true,
+                            period: 4.5,
+                            trailLength: 0.35,
+                            symbol: "arrow",
+                            symbolSize: 5,
+                            color: "#7fe9ff"
+                        },
+                        lineStyle: {
+                            color: "#2f9fe0",
+                            width: 1.2,
+                            opacity: 0.72,
+                            curveness: 0.25
+                        },
+                        data: zxzy_lines
+                    }
+                ]
+            });
+
+            /* =========================================================
+               5. 实时并发（迷你折线）
+               ========================================================= */
+            var zxzy_spark = [];
+            for (var zxzy_s = 0; zxzy_s < 30; zxzy_s++) {
+                zxzy_spark.push(zxzy_rand(1100, 1600));
+            }
+
+            var zxzy_c5 = echarts.init(document.getElementById("zxzy_c5"));
+            zxzy_c5.setOption({
+                tooltip: Object.assign({ trigger: "axis" }, zxzy_tip),
+                grid: { left: 6, right: 12, top: 12, bottom: 4, containLabel: true },
+                xAxis: {
+                    type: "category",
+                    boundaryGap: false,
+                    data: zxzy_spark.map(function (v, i) { return i + 1; }),
+                    axisLine: { lineStyle: { color: zxzy_axisColor } },
+                    axisTick: { show: false },
+                    axisLabel: { show: false }
+                },
+                yAxis: {
+                    type: "value",
+                    scale: true,
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    axisLabel: { color: zxzy_textColor, fontSize: 9.5 },
+                    splitLine: { lineStyle: { color: "rgba(70, 130, 190, .12)" } }
+                },
+                series: [{
+                    name: "并发会话",
+                    type: "line",
+                    smooth: true,
+                    symbol: "none",
+                    lineStyle: { width: 2, color: "#35e0a1" },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: "rgba(53, 224, 161, .4)" },
+                            { offset: 1, color: "rgba(53, 224, 161, 0)" }
+                        ])
+                    },
+                    data: zxzy_spark
+                }]
+            });
+
+            /* =========================================================
+               6. 用户意图分布（横向条形）
+               ========================================================= */
+            var zxzy_intents = ["售后咨询", "物流查询", "账户问题", "支付问题", "商品咨询", "投诉建议"];
+            var zxzy_intentValues = [920, 810, 640, 520, 430, 260];
+
+            var zxzy_c6 = echarts.init(document.getElementById("zxzy_c6"));
+            zxzy_c6.setOption({
+                tooltip: Object.assign({ trigger: "axis", axisPointer: { type: "shadow" } }, zxzy_tip),
+                grid: { left: 6, right: 34, top: 10, bottom: 4, containLabel: true },
+                xAxis: {
+                    type: "value",
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    axisLabel: { show: false },
+                    splitLine: { show: false }
+                },
+                yAxis: {
+                    type: "category",
+                    inverse: true,
+                    data: zxzy_intents,
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    axisLabel: { color: zxzy_textColor, fontSize: 10.5 }
+                },
+                series: [{
+                    type: "bar",
+                    barWidth: 9,
+                    showBackground: true,
+                    backgroundStyle: { color: "rgba(46, 168, 255, .08)" },
+                    itemStyle: {
+                        borderRadius: 5,
+                        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                            { offset: 0, color: "#1f7fbf" },
+                            { offset: 1, color: "#5ee6ff" }
+                        ])
+                    },
+                    label: { show: true, position: "right", color: "#9ad8ff", fontSize: 10.5 },
+                    data: zxzy_intentValues
+                }]
+            });
+
+            /* =========================================================
+               7. 客户满意度（仪表盘）
+               ========================================================= */
+            var zxzy_c7 = echarts.init(document.getElementById("zxzy_c7"));
+            zxzy_c7.setOption({
+                series: [{
+                    type: "gauge",
+                    startAngle: 210,
+                    endAngle: -30,
+                    min: 80,
+                    max: 100,
+                    radius: "88%",
+                    center: ["50%", "58%"],
+                    progress: {
+                        show: true,
+                        roundCap: true,
+                        width: 11,
+                        itemStyle: { color: "#35e0ff" }
+                    },
+                    axisLine: {
+                        lineStyle: { width: 11, color: [[1, "rgba(46, 168, 255, .14)"]] }
+                    },
+                    pointer: { show: false },
+                    axisTick: { show: false },
+                    splitLine: { show: false },
+                    axisLabel: { show: false },
+                    detail: {
+                        valueAnimation: false,
+                        formatter: "{value}%",
+                        color: "#eaf6ff",
+                        fontSize: 26,
+                        offsetCenter: [0, "8%"]
+                    },
+                    title: {
+                        offsetCenter: [0, "48%"],
+                        color: "#7fa8cd",
+                        fontSize: 11
+                    },
+                    data: [{ value: 94.6, name: "客户满意度" }]
+                }]
+            });
+
+            /* =========================================================
+               8. 实时告警（HTML 列表）
+               ========================================================= */
+            var zxzy_alerts = document.getElementById("zxzy_alerts");
+            var zxzy_alertPool = [
+                { t: "华东节点响应时间超过 2s，已自动扩容", c: "#f2c14e" },
+                { t: "检测到高频重复提问，建议补充知识库条目", c: "#35d0ff" },
+                { t: "坐席在线数低于阈值，已启动备用坐席", c: "#ef7d9b" },
+                { t: "支付类意图激增，已切换专用应答模板", c: "#35e0a1" },
+                { t: "知识库索引重建完成，检索延迟下降 18%", c: "#9a8cf0" },
+                { t: "会话质检发现 3 条低置信回答，待人工复核", c: "#f2c14e" }
+            ];
+
+            function zxzy_nowStr() {
+                var zxzy_d = new Date();
+                var zxzy_pad = function (n) { return n < 10 ? "0" + n : "" + n; };
+                return zxzy_pad(zxzy_d.getHours()) + ":" + zxzy_pad(zxzy_d.getMinutes()) + ":" + zxzy_pad(zxzy_d.getSeconds());
+            }
+
+            function zxzy_addAlert(zxzy_item) {
+                var zxzy_row = document.createElement("div");
+                zxzy_row.className = "alert";
+                zxzy_row.innerHTML =
+                    '<i class="dot" style="background:' + zxzy_item.c + ';box-shadow:0 0 8px ' + zxzy_item.c + '"></i>' +
+                    '<span class="txt">' + zxzy_item.t + '</span>' +
+                    '<span class="tm">' + zxzy_nowStr() + '</span>';
+                zxzy_alerts.insertBefore(zxzy_row, zxzy_alerts.firstChild);
+
+                // 最多保留 7 条
+                while (zxzy_alerts.children.length > 7) {
+                    zxzy_alerts.removeChild(zxzy_alerts.lastChild);
+                }
+            }
+
+            // 先铺几条
+            for (var zxzy_a = 0; zxzy_a < 5; zxzy_a++) {
+                zxzy_addAlert(zxzy_alertPool[zxzy_a]);
+            }
+
+            /* =========================================================
+               时间显示
+               ========================================================= */
+            var zxzy_week = ["日", "一", "二", "三", "四", "五", "六"];
+
+            function zxzy_paintClock() {
+                var zxzy_d = new Date();
+                document.getElementById("zxzyTime").textContent = zxzy_nowStr();
+                document.getElementById("zxzyDate").textContent =
+                    zxzy_d.getFullYear() + "-" +
+                    (zxzy_d.getMonth() + 1 < 10 ? "0" : "") + (zxzy_d.getMonth() + 1) + "-" +
+                    (zxzy_d.getDate() < 10 ? "0" : "") + zxzy_d.getDate() +
+                    " 星期" + zxzy_week[zxzy_d.getDay()];
+            }
+            zxzy_paintClock();
+            setInterval(zxzy_paintClock, 1000);
+
+            /* =========================================================
+               模拟实时数据刷新
+               ========================================================= */
+            setInterval(function () {
+                // 1) 趋势：整体平移并补充新值
+                zxzy_trendA.shift();
+                zxzy_trendA.push(zxzy_rand(480, 900));
+                zxzy_trendB.shift();
+                zxzy_trendB.push(Math.round(zxzy_trendA[23] * (0.85 + Math.random() * 0.1)));
+                zxzy_c1.setOption({ series: [{ data: zxzy_trendA }, { data: zxzy_trendB }] });
+
+                // 2) 渠道占比轻微抖动
+                zxzy_channels[0].value = zxzy_rand(35, 41);
+                zxzy_channels[1].value = zxzy_rand(24, 29);
+                zxzy_channels[2].value = zxzy_rand(18, 23);
+                zxzy_channels[3].value = zxzy_rand(7, 11);
+                zxzy_channels[4].value = 100 - zxzy_channels[0].value - zxzy_channels[1].value -
+                    zxzy_channels[2].value - zxzy_channels[3].value;
+                zxzy_c2.setOption({ series: [{ data: zxzy_channels }] });
+
+                // 3) 热门问题
+                zxzy_topicValues = zxzy_topicValues.map(function (v) {
+                    return Math.max(120, v + zxzy_rand(-25, 25));
+                });
+                zxzy_c3.setOption({ series: [{ data: zxzy_topicValues }] });
+
+                // 4) 地图节点数值
+                zxzy_cities.forEach(function (c) {
+                    c.value[2] = Math.max(80, c.value[2] + zxzy_rand(-60, 60));
+                });
+                zxzy_mapChart.setOption({ series: [{ data: zxzy_cities }] });
+
+                // 5) 并发折线
+                zxzy_spark.shift();
+                zxzy_spark.push(zxzy_rand(1050, 1650));
+                zxzy_c5.setOption({ series: [{ data: zxzy_spark }] });
+
+                // 6) 意图分布
+                zxzy_intentValues = zxzy_intentValues.map(function (v) {
+                    return Math.max(150, v + zxzy_rand(-40, 40));
+                });
+                zxzy_c6.setOption({ series: [{ data: zxzy_intentValues }] });
+
+                // 7) 满意度
+                var zxzy_sat = +(90 + Math.random() * 8).toFixed(1);
+                zxzy_c7.setOption({ series: [{ data: [{ value: zxzy_sat, name: "客户满意度" }] }] });
+
+                // 8) KPI
+                var zxzy_k1 = zxzy_rand(12800, 14200);
+                document.getElementById("zxzy_k1").textContent = zxzy_k1.toLocaleString();
+                document.getElementById("zxzy_k2").innerHTML = (90 + Math.random() * 6).toFixed(1) + '<small>%</small>';
+                document.getElementById("zxzy_k3").innerHTML = (1.2 + Math.random() * 1.2).toFixed(1) + '<small>s</small>';
+                document.getElementById("zxzy_k4").textContent = zxzy_rand(170, 210);
+            }, 3000);
+
+            // 告警滚动
+            setInterval(function () {
+                var zxzy_item = zxzy_alertPool[Math.floor(Math.random() * zxzy_alertPool.length)];
+                zxzy_addAlert(zxzy_item);
+            }, 6000);
+
+            /* =========================================================
+               自适应
+               ========================================================= */
+            window.addEventListener("resize", function () {
+                [zxzy_c1, zxzy_c2, zxzy_c3, zxzy_mapChart, zxzy_c5, zxzy_c6, zxzy_c7].forEach(function (ch) {
+                    ch.resize();
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

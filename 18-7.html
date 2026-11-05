@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-11-05，功能名称：Three.js 3D 数据图表（柱状图 + 环形图） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-7 · Three.js 3D 图表</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(160deg, #182140 0%, #1d2850 100%);
+            color: #eef1fb;
+            padding: 28px 16px 48px;
+            min-height: 100vh;
+        }
+        .zxzy_wrap { max-width: 1080px; margin: 0 auto; }
+
+        /* ===== 顶部英雄卡片 ===== */
+        .zxzy_hero {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 26px;
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .zxzy_badge {
+            background: #86b9f2;
+            color: #14264d;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .zxzy_home {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            color: #dfe4f3;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 5px 16px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #354478; }
+        .zxzy_h1 { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+        .zxzy_intro { font-size: 14px; line-height: 2.1; color: #aab4d4; }
+        .zxzy_t {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            font-weight: bold;
+        }
+        .zxzy_t_code { background: rgba(125, 211, 252, .14); color: #7dd3fc; }
+        .zxzy_t_ok { background: rgba(74, 222, 128, .14); color: #4ade80; }
+        .zxzy_b { color: #eef1fb; font-weight: bold; }
+
+        /* ===== 区块标题 ===== */
+        .zxzy_h2 { font-size: 18px; font-weight: bold; margin: 26px 2px 14px; }
+
+        /* ===== 图表卡片 ===== */
+        .zxzy_card {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 18px 20px 14px;
+        }
+        .zxzy_card + .zxzy_card { margin-top: 18px; }
+        .zxzy_card_head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .zxzy_card h3 { font-size: 16.5px; margin-bottom: 5px; }
+        .zxzy_card p {
+            font-size: 12.8px;
+            line-height: 1.9;
+            color: #aab4d4;
+        }
+        .zxzy_card p code {
+            font-family: Consolas, monospace;
+            font-size: 12px;
+            color: #7dd3fc;
+            background: rgba(125, 211, 252, .1);
+            border-radius: 3px;
+            padding: 1px 5px;
+        }
+        .zxzy_tag {
+            font-size: 11.5px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: #2a3760;
+            color: #8fb8de;
+            white-space: nowrap;
+            font-family: Consolas, monospace;
+        }
+
+        /* ===== 3D 视图 ===== */
+        .zxzy_view {
+            position: relative;
+            width: 100%;
+            height: 440px;
+            border-radius: 12px;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 50% 30%, rgba(80, 130, 220, .18), transparent 62%),
+                #0e1730;
+            cursor: grab;
+            touch-action: none;
+        }
+        .zxzy_view:active { cursor: grabbing; }
+        .zxzy_view canvas { display: block; }
+
+        .zxzy_tip {
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: none;
+            padding: 6px 10px;
+            background: rgba(10, 16, 32, .92);
+            border: 1px solid #46558a;
+            border-radius: 6px;
+            font-size: 12.5px;
+            color: #eef1fb;
+            white-space: nowrap;
+            pointer-events: none;
+            transform: translate(12px, 12px);
+            z-index: 3;
+        }
+
+        .zxzy_hint {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #8b97bd;
+            text-align: center;
+            font-family: Consolas, monospace;
+        }
+
+        /* 图例 */
+        .zxzy_legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 18px;
+            margin: 12px 0 4px;
+            font-size: 12.5px;
+            color: #aab4d4;
+        }
+        .zxzy_legend span { display: flex; align-items: center; gap: 6px; }
+        .zxzy_dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        .zxzy_fail {
+            position: absolute;
+            left: 0; right: 0; top: 45%;
+            text-align: center;
+            font-size: 13px;
+            color: #f87171;
+            padding: 0 20px;
+            line-height: 2;
+        }
+
+        .zxzy_foot {
+            margin-top: 20px;
+            font-size: 12.5px;
+            line-height: 2;
+            color: #8b97bd;
+        }
+        .zxzy_foot code {
+            font-family: Consolas, monospace;
+            color: #7dd3fc;
+        }
+
+        @media (max-width: 700px) {
+            .zxzy_hero { padding: 20px; }
+            .zxzy_h1 { font-size: 23px; }
+            .zxzy_view { height: 340px; }
+            .zxzy_card { padding: 16px 12px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶部英雄卡片 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第18课 · Three.js 3D</span>
+                <a class="zxzy_home" href="index.html">← 返回首页</a>
+            </div>
+            <h1 class="zxzy_h1">用 Three.js 做 3D 图表</h1>
+            <p class="zxzy_intro">
+                页面引入本地文件 <span class="zxzy_t zxzy_t_ok">cdn/three/three.min.js</span>（r149，已下载，离线可用）。
+                两个图表都用同一个套路：<span class="zxzy_b">场景 Scene + 相机 Camera + 渲染器 WebGLRenderer</span>，
+                数据变成几何体（长方体 / 扇环），再用文字精灵做标签，最后在
+                <span class="zxzy_t zxzy_t_code">requestAnimationFrame</span> 里逐帧渲染。
+                图表支持按住拖动旋转、鼠标悬停查看数值。
+            </p>
+        </header>
+
+        <!-- 图表一 -->
+        <h2 class="zxzy_h2">一、3D 柱状图：全年销量</h2>
+        <section class="zxzy_card">
+            <div class="zxzy_card_head">
+                <div>
+                    <h3>12 个月销量（万元）</h3>
+                    <p>每根柱子是一个 <code>BoxGeometry</code>，高度由数据决定；颜色按数值从蓝到青渐变，柱顶和月份用 <code>Sprite</code> 文字标签标注。</p>
+                </div>
+                <span class="zxzy_tag">BoxGeometry</span>
+            </div>
+
+            <div class="zxzy_view" id="zxzy_view1">
+                <div class="zxzy_tip" id="zxzy_tip1"></div>
+            </div>
+            <p class="zxzy_hint">按住拖动旋转　·　鼠标悬停查看具体数值</p>
+        </section>
+
+        <!-- 图表二 -->
+        <h2 class="zxzy_h2">二、3D 环形图：咨询渠道占比</h2>
+        <section class="zxzy_card">
+            <div class="zxzy_card_head">
+                <div>
+                    <h3>各渠道咨询量占比</h3>
+                    <p>每个扇环由 <code>Shape</code>（内外两段圆弧）经 <code>ExtrudeGeometry</code> 拉伸成立体块，厚度随占比变化；扇环缓慢自转。</p>
+                </div>
+                <span class="zxzy_tag">ExtrudeGeometry</span>
+            </div>
+
+            <div class="zxzy_view" id="zxzy_view2">
+                <div class="zxzy_tip" id="zxzy_tip2"></div>
+            </div>
+            <div class="zxzy_legend" id="zxzy_legend2"></div>
+            <p class="zxzy_hint">按住拖动旋转　·　鼠标悬停查看占比</p>
+        </section>
+
+        <p class="zxzy_foot">
+            说明：Three.js 版本 r149，文件保存在 <code>cdn/three/three.min.js</code>；
+            页面不依赖任何构建工具，直接 <code>&lt;script&gt;</code> 引入即可；
+            两个图表各自独立渲染循环，窗口尺寸变化时会自动调整相机与画布比例。
+        </p>
+
+    </div>
+
+    <!-- 本地 Three.js -->
+    <script src="cdn/three/three.min.js"></script>
+    <script>
+        (function () {
+            // ===== 环境检查 =====
+            var zxzy_failMsg = "Three.js 加载失败，请确认 cdn/three/three.min.js 文件存在；若文件正常，可能是浏览器不支持 WebGL。";
+            if (typeof THREE === "undefined") {
+                document.getElementById("zxzy_view1").innerHTML = '<p class="zxzy_fail">' + zxzy_failMsg + '</p>';
+                document.getElementById("zxzy_view2").innerHTML = '<p class="zxzy_fail">' + zxzy_failMsg + '</p>';
+                return;
+            }
+
+            /* =========================================================
+               公共工具
+               ========================================================= */
+
+            // 创建场景 / 相机 / 渲染器，并把 canvas 塞进容器
+            function zxzyStage(container) {
+                var w = container.clientWidth || 800;
+                var h = container.clientHeight || 440;
+
+                var scene = new THREE.Scene();
+
+                var camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 300);
+
+                var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+                renderer.setSize(w, h);
+                renderer.outputEncoding = THREE.sRGBEncoding;
+                container.appendChild(renderer.domElement);
+
+                // 环境光 + 两盏方向光：让立方体有明显亮暗面
+                scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+
+                var light1 = new THREE.DirectionalLight(0xffffff, 0.95);
+                light1.position.set(8, 16, 10);
+                scene.add(light1);
+
+                var light2 = new THREE.DirectionalLight(0x7fb2ff, 0.55);
+                light2.position.set(-10, 8, -8);
+                scene.add(light2);
+
+                return { container: container, scene: scene, camera: camera, renderer: renderer };
+            }
+
+            // 用 canvas 画文字，做成永远面向相机的 Sprite 标签
+            function zxzyLabel(text, color, fontSize) {
+                var fs = fontSize || 28;
+                var canvas = document.createElement("canvas");
+                var ctx = canvas.getContext("2d");
+
+                ctx.font = 'bold ' + fs + 'px "Microsoft YaHei", "PingFang SC", sans-serif';
+                var textWidth = Math.ceil(ctx.measureText(text).width);
+
+                canvas.width = textWidth + 16;
+                canvas.height = fs + 14;
+
+                ctx = canvas.getContext("2d");
+                ctx.font = 'bold ' + fs + 'px "Microsoft YaHei", "PingFang SC", sans-serif';
+                ctx.fillStyle = color || "#cfe0f2";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(text, canvas.width / 2, canvas.height / 2 + 1);
+
+                var texture = new THREE.CanvasTexture(canvas);
+                texture.minFilter = THREE.LinearFilter;
+
+                var sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+                    map: texture,
+                    transparent: true,
+                    depthWrite: false
+                }));
+
+                // 按像素换算成世界的尺寸
+                sprite.scale.set(canvas.width * 0.011, canvas.height * 0.011, 1);
+                return sprite;
+            }
+
+            // 拖拽旋转（只绕 Y 轴，附带一点俯仰）
+            function zxzyEnableDrag(dom, state, tilt) {
+                var dragging = false;
+                var lastX = 0;
+                var lastY = 0;
+
+                dom.addEventListener("pointerdown", function (e) {
+                    dragging = true;
+                    lastX = e.clientX;
+                    lastY = e.clientY;
+                    dom.setPointerCapture(e.pointerId);
+                });
+
+                dom.addEventListener("pointermove", function (e) {
+                    if (!dragging) { return; }
+                    state.ry += (e.clientX - lastX) * 0.008;
+                    if (tilt) {
+                        state.rx += (e.clientY - lastY) * 0.004;
+                        state.rx = Math.max(-0.35, Math.min(0.35, state.rx));
+                    }
+                    lastX = e.clientX;
+                    lastY = e.clientY;
+                });
+
+                function stop(e) {
+                    dragging = false;
+                    if (e && e.pointerId !== undefined) {
+                        try { dom.releasePointerCapture(e.pointerId); } catch (err) { }
+                    }
+                }
+                dom.addEventListener("pointerup", stop);
+                dom.addEventListener("pointercancel", stop);
+                dom.addEventListener("pointerleave", stop);
+            }
+
+            /* =========================================================
+               图表一：3D 柱状图
+               ========================================================= */
+            var zxzy_view1 = document.getElementById("zxzy_view1");
+            var zxzy_stage1 = zxzyStage(zxzy_view1);
+            var zxzy_tip1 = document.getElementById("zxzy_tip1");
+
+            var zxzy_group1 = new THREE.Group();
+            zxzy_stage1.scene.add(zxzy_group1);
+
+            // 地面网格
+            var zxzy_grid1 = new THREE.GridHelper(14, 14, 0x3c4d7e, 0x243154);
+            zxzy_grid1.material.transparent = true;
+            zxzy_grid1.material.opacity = 0.7;
+            zxzy_group1.add(zxzy_grid1);
+
+            // Y 轴竖线，让刻度有依附
+            var zxzy_axisGeo = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(-6.3, 0, 0),
+                new THREE.Vector3(-6.3, 7, 0)
+            ]);
+            zxzy_group1.add(new THREE.Line(zxzy_axisGeo, new THREE.LineBasicMaterial({ color: 0x3c4d7e })));
+
+            // 数据：12 个月销量（万元）
+            var zxzy_months = ["1月", "2月", "3月", "4月", "5月", "6月",
+                "7月", "8月", "9月", "10月", "11月", "12月"];
+            var zxzy_values = [42, 58, 65, 51, 78, 92, 88, 105, 96, 120, 138, 152];
+            var zxzy_maxValue = 160;
+            var zxzy_maxHeight = 7;
+
+            var zxzy_bars = [];
+            var zxzy_barGeom = new THREE.BoxGeometry(0.62, 1, 0.62);
+            zxzy_barGeom.translate(0, 0.5, 0);     // 让长方体的“底”落在 y = 0
+
+            zxzy_values.forEach(function (zxzy_v, zxzy_i) {
+                var zxzy_x = (zxzy_i - 5.5) * 1.05;
+                var zxzy_targetH = zxzy_v / zxzy_maxValue * zxzy_maxHeight;
+
+                // 数值越大颜色越偏青
+                var zxzy_color = new THREE.Color().setHSL(0.60 - zxzy_v / zxzy_maxValue * 0.09, 0.72, 0.58);
+
+                var zxzy_mat = new THREE.MeshStandardMaterial({
+                    color: zxzy_color,
+                    roughness: 0.35,
+                    metalness: 0.2,
+                    emissive: zxzy_color,
+                    emissiveIntensity: 0.12
+                });
+
+                var zxzy_bar = new THREE.Mesh(zxzy_barGeom, zxzy_mat);
+                zxzy_bar.position.set(zxzy_x, 0, 0);
+                zxzy_bar.scale.y = 0.001;
+                zxzy_bar.userData = {
+                    name: zxzy_months[zxzy_i],
+                    value: zxzy_v,
+                    targetH: zxzy_targetH
+                };
+                zxzy_group1.add(zxzy_bar);
+                zxzy_bars.push(zxzy_bar);
+
+                // 月份标签：放在每根柱子前面
+                var zxzy_monthLabel = zxzyLabel(zxzy_months[zxzy_i], "#9fb0d0", 26);
+                zxzy_monthLabel.position.set(zxzy_x, 0.08, 0.95);
+                zxzy_group1.add(zxzy_monthLabel);
+
+                // 数值标签：浮在柱顶（每帧跟随柱子长高）
+                var zxzy_valueLabel = zxzyLabel(String(zxzy_v), "#cfe6ff", 24);
+                zxzy_valueLabel.position.set(zxzy_x, 0.5, 0);
+                zxzy_valueLabel.userData.bar = zxzy_bar;
+                zxzy_group1.add(zxzy_valueLabel);
+                zxzy_bar.userData.valueLabel = zxzy_valueLabel;
+            });
+
+            // Y 轴刻度
+            [0, 50, 100, 150].forEach(function (zxzy_tick) {
+                var zxzy_tickLabel = zxzyLabel(String(zxzy_tick), "#6f80a8", 24);
+                zxzy_tickLabel.position.set(-7.15, zxzy_tick / zxzy_maxValue * zxzy_maxHeight, 0);
+                zxzy_group1.add(zxzy_tickLabel);
+            });
+
+            // 相机与交互
+            zxzy_stage1.camera.position.set(0, 7.4, 12.6);
+            zxzy_stage1.camera.lookAt(0, 2.4, 0);
+
+            var zxzy_drag1 = { ry: 0, rx: 0 };
+            zxzyEnableDrag(zxzy_stage1.renderer.domElement, zxzy_drag1, true);
+            zxzy_group1.position.y = -1.3;
+
+            // 悬停拾取
+            var zxzy_raycaster = new THREE.Raycaster();
+            var zxzy_pointer = new THREE.Vector2();
+            var zxzy_hovered = null;
+
+            zxzy_stage1.renderer.domElement.addEventListener("pointermove", function (e) {
+                var zxzy_rect = zxzy_stage1.renderer.domElement.getBoundingClientRect();
+                zxzy_pointer.x = ((e.clientX - zxzy_rect.left) / zxzy_rect.width) * 2 - 1;
+                zxzy_pointer.y = -((e.clientY - zxzy_rect.top) / zxzy_rect.height) * 2 + 1;
+
+                zxzy_raycaster.setFromCamera(zxzy_pointer, zxzy_stage1.camera);
+                var zxzy_hits = zxzy_raycaster.intersectObjects(zxzy_bars, false);
+
+                if (zxzy_hits.length > 0) {
+                    var zxzy_hit = zxzy_hits[0].object;
+
+                    // 取消上一个高亮
+                    if (zxzy_hovered !== null && zxzy_hovered !== zxzy_hit) {
+                        zxzy_hovered.material.emissiveIntensity = 0.12;
+                    }
+                    zxzy_hovered = zxzy_hit;
+                    zxzy_hit.material.emissiveIntensity = 0.65;
+
+                    zxzy_tip1.style.display = "block";
+                    zxzy_tip1.style.left = (e.clientX - zxzy_rect.left) + "px";
+                    zxzy_tip1.style.top = (e.clientY - zxzy_rect.top) + "px";
+                    zxzy_tip1.textContent = zxzy_hit.userData.name + " · " + zxzy_hit.userData.value + " 万元";
+                } else {
+                    if (zxzy_hovered !== null) {
+                        zxzy_hovered.material.emissiveIntensity = 0.12;
+                        zxzy_hovered = null;
+                    }
+                    zxzy_tip1.style.display = "none";
+                }
+            });
+
+            zxzy_stage1.renderer.domElement.addEventListener("pointerleave", function () {
+                zxzy_tip1.style.display = "none";
+                if (zxzy_hovered !== null) {
+                    zxzy_hovered.material.emissiveIntensity = 0.12;
+                    zxzy_hovered = null;
+                }
+            });
+
+            // 柱状图渲染循环
+            var zxzy_clock1 = new THREE.Clock();
+
+            function zxzy_render1() {
+                var zxzy_t = zxzy_clock1.getElapsedTime();
+
+                // 柱子长高动画（缓动）
+                zxzy_bars.forEach(function (zxzy_bar) {
+                    var zxzy_target = zxzy_bar.userData.targetH;
+                    zxzy_bar.scale.y += (zxzy_target - zxzy_bar.scale.y) * 0.08;
+                    zxzy_bar.userData.valueLabel.position.y = zxzy_bar.scale.y + 0.55;
+                });
+
+                // 自动轻微摆动 + 手动拖拽
+                zxzy_group1.rotation.y = zxzy_drag1.ry + Math.sin(zxzy_t * 0.35) * 0.10;
+                zxzy_group1.rotation.x = zxzy_drag1.rx;
+
+                zxzy_stage1.renderer.render(zxzy_stage1.scene, zxzy_stage1.camera);
+                requestAnimationFrame(zxzy_render1);
+            }
+            zxzy_render1();
+
+            /* =========================================================
+               图表二：3D 环形图
+               ========================================================= */
+            var zxzy_view2 = document.getElementById("zxzy_view2");
+            var zxzy_stage2 = zxzyStage(zxzy_view2);
+            var zxzy_tip2 = document.getElementById("zxzy_tip2");
+
+            var zxzy_group2 = new THREE.Group();
+            zxzy_stage2.scene.add(zxzy_group2);
+
+            var zxzy_grid2 = new THREE.GridHelper(14, 14, 0x3c4d7e, 0x243154);
+            zxzy_grid2.material.transparent = true;
+            zxzy_grid2.material.opacity = 0.55;
+            zxzy_group2.add(zxzy_grid2);
+
+            // 数据：渠道占比（合计 100）
+            var zxzy_pieData = [
+                { name: "网页", value: 38, color: 0x4f9cf9, css: "#4f9cf9" },
+                { name: "App", value: 27, color: 0x5ed3b8, css: "#5ed3b8" },
+                { name: "微信", value: 21, color: 0xf2b34b, css: "#f2b34b" },
+                { name: "电话", value: 9, color: 0xef7d9b, css: "#ef7d9b" },
+                { name: "其他", value: 5, color: 0x9a8cf0, css: "#9a8cf0" }
+            ];
+
+            var zxzy_slices = [];
+            var zxzy_rOuter = 3.2;
+            var zxzy_rInner = 1.25;
+            var zxzy_startAngle = -Math.PI / 2;    // 从正上方开始画
+
+            zxzy_pieData.forEach(function (zxzy_d) {
+                var zxzy_angle = zxzy_d.value / 100 * Math.PI * 2;
+                var zxzy_endAngle = zxzy_startAngle + zxzy_angle;
+
+                // 用内外两段圆弧围成一个扇环
+                var zxzy_shape = new THREE.Shape();
+                zxzy_shape.moveTo(
+                    Math.cos(zxzy_startAngle) * zxzy_rInner,
+                    Math.sin(zxzy_startAngle) * zxzy_rInner
+                );
+                zxzy_shape.absarc(0, 0, zxzy_rOuter, zxzy_startAngle, zxzy_endAngle, false);
+                zxzy_shape.absarc(0, 0, zxzy_rInner, zxzy_endAngle, zxzy_startAngle, true);
+
+                // 占比越大，扇环越厚
+                var zxzy_depth = 0.45 + zxzy_d.value * 0.013;
+
+                var zxzy_geo = new THREE.ExtrudeGeometry(zxzy_shape, {
+                    depth: zxzy_depth,
+                    bevelEnabled: false,
+                    curveSegments: 48
+                });
+
+                var zxzy_mat = new THREE.MeshStandardMaterial({
+                    color: zxzy_d.color,
+                    roughness: 0.4,
+                    metalness: 0.18,
+                    emissive: zxzy_d.color,
+                    emissiveIntensity: 0.10,
+                    side: THREE.DoubleSide
+                });
+
+                var zxzy_slice = new THREE.Mesh(zxzy_geo, zxzy_mat);
+                zxzy_slice.rotation.x = -Math.PI / 2;      // 平放，厚度朝上
+                zxzy_slice.userData = {
+                    name: zxzy_d.name,
+                    value: zxzy_d.value
+                };
+                zxzy_group2.add(zxzy_slice);
+                zxzy_slices.push(zxzy_slice);
+
+                // 标签放在扇环外侧
+                var zxzy_mid = zxzy_startAngle + zxzy_angle / 2;
+                var zxzy_lx = Math.cos(zxzy_mid) * (zxzy_rOuter + 0.95);
+                var zxzy_lz = -Math.sin(zxzy_mid) * (zxzy_rOuter + 0.95);
+
+                var zxzy_label = zxzyLabel(zxzy_d.name + " " + zxzy_d.value + "%", "#d7e2f2", 24);
+                zxzy_label.position.set(zxzy_lx, 0.95, zxzy_lz);
+                zxzy_group2.add(zxzy_label);
+
+                zxzy_startAngle = zxzy_endAngle;
+            });
+
+            zxzy_stage2.camera.position.set(0, 8.4, 9.4);
+            zxzy_stage2.camera.lookAt(0, 0.6, 0);
+            zxzy_group2.position.y = -0.4;
+
+            var zxzy_drag2 = { ry: 0, rx: 0 };
+            zxzyEnableDrag(zxzy_stage2.renderer.domElement, zxzy_drag2, false);
+
+            // 悬停拾取
+            var zxzy_raycaster2 = new THREE.Raycaster();
+            var zxzy_pointer2 = new THREE.Vector2();
+            var zxzy_hovered2 = null;
+
+            zxzy_stage2.renderer.domElement.addEventListener("pointermove", function (e) {
+                var zxzy_rect = zxzy_stage2.renderer.domElement.getBoundingClientRect();
+                zxzy_pointer2.x = ((e.clientX - zxzy_rect.left) / zxzy_rect.width) * 2 - 1;
+                zxzy_pointer2.y = -((e.clientY - zxzy_rect.top) / zxzy_rect.height) * 2 + 1;
+
+                zxzy_raycaster2.setFromCamera(zxzy_pointer2, zxzy_stage2.camera);
+                var zxzy_hits = zxzy_raycaster2.intersectObjects(zxzy_slices, false);
+
+                if (zxzy_hits.length > 0) {
+                    var zxzy_hit = zxzy_hits[0].object;
+
+                    if (zxzy_hovered2 !== null && zxzy_hovered2 !== zxzy_hit) {
+                        zxzy_hovered2.material.emissiveIntensity = 0.10;
+                    }
+                    zxzy_hovered2 = zxzy_hit;
+                    zxzy_hit.material.emissiveIntensity = 0.75;
+
+                    zxzy_tip2.style.display = "block";
+                    zxzy_tip2.style.left = (e.clientX - zxzy_rect.left) + "px";
+                    zxzy_tip2.style.top = (e.clientY - zxzy_rect.top) + "px";
+                    zxzy_tip2.textContent = zxzy_hit.userData.name + " · " + zxzy_hit.userData.value + "%";
+                } else {
+                    if (zxzy_hovered2 !== null) {
+                        zxzy_hovered2.material.emissiveIntensity = 0.10;
+                        zxzy_hovered2 = null;
+                    }
+                    zxzy_tip2.style.display = "none";
+                }
+            });
+
+            zxzy_stage2.renderer.domElement.addEventListener("pointerleave", function () {
+                zxzy_tip2.style.display = "none";
+                if (zxzy_hovered2 !== null) {
+                    zxzy_hovered2.material.emissiveIntensity = 0.10;
+                    zxzy_hovered2 = null;
+                }
+            });
+
+            // 图例（由数据自动生成）
+            var zxzy_legend = document.getElementById("zxzy_legend2");
+            zxzy_pieData.forEach(function (zxzy_d) {
+                var zxzy_item = document.createElement("span");
+                zxzy_item.innerHTML = '<i class="zxzy_dot" style="background:' + zxzy_d.css + '"></i>' +
+                    zxzy_d.name + "　" + zxzy_d.value + "%";
+                zxzy_legend.appendChild(zxzy_item);
+            });
+
+            // 环形图渲染循环
+            var zxzy_clock2 = new THREE.Clock();
+
+            function zxzy_render2() {
+                var zxzy_t = zxzy_clock2.getElapsedTime();
+
+                // 进场缩放
+                var zxzy_scale = Math.min(1, 0.65 + zxzy_t * 0.5);
+                zxzy_group2.scale.setScalar(zxzy_scale);
+
+                // 自转 + 手动拖拽
+                zxzy_group2.rotation.y = zxzy_drag2.ry + zxzy_t * 0.22;
+
+                zxzy_stage2.renderer.render(zxzy_stage2.scene, zxzy_stage2.camera);
+                requestAnimationFrame(zxzy_render2);
+            }
+            zxzy_render2();
+
+            /* =========================================================
+               自适应窗口
+               ========================================================= */
+            window.addEventListener("resize", function () {
+                [zxzy_stage1, zxzy_stage2].forEach(function (zxzy_st) {
+                    var zxzy_w = zxzy_st.container.clientWidth;
+                    var zxzy_h = zxzy_st.container.clientHeight;
+                    zxzy_st.camera.aspect = zxzy_w / zxzy_h;
+                    zxzy_st.camera.updateProjectionMatrix();
+                    zxzy_st.renderer.setSize(zxzy_w, zxzy_h);
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

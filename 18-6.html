@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-11-05，功能名称：Mermaid 绘制智能客服流程图与 ER 图 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-6 · Mermaid 流程图与 ER 图</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(160deg, #182140 0%, #1d2850 100%);
+            color: #eef1fb;
+            padding: 28px 16px 48px;
+            min-height: 100vh;
+        }
+        .zxzy_wrap { max-width: 1180px; margin: 0 auto; }
+
+        /* ===== 顶部英雄卡片 ===== */
+        .zxzy_hero {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 26px;
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .zxzy_badge {
+            background: #86b9f2;
+            color: #14264d;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .zxzy_home {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            color: #dfe4f3;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 5px 16px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #354478; }
+        .zxzy_h1 { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+        .zxzy_intro { font-size: 14px; line-height: 2.1; color: #aab4d4; }
+        .zxzy_t {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            font-weight: bold;
+        }
+        .zxzy_t_code { background: rgba(125, 211, 252, .14); color: #7dd3fc; }
+        .zxzy_t_ok { background: rgba(74, 222, 128, .14); color: #4ade80; }
+        .zxzy_b { color: #eef1fb; font-weight: bold; }
+
+        /* ===== 区块标题 ===== */
+        .zxzy_h2 { font-size: 18px; font-weight: bold; margin: 26px 2px 14px; }
+
+        /* ===== 图卡片 ===== */
+        .zxzy_card {
+            background: #ffffff;
+            border: 1px solid #dfe5ec;
+            border-radius: 14px;
+            padding: 20px 22px 10px;
+            box-shadow: 0 4px 16px rgba(8, 14, 32, .18);
+        }
+        .zxzy_card + .zxzy_card { margin-top: 18px; }
+        .zxzy_card_head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .zxzy_card h3 { font-size: 17px; color: #243244; margin-bottom: 5px; }
+        .zxzy_card p { font-size: 12.8px; line-height: 1.9; color: #6c7889; }
+        .zxzy_card p code {
+            font-family: Consolas, monospace;
+            font-size: 12px;
+            color: #a35427;
+            background: #fbf3ee;
+            border-radius: 3px;
+            padding: 1px 5px;
+        }
+        .zxzy_tag {
+            font-size: 11.5px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: #eef4fb;
+            color: #3b6a99;
+            white-space: nowrap;
+            font-family: Consolas, monospace;
+        }
+
+        /* 图表容器 */
+        .zxzy_diagram {
+            padding: 8px 0 16px;
+            overflow-x: auto;
+            text-align: center;
+        }
+        .zxzy_diagram .mermaid {
+            display: inline-block;
+            min-width: 320px;
+        }
+        /* 让 Mermaid 生成的 SVG 自适应宽度 */
+        .zxzy_diagram svg { max-width: 100%; height: auto; }
+
+        .zxzy_fail {
+            color: #c0392b;
+            font-size: 13px;
+            padding: 18px 0;
+            text-align: center;
+        }
+
+        /* 图下方的说明 */
+        .zxzy_notes {
+            margin-top: 10px;
+            padding: 12px 16px;
+            background: #f7fafd;
+            border: 1px solid #e6edf5;
+            border-radius: 10px;
+            font-size: 12.6px;
+            line-height: 2;
+            color: #5a6879;
+        }
+        .zxzy_notes b { color: #2f5f8f; }
+        .zxzy_notes code {
+            font-family: Consolas, monospace;
+            color: #a35427;
+            background: #fbf3ee;
+            padding: 1px 5px;
+            border-radius: 3px;
+        }
+
+        /* ===== 语法卡片 ===== */
+        .zxzy_cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 12px;
+        }
+        .zxzy_syntax {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 14px;
+            padding: 16px 18px;
+        }
+        .zxzy_syntax h4 {
+            font-size: 14px;
+            color: #7dd3fc;
+            margin-bottom: 8px;
+        }
+        .zxzy_syntax p {
+            font-size: 12.8px;
+            line-height: 2;
+            color: #aab4d4;
+        }
+        .zxzy_syntax code {
+            font-family: Consolas, monospace;
+            font-size: 12px;
+            color: #4ade80;
+            background: rgba(74, 222, 128, .1);
+            padding: 1px 5px;
+            border-radius: 4px;
+        }
+
+        .zxzy_foot {
+            margin-top: 20px;
+            font-size: 12.5px;
+            line-height: 2;
+            color: #8b97bd;
+        }
+        .zxzy_foot code {
+            font-family: Consolas, monospace;
+            color: #7dd3fc;
+        }
+
+        @media (max-width: 700px) {
+            .zxzy_hero { padding: 20px; }
+            .zxzy_h1 { font-size: 23px; }
+            .zxzy_card { padding: 16px 12px 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶部英雄卡片 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第18课 · Mermaid 绘图</span>
+                <a class="zxzy_home" href="index.html">← 返回首页</a>
+            </div>
+            <h1 class="zxzy_h1">用文本画图：智能客服系统</h1>
+            <p class="zxzy_intro">
+                Mermaid 是一种<span class="zxzy_b">用文本描述图形</span>的工具：把
+                <span class="zxzy_t zxzy_t_code">flowchart</span> / <span class="zxzy_t zxzy_t_code">erDiagram</span>
+                写进页面，脚本会自动渲染成 SVG。本页引入本地文件
+                <span class="zxzy_t zxzy_t_ok">cdn/mermaid/mermaid.min.js</span>（已下载，离线可用），
+                上图为系统流程图，下图为会话数据的 ER 图。
+            </p>
+        </header>
+
+        <!-- 流程图 -->
+        <h2 class="zxzy_h2">一、智能客服系统流程图</h2>
+        <section class="zxzy_card">
+            <div class="zxzy_card_head">
+                <div>
+                    <h3>从用户提问到人工兜底的完整链路</h3>
+                    <p>用 <code>flowchart TD</code> 描述自上而下的流程：圆角节点是开始 / 结束，菱形是判断，普通矩形是处理步骤，虚线表示数据回流。</p>
+                </div>
+                <span class="zxzy_tag">flowchart TD</span>
+            </div>
+
+            <div class="zxzy_diagram">
+                <pre class="mermaid">
+flowchart TD
+    A(["用户提问"]) --> B["接入网关&lt;br/&gt;鉴权 · 限流 · 路由"]
+    B --> C["意图识别&lt;br/&gt;文本分类 + 槽位抽取"]
+    C --> D{"意图与槽位&lt;br/&gt;是否明确?"}
+    D -- 否 --> E["多轮澄清&lt;br/&gt;追问缺失信息"]
+    E --> C
+    D -- 是 --> F["知识检索&lt;br/&gt;向量检索 + BM25 + 重排"]
+    F --> G["LLM 生成答案&lt;br/&gt;Prompt 注入知识片段"]
+    G --> H{"置信度&lt;br/&gt;≥ 阈值?"}
+    H -- 是 --> I(["返回答案&lt;br/&gt;附引用来源"])
+    H -- 否 --> J["转人工坐席&lt;br/&gt;携带会话上下文"]
+    I --> K["会话记录&lt;br/&gt;质检与标注"]
+    J --> K
+    K -. 数据回流 .-> L["知识库与模型迭代"]
+    L -.-> F
+
+    classDef se fill:#eaf2fb,stroke:#4a7bb0,stroke-width:1.5px,color:#1f3f5f;
+    classDef proc fill:#ffffff,stroke:#9ab8d6,color:#243244;
+    classDef decide fill:#fff8ec,stroke:#c9963f,color:#6b4a12;
+    classDef human fill:#fdf1f3,stroke:#c07488,color:#6d3544;
+    class A,I se;
+    class D,H decide;
+    class J human;
+                </pre>
+            </div>
+
+            <div class="zxzy_notes">
+                <b>读图顺序：</b>用户提问 → 网关校验 → 意图识别；若信息不足则多轮澄清后重新识别；
+                信息完整就进入 RAG 检索（向量 + BM25 + 重排）并由大模型生成答案；
+                置信度达标直接回复，否则转人工；无论哪条路径，会话都会进入记录与标注，
+                通过虚线回流到知识库与模型，形成持续迭代的闭环。
+            </div>
+        </section>
+
+        <!-- ER 图 -->
+        <h2 class="zxzy_h2">二、会话数据 ER 图</h2>
+        <section class="zxzy_card">
+            <div class="zxzy_card_head">
+                <div>
+                    <h3>用户 / 会话 / 消息 / 知识的关系模型</h3>
+                    <p>用 <code>erDiagram</code> 描述实体、属性与关系：<code>||--o{</code> 表示一对多，<code>}o--o{</code> 表示多对多，每个实体大括号里写字段类型、主外键与注释。</p>
+                </div>
+                <span class="zxzy_tag">erDiagram</span>
+            </div>
+
+            <div class="zxzy_diagram">
+                <pre class="mermaid">
+erDiagram
+    USER ||--o{ SESSION : "发起"
+    SESSION ||--o{ MESSAGE : "包含"
+    MESSAGE }o--o| INTENT : "识别为"
+    INTENT ||--o{ ANSWER : "生成"
+    ANSWER }o--o{ KNOWLEDGE : "引用"
+    KNOWLEDGE }o--|| CATEGORY : "归属"
+    AGENT |o--o{ SESSION : "接管"
+
+    USER {
+        bigint id PK "用户ID"
+        varchar nickname "昵称"
+        varchar phone "手机号"
+    }
+    SESSION {
+        bigint id PK "会话ID"
+        bigint user_id FK "所属用户"
+        varchar channel "网页/微信/电话"
+    }
+    MESSAGE {
+        bigint id PK "消息ID"
+        bigint session_id FK "所属会话"
+        text content "消息内容"
+    }
+    INTENT {
+        bigint id PK "意图ID"
+        bigint message_id FK "来源消息"
+        decimal confidence "置信度"
+    }
+    ANSWER {
+        bigint id PK "答案ID"
+        bigint intent_id FK "对应意图"
+        text content "回答内容"
+    }
+    KNOWLEDGE {
+        bigint id PK "知识ID"
+        bigint category_id FK "所属分类"
+        varchar title "标题"
+    }
+    CATEGORY {
+        bigint id PK "分类ID"
+        varchar name "分类名称"
+    }
+    AGENT {
+        bigint id PK "坐席ID"
+        varchar name "姓名"
+        varchar status "在线/忙碌"
+    }
+                </pre>
+            </div>
+
+            <div class="zxzy_notes">
+                <b>关系说明：</b>一个用户可以有多个会话，一个会话包含多条消息；
+                每条消息识别出一个意图，意图生成对应答案；
+                答案可以引用多条知识，知识归属分类；坐席可以接管会话。
+                这套模型能支撑多轮对话、知识溯源与人工协同。
+            </div>
+        </section>
+
+        <!-- 语法要点 -->
+        <h2 class="zxzy_h2">三、Mermaid 语法要点</h2>
+        <section class="zxzy_cards">
+            <div class="zxzy_syntax">
+                <h4>流程图方向与节点</h4>
+                <p>
+                    <code>flowchart TD</code> 自上而下，<code>LR</code> 从左到右；<br>
+                    <code>A["矩形"]</code> 处理、<code>B(["圆角"])</code> 起止、<br>
+                    <code>C{"菱形"}</code> 判断。
+                </p>
+            </div>
+            <div class="zxzy_syntax">
+                <h4>连线与文字</h4>
+                <p>
+                    <code>A --&gt; B</code> 实线箭头，<code>A -.-> B</code> 虚线箭头；<br>
+                    箭头中间加文字：<code>D -- 否 --&gt; E</code>。
+                </p>
+            </div>
+            <div class="zxzy_syntax">
+                <h4>ER 图的基数符号</h4>
+                <p>
+                    <code>||--o{</code> 一对多，<code>}|--||</code> 多对一，<br>
+                    <code>}o--o{</code> 多对多，左端是起点实体的基数。
+                </p>
+            </div>
+            <div class="zxzy_syntax">
+                <h4>本地引入与初始化</h4>
+                <p>
+                    引入 <code>cdn/mermaid/mermaid.min.js</code> 后，<br>
+                    调用 <code>mermaid.initialize({...})</code> 设置主题，<br>
+                    再 <code>mermaid.run()</code> 渲染所有 <code>.mermaid</code> 元素。
+                </p>
+            </div>
+        </section>
+
+        <p class="zxzy_foot">
+            说明：Mermaid 版本 11.4.1，文件保存在 <code>cdn/mermaid/mermaid.min.js</code>；
+            页面使用 default 主题并按站点配色微调字体；两个图均由文本实时渲染为 SVG，无需图片。
+        </p>
+
+    </div>
+
+    <!-- 本地 Mermaid（已下载，离线可用） -->
+    <script src="cdn/mermaid/mermaid.min.js"></script>
+    <script>
+        (function () {
+            // 检查脚本是否加载成功
+            if (typeof window.mermaid === "undefined") {
+                var zxzy_nodes = document.querySelectorAll(".mermaid");
+                for (var zxzy_i = 0; zxzy_i < zxzy_nodes.length; zxzy_i++) {
+                    zxzy_nodes[zxzy_i].outerHTML =
+                        '<p class="zxzy_fail">Mermaid 加载失败，请确认 cdn/mermaid/mermaid.min.js 文件存在。</p>';
+                }
+                return;
+            }
+
+            // 初始化全局配置：主题、字体、流程图与 ER 图参数
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: "default",
+                securityLevel: "loose",
+                themeVariables: {
+                    fontFamily: '"Microsoft YaHei", "PingFang SC", sans-serif',
+                    fontSize: "14px",
+                    primaryColor: "#eef4fb",
+                    primaryBorderColor: "#9ab8d6",
+                    primaryTextColor: "#243244",
+                    lineColor: "#8a95a3"
+                },
+                flowchart: {
+                    curve: "basis",
+                    htmlLabels: true,
+                    nodeSpacing: 40,
+                    rankSpacing: 46,
+                    padding: 12
+                },
+                er: {
+                    diagramPadding: 16,
+                    layoutDirection: "TB",
+                    minEntityWidth: 110,
+                    minEntityHeight: 50,
+                    entityPadding: 14,
+                    useMaxWidth: true
+                }
+            });
+
+            // 渲染页面中所有 .mermaid 元素
+            mermaid.run({
+                querySelector: ".mermaid"
+            }).catch(function (zxzy_err) {
+                console.error("Mermaid 渲染出错：", zxzy_err);
+            });
+        })();
+    </script>
+</body>
+</html>
