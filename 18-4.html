@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-11-05，功能名称：ECharts 大数据量面积图与雨量流量关系图 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-4 · ECharts 数据可视化</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(160deg, #182140 0%, #1d2850 100%);
+            color: #eef1fb;
+            padding: 28px 16px 48px;
+            min-height: 100vh;
+        }
+        .zxzy_wrap { max-width: 1180px; margin: 0 auto; }
+
+        /* ===== 顶部英雄卡片 ===== */
+        .zxzy_hero {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 26px;
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .zxzy_badge {
+            background: #86b9f2;
+            color: #14264d;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .zxzy_home {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            color: #dfe4f3;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 5px 16px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #354478; }
+        .zxzy_h1 { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+        .zxzy_intro { font-size: 14px; line-height: 2.1; color: #aab4d4; }
+        .zxzy_t {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            font-weight: bold;
+        }
+        .zxzy_t_code { background: rgba(125, 211, 252, .14); color: #7dd3fc; }
+        .zxzy_t_ok { background: rgba(74, 222, 128, .14); color: #4ade80; }
+        .zxzy_b { color: #eef1fb; font-weight: bold; }
+
+        /* ===== 区块标题 ===== */
+        .zxzy_h2 { font-size: 18px; font-weight: bold; margin: 26px 2px 14px; }
+
+        /* ===== 图表卡片 ===== */
+        .zxzy_card {
+            background: #ffffff;
+            border: 1px solid #dfe5ec;
+            border-radius: 14px;
+            padding: 20px 22px 14px;
+            box-shadow: 0 4px 16px rgba(8, 14, 32, .18);
+        }
+        .zxzy_card + .zxzy_card { margin-top: 18px; }
+        .zxzy_card_head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        .zxzy_card h3 { font-size: 17px; color: #243244; margin-bottom: 5px; }
+        .zxzy_card p {
+            font-size: 12.8px;
+            line-height: 1.9;
+            color: #6c7889;
+        }
+        .zxzy_tag {
+            font-size: 11.5px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: #eef4fb;
+            color: #3b6a99;
+            white-space: nowrap;
+            font-family: Consolas, monospace;
+        }
+        .zxzy_chart {
+            width: 100%;
+            height: 400px;
+            margin-top: 8px;
+        }
+        .zxzy_chart_tall { height: 460px; }
+        .zxzy_fail {
+            color: #c0392b;
+            font-size: 13px;
+            padding: 18px 0;
+        }
+
+        /* ===== 页脚说明 ===== */
+        .zxzy_note {
+            margin-top: 20px;
+            font-size: 12.5px;
+            line-height: 2;
+            color: #8b97bd;
+        }
+        .zxzy_note code {
+            font-family: Consolas, monospace;
+            color: #7dd3fc;
+        }
+
+        @media (max-width: 700px) {
+            .zxzy_hero { padding: 20px; }
+            .zxzy_h1 { font-size: 23px; }
+            .zxzy_card { padding: 16px 12px 10px; }
+            .zxzy_chart { height: 320px; }
+            .zxzy_chart_tall { height: 380px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶部英雄卡片 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第18课 · ECharts 可视化</span>
+                <a class="zxzy_home" href="index.html">← 返回首页</a>
+            </div>
+            <h1 class="zxzy_h1">两个经典图表：面积图与雨量流量关系图</h1>
+            <p class="zxzy_intro">
+                页面引入本地文件 <span class="zxzy_t zxzy_t_code">cdn/echarts/echarts.min.js</span>（已下载，无需联网），
+                用 <span class="zxzy_t zxzy_t_code">echarts.init()</span> 创建实例、<span class="zxzy_t zxzy_t_code">setOption()</span> 配置图表。
+                第一张是 <span class="zxzy_b">10,000 个采样点的大数据量面积图</span>；第二张是
+                <span class="zxzy_b">雨量与流量的双 Y 轴关系图</span>，降雨量柱状图倒置在顶部，流量用面积线表示。
+            </p>
+        </header>
+
+        <!-- 图表一 -->
+        <h2 class="zxzy_h2">一、大数据量面积图</h2>
+        <section class="zxzy_card">
+            <div class="zxzy_card_head">
+                <div>
+                    <h3>大数据量面积图</h3>
+                    <p>对应官方示例 area-simple。连续绘制 10,000 个采样点，用 <code>sampling: 'lttb'</code> 降采样保证流畅；关闭动画，鼠标移动可查看具体采样点的值。</p>
+                </div>
+                <span class="zxzy_tag">10,000 points</span>
+            </div>
+            <div class="zxzy_chart" id="zxzy_areaChart"></div>
+        </section>
+
+        <!-- 图表二 -->
+        <h2 class="zxzy_h2">二、雨量流量关系图</h2>
+        <section class="zxzy_card">
+            <div class="zxzy_card_head">
+                <div>
+                    <h3>雨量与流量关系图</h3>
+                    <p>对应官方示例 area-rainfall。左轴为水流量（面积折线），右轴为降雨量（柱状图，通过 <code>inverse: true</code> 倒置在顶部）；底部提供缩放滑块，可拖动查看任意时间段。</p>
+                </div>
+                <span class="zxzy_tag">双 Y 轴 · 365 天</span>
+            </div>
+            <div class="zxzy_chart zxzy_chart_tall" id="zxzy_rainChart"></div>
+        </section>
+
+        <p class="zxzy_note">
+            说明：两张图的数据均为页面内 JavaScript 模拟生成（固定随机种子，刷新后形态一致），
+            图表配置参考 ECharts 官方示例 <code>area-simple</code> 与 <code>area-rainfall</code>；
+            窗口尺寸变化时会自动调用 <code>resize()</code> 自适应。
+        </p>
+
+    </div>
+
+    <!-- 本地 ECharts（下载自 npm 镜像，版本 5.5.1） -->
+    <script src="cdn/echarts/echarts.min.js"></script>
+    <script>
+        // ===== 固定种子的伪随机数：保证每次打开数据形态一致 =====
+        var zxzy_seed = 20261105;
+        function zxzy_rand() {
+            zxzy_seed = (zxzy_seed * 9301 + 49297) % 233280;
+            return zxzy_seed / 233280;
+        }
+
+        // ===== 检查 ECharts 是否加载成功 =====
+        if (typeof echarts === "undefined") {
+            document.getElementById("zxzy_areaChart").innerHTML =
+                '<p class="zxzy_fail">ECharts 加载失败，请确认 cdn/echarts/echarts.min.js 文件存在。</p>';
+            document.getElementById("zxzy_rainChart").innerHTML =
+                '<p class="zxzy_fail">ECharts 加载失败，请确认文件路径。</p>';
+        } else {
+
+            /* =========================================================
+               ① 大数据量面积图（参考 area-simple）
+               ========================================================= */
+            var zxzy_areaChart = echarts.init(document.getElementById("zxzy_areaChart"));
+
+            var zxzy_areaX = [];       // 横轴：采样序号
+            var zxzy_areaY = [];       // 纵轴：成交量
+            var zxzy_base = 80;
+
+            for (var zxzy_i = 0; zxzy_i < 10000; zxzy_i++) {
+                zxzy_areaX.push(zxzy_i);
+
+                // 随机游走 + 两个不同周期的正弦波，模拟真实的波动数据
+                zxzy_base += (zxzy_rand() - 0.5) * 5;
+                zxzy_base = Math.max(30, Math.min(140, zxzy_base));
+
+                var zxzy_val = zxzy_base
+                    + Math.sin(zxzy_i / 480) * 26
+                    + Math.sin(zxzy_i / 53) * 7;
+
+                zxzy_val = Math.max(2, zxzy_val);      // 保证不出现负数
+                zxzy_areaY.push(+zxzy_val.toFixed(2));
+            }
+
+            zxzy_areaChart.setOption({
+                animation: false,
+                color: ["#3b82f6"],
+                tooltip: {
+                    trigger: "axis",
+                    axisPointer: { type: "line", lineStyle: { color: "#9db4cc" } },
+                    formatter: function (zxzy_ps) {
+                        var zxzy_p = zxzy_ps[0];
+                        return "第 " + (zxzy_p.dataIndex + 1) + " 个采样点<br/>" +
+                            "成交量：<b>" + zxzy_p.value + "</b>";
+                    }
+                },
+                grid: { left: 16, right: 28, top: 28, bottom: 34, containLabel: true },
+                xAxis: {
+                    type: "category",
+                    boundaryGap: false,
+                    data: zxzy_areaX,
+                    axisLine: { lineStyle: { color: "#d3dbe5" } },
+                    axisTick: { show: false },
+                    axisLabel: { show: false }       // 一万个刻度太密，直接隐藏
+                },
+                yAxis: {
+                    type: "value",
+                    name: "成交量",
+                    min: 0,
+                    max: 180,
+                    nameTextStyle: { color: "#8b96a4", fontSize: 11 },
+                    axisLabel: { color: "#8b96a4", fontSize: 11 },
+                    splitLine: { lineStyle: { color: "#eef2f7" } }
+                },
+                series: [{
+                    name: "成交量",
+                    type: "line",
+                    symbol: "none",
+                    sampling: "lttb",               // 大数据量降采样
+                    lineStyle: { width: 1, color: "#3b82f6" },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: "rgba(59, 130, 246, 0.60)" },
+                            { offset: 1, color: "rgba(59, 130, 246, 0.04)" }
+                        ])
+                    },
+                    data: zxzy_areaY
+                }]
+            });
+
+
+            /* =========================================================
+               ② 雨量流量关系图（参考 area-rainfall）
+               ========================================================= */
+            var zxzy_rainChart = echarts.init(document.getElementById("zxzy_rainChart"));
+
+            var zxzy_days = [];        // 日期
+            var zxzy_rain = [];        // 降雨量（mm）
+            var zxzy_flow = [];        // 流量（m³/s）
+            var zxzy_flowNow = 40;
+
+            for (var zxzy_d = 0; zxzy_d < 365; zxzy_d++) {
+                var zxzy_date = new Date(2024, 0, 1 + zxzy_d);
+                zxzy_days.push((zxzy_date.getMonth() + 1) + "月" + zxzy_date.getDate() + "日");
+
+                // 夏季雨多、冬季雨少：用正弦波做季节权重
+                var zxzy_season = 0.5 + 0.5 * Math.sin((zxzy_d - 100) / 365 * Math.PI * 2);
+                var zxzy_r = 0;
+
+                // 不是每天下雨：约 12%~38% 的日子有雨，且多为小雨
+                if (zxzy_rand() < 0.12 + zxzy_season * 0.26) {
+                    zxzy_r = +(Math.pow(zxzy_rand(), 1.6) * 42).toFixed(1);
+                }
+                // 夏季偶发暴雨
+                if (zxzy_season > 0.6 && zxzy_rand() < 0.03) {
+                    zxzy_r = +(35 + zxzy_rand() * 25).toFixed(1);
+                }
+                zxzy_rain.push(zxzy_r);
+
+                // 流量：随降雨上涨，之后缓慢消退（简单的水文模型）
+                zxzy_flowNow = zxzy_flowNow * 0.9 + zxzy_r * 1.3 + 2;
+                zxzy_flowNow = Math.max(20, Math.min(300, zxzy_flowNow));
+                zxzy_flow.push(+zxzy_flowNow.toFixed(1));
+            }
+
+            zxzy_rainChart.setOption({
+                color: ["#3b82f6", "#8bc34a"],
+                tooltip: {
+                    trigger: "axis",
+                    axisPointer: { type: "cross", crossStyle: { color: "#a8b5c6" } }
+                },
+                legend: {
+                    data: ["流量", "降雨量"],
+                    top: 4,
+                    textStyle: { color: "#5a6879", fontSize: 12 }
+                },
+                grid: { left: 20, right: 26, top: 56, bottom: 78, containLabel: true },
+                xAxis: [{
+                    type: "category",
+                    boundaryGap: false,
+                    data: zxzy_days,
+                    axisLine: { lineStyle: { color: "#d3dbe5" } },
+                    axisTick: { show: false },
+                    axisLabel: {
+                        color: "#8b96a4",
+                        fontSize: 11,
+                        interval: 29                 // 每 30 天显示一个日期
+                    }
+                }],
+                yAxis: [
+                    {
+                        type: "value",
+                        name: "流量 (m³/s)",
+                        nameTextStyle: { color: "#8b96a4", fontSize: 11 },
+                        axisLabel: { color: "#8b96a4", fontSize: 11 },
+                        axisLine: { show: true, lineStyle: { color: "#d3dbe5" } },
+                        splitLine: { lineStyle: { color: "#eef2f7" } }
+                    },
+                    {
+                        type: "value",
+                        name: "降雨量 (mm)",
+                        min: 0,
+                        max: 60,
+                        nameLocation: "start",        // 轴名放到顶部，避免压住日期
+                        nameGap: 14,
+                        nameTextStyle: { color: "#8b96a4", fontSize: 11 },
+                        axisLabel: { color: "#8b96a4", fontSize: 11 },
+                        axisLine: { show: true, lineStyle: { color: "#d3dbe5" } },
+                        splitLine: { show: false },
+                        inverse: true                 // 右边轴倒置：雨柱从顶部往下长
+                    }
+                ],
+                dataZoom: [
+                    { type: "inside", start: 0, end: 100 },
+                    { type: "slider", height: 18, bottom: 18, borderColor: "#dbe3ec" }
+                ],
+                series: [
+                    {
+                        name: "流量",
+                        type: "line",
+                        smooth: true,
+                        symbol: "none",
+                        lineStyle: { width: 1.5, color: "#3b82f6" },
+                        areaStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: "rgba(59, 130, 246, 0.55)" },
+                                { offset: 1, color: "rgba(59, 130, 246, 0.05)" }
+                            ])
+                        },
+                        data: zxzy_flow
+                    },
+                    {
+                        name: "降雨量",
+                        type: "bar",
+                        yAxisIndex: 1,
+                        barWidth: "55%",
+                        itemStyle: { color: "#8bc34a", opacity: 0.85 },
+                        data: zxzy_rain
+                    }
+                ]
+            });
+
+            // ===== 窗口尺寸变化时自适应 =====
+            window.addEventListener("resize", function () {
+                zxzy_areaChart.resize();
+                zxzy_rainChart.resize();
+            });
+        }
+    </script>
+</body>
+</html>

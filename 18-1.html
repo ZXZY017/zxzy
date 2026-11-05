@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-11-05，功能名称：Canvas 粒子文字动画（文字：周徐倬玚） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-1 · Canvas 粒子文字动画</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(160deg, #182140 0%, #1d2850 100%);
+            color: #eef1fb;
+            padding: 28px 16px 44px;
+            min-height: 100vh;
+        }
+        .zxzy_wrap { max-width: 860px; margin: 0 auto; }
+
+        /* ===== 顶部英雄卡片 ===== */
+        .zxzy_hero {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 28px;
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .zxzy_badge {
+            background: #86b9f2;
+            color: #14264d;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .zxzy_home {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            color: #dfe4f3;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 5px 16px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #354478; }
+        .zxzy_h1 { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+        .zxzy_intro { font-size: 14px; line-height: 2.1; color: #aab4d4; }
+        .zxzy_t {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .zxzy_t_fn { background: rgba(74, 222, 128, .14); color: #4ade80; }
+        .zxzy_b { color: #eef1fb; font-weight: bold; }
+
+        /* ===== 区块标题 ===== */
+        .zxzy_h2 { font-size: 18px; font-weight: bold; margin: 26px 2px 14px; }
+
+        /* ===== 画布卡片 ===== */
+        .zxzy_stage {
+            background: #131b36;
+            border: 1px solid #2c3865;
+            border-radius: 16px;
+            padding: 12px;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            background:
+                radial-gradient(circle at 50% 45%, rgba(125, 211, 252, .10), transparent 60%),
+                #101830;
+            cursor: crosshair;
+        }
+
+        /* ===== 操作条 ===== */
+        .zxzy_bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .zxzy_btn {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            border-radius: 10px;
+            color: #eef1fb;
+            font-family: inherit;
+            font-size: 13px;
+            padding: 9px 18px;
+            cursor: pointer;
+            transition: background .12s ease, transform .12s ease;
+        }
+        .zxzy_btn:hover { background: #354478; transform: translateY(-2px); }
+        .zxzy_tip {
+            margin-left: auto;
+            font-size: 12.5px;
+            color: #8b97bd;
+            font-family: Consolas, monospace;
+        }
+
+        /* ===== 原理说明 ===== */
+        .zxzy_cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+        }
+        .zxzy_card {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 14px;
+            padding: 15px 18px;
+        }
+        .zxzy_card h3 { font-size: 14.5px; margin-bottom: 6px; color: #7dd3fc; }
+        .zxzy_card p { font-size: 13px; line-height: 1.95; color: #aab4d4; }
+        .zxzy_card code {
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            color: #4ade80;
+            background: rgba(74, 222, 128, .1);
+            border-radius: 4px;
+            padding: 1px 5px;
+        }
+
+        @media (max-width: 660px) {
+            .zxzy_hero { padding: 20px; }
+            .zxzy_h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶部英雄卡片 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第18课 · Canvas</span>
+                <a class="zxzy_home" href="index.html">← 返回首页</a>
+            </div>
+            <h1 class="zxzy_h1">粒子文字：周徐倬玚</h1>
+            <p class="zxzy_intro">
+                先在离屏画布上写出文字，用 <span class="zxzy_t zxzy_t_fn">getImageData()</span> 读取每个像素，
+                把有颜色的像素变成一个个<span class="zxzy_b">粒子目标点</span>；再让粒子从四周飞向目标点，并用
+                <span class="zxzy_t zxzy_t_fn">requestAnimationFrame()</span> 逐帧绘制，就得到了文字在呼吸、鼠标靠近会散开的动画。
+            </p>
+        </header>
+
+        <!-- 画布 -->
+        <h2 class="zxzy_h2">一、动画画布</h2>
+        <section class="zxzy_stage">
+            <canvas id="zxzy_cv" width="900" height="500"></canvas>
+            <div class="zxzy_bar">
+                <button class="zxzy_btn" onclick="zxzy_gather()">重新聚合</button>
+                <button class="zxzy_btn" onclick="zxzy_scatter()">全部散开</button>
+                <span class="zxzy_tip" id="zxzy_tip">粒子数 —</span>
+            </div>
+        </section>
+
+        <!-- 原理 -->
+        <h2 class="zxzy_h2">二、动画是怎么做出来的</h2>
+        <section class="zxzy_cards">
+            <div class="zxzy_card">
+                <h3>① 用文字“画”出像素</h3>
+                <p>离屏 canvas 上 <code>fillText("周徐倬玚")</code>，再用 <code>getImageData</code> 扫描像素，记录所有不透明像素的坐标，作为粒子的目标位置。</p>
+            </div>
+            <div class="zxzy_card">
+                <h3>② 每个粒子都是一个对象</h3>
+                <p>粒子保存当前位置 <code>x, y</code>、速度 <code>vx, vy</code> 和目标 <code>tx, ty</code>，每帧用弹性公式向目标靠拢，就形成“飞来聚字”的效果。</p>
+            </div>
+            <div class="zxzy_card">
+                <h3>③ 逐帧重绘</h3>
+                <p><code>requestAnimationFrame</code> 每秒约调用 60 次，每次先用半透明底色覆盖（留拖影），再画出所有粒子，动画就流动起来了。</p>
+            </div>
+            <div class="zxzy_card">
+                <h3>④ 鼠标交互</h3>
+                <p>记录鼠标在画布中的坐标，当粒子离鼠标太近时给一个反方向的力，文字就会被“推开”，鼠标离开后又自动聚回去。</p>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        var zxzy_canvas = document.getElementById("zxzy_cv");
+        var zxzy_ctx = zxzy_canvas.getContext("2d");
+
+        // 逻辑尺寸（与 canvas 的 width / height 属性一致）
+        var zxzy_W = 900;
+        var zxzy_H = 500;
+
+        var zxzy_particles = [];      // 所有粒子
+        var zxzy_mouse = { x: -999, y: -999 };
+
+        // ===== 颜色池：让文字自带渐变感 =====
+        var zxzy_colors = ["#7dd3fc", "#86b9f2", "#4ade80", "#a78bfa", "#fbbf24", "#f472b6"];
+
+        // ===== 第一步：把文字画在离屏画布上，采样出粒子的目标点 =====
+        function zxzy_getTargets() {
+            var zxzy_off = document.createElement("canvas");
+            zxzy_off.width = zxzy_W;
+            zxzy_off.height = zxzy_H;
+            var zxzy_octx = zxzy_off.getContext("2d");
+
+            // 文字：四字姓名，居中显示
+            zxzy_octx.fillStyle = "#fff";
+            zxzy_octx.textAlign = "center";
+            zxzy_octx.textBaseline = "middle";
+            zxzy_octx.font = 'bold 150px "Microsoft YaHei", "PingFang SC", sans-serif';
+            zxzy_octx.fillText("周徐倬玚", zxzy_W / 2, zxzy_H / 2 - 8);
+
+            // 读取像素：每隔 4 个像素取一个，笔画更饱满，粒子数量也还能接受
+            var zxzy_data = zxzy_octx.getImageData(0, 0, zxzy_W, zxzy_H).data;
+            var zxzy_gap = 4;
+            var zxzy_targets = [];
+
+            for (var zxzy_yy = 0; zxzy_yy < zxzy_H; zxzy_yy += zxzy_gap) {
+                for (var zxzy_xx = 0; zxzy_xx < zxzy_W; zxzy_xx += zxzy_gap) {
+                    var zxzy_index = (zxzy_yy * zxzy_W + zxzy_xx) * 4;
+                    if (zxzy_data[zxzy_index + 3] > 128) {          // 该像素不透明，说明属于文字
+                        zxzy_targets.push({ x: zxzy_xx, y: zxzy_yy });
+                    }
+                }
+            }
+            return zxzy_targets;
+        }
+
+        // ===== 第二步：根据目标点创建粒子 =====
+        function zxzy_build() {
+            var zxzy_targets = zxzy_getTargets();
+            zxzy_particles = [];
+
+            zxzy_targets.forEach(function (zxzy_t, zxzy_i) {
+                zxzy_particles.push({
+                    x: Math.random() * zxzy_W,          // 初始位置：画布内随机
+                    y: Math.random() * zxzy_H,
+                    vx: 0,
+                    vy: 0,
+                    tx: zxzy_t.x,                       // 目标位置
+                    ty: zxzy_t.y,
+                    size: 1.3 + Math.random() * 1.2,
+                    phase: Math.random() * Math.PI * 2,  // 每个粒子呼吸抖动的相位
+                    color: zxzy_colors[zxzy_i % zxzy_colors.length]
+                });
+            });
+
+            document.getElementById("zxzy_tip").textContent = "粒子数 " + zxzy_particles.length;
+        }
+
+        // ===== 第三步：物理步进（单独抽出来，初始化时可以预先跑若干步） =====
+        var zxzy_tick = 0;
+
+        function zxzy_step() {
+            zxzy_tick++;
+
+            zxzy_particles.forEach(function (zxzy_p) {
+                // 目标点带一点“呼吸”抖动，让静止的文字也在轻轻浮动
+                var zxzy_tx = zxzy_p.tx + Math.sin(zxzy_tick * 0.03 + zxzy_p.phase) * 1.8;
+                var zxzy_ty = zxzy_p.ty + Math.cos(zxzy_tick * 0.03 + zxzy_p.phase) * 1.8;
+
+                // 朝目标点的弹力
+                zxzy_p.vx += (zxzy_tx - zxzy_p.x) * 0.06;
+                zxzy_p.vy += (zxzy_ty - zxzy_p.y) * 0.06;
+
+                // 鼠标斥力：离鼠标近的粒子被推开
+                var zxzy_dx = zxzy_p.x - zxzy_mouse.x;
+                var zxzy_dy = zxzy_p.y - zxzy_mouse.y;
+                var zxzy_dist = Math.sqrt(zxzy_dx * zxzy_dx + zxzy_dy * zxzy_dy);
+                if (zxzy_dist < 90 && zxzy_dist > 0.01) {
+                    var zxzy_force = (90 - zxzy_dist) / 90;
+                    zxzy_p.vx += (zxzy_dx / zxzy_dist) * zxzy_force * 7;
+                    zxzy_p.vy += (zxzy_dy / zxzy_dist) * zxzy_force * 7;
+                }
+
+                // 阻尼，避免越飞越快
+                zxzy_p.vx *= 0.86;
+                zxzy_p.vy *= 0.86;
+                zxzy_p.x += zxzy_p.vx;
+                zxzy_p.y += zxzy_p.vy;
+            });
+        }
+
+        // ===== 第四步：绘制一帧 =====
+        // zxzy_full 为 true 时完全清屏（第一帧用），否则半透明覆盖形成拖影
+        function zxzy_draw(zxzy_full) {
+            if (zxzy_full === true) {
+                zxzy_ctx.clearRect(0, 0, zxzy_W, zxzy_H);
+            } else {
+                zxzy_ctx.fillStyle = "rgba(16, 24, 48, 0.30)";
+                zxzy_ctx.fillRect(0, 0, zxzy_W, zxzy_H);
+            }
+
+            zxzy_particles.forEach(function (zxzy_p) {
+                zxzy_ctx.beginPath();
+                zxzy_ctx.fillStyle = zxzy_p.color;
+                zxzy_ctx.arc(zxzy_p.x, zxzy_p.y, zxzy_p.size, 0, Math.PI * 2);
+                zxzy_ctx.fill();
+            });
+
+            // 文字下方的小标注：这行字用普通 fillText 绘制（不参与粒子）
+            zxzy_ctx.textAlign = "center";
+            zxzy_ctx.textBaseline = "middle";
+            zxzy_ctx.font = '13px Consolas, "Microsoft YaHei", monospace';
+            zxzy_ctx.fillStyle = "rgba(170, 180, 212, 0.55)";
+            zxzy_ctx.fillText("C A N V A S   ·   粒 子 文 字 动 画", zxzy_W / 2, zxzy_H / 2 + 118);
+        }
+
+        // ===== 第五步：逐帧循环 =====
+        function zxzy_animate() {
+            zxzy_step();
+            zxzy_draw(false);
+            requestAnimationFrame(zxzy_animate);
+        }
+
+        // ===== 交互：记录鼠标位置 =====
+        zxzy_canvas.addEventListener("mousemove", function (zxzy_e) {
+            var zxzy_rect = zxzy_canvas.getBoundingClientRect();
+            zxzy_mouse.x = (zxzy_e.clientX - zxzy_rect.left) * (zxzy_W / zxzy_rect.width);
+            zxzy_mouse.y = (zxzy_e.clientY - zxzy_rect.top) * (zxzy_H / zxzy_rect.height);
+        });
+
+        zxzy_canvas.addEventListener("mouseleave", function () {
+            zxzy_mouse.x = -999;
+            zxzy_mouse.y = -999;
+        });
+
+        // ===== 按钮：重新聚合 / 全部散开 =====
+        function zxzy_gather() {
+            zxzy_particles.forEach(function (zxzy_p) {
+                zxzy_p.x = Math.random() * zxzy_W;
+                zxzy_p.y = Math.random() * zxzy_H;
+                zxzy_p.vx = 0;
+                zxzy_p.vy = 0;
+            });
+        }
+
+        function zxzy_scatter() {
+            zxzy_particles.forEach(function (zxzy_p) {
+                var zxzy_angle = Math.random() * Math.PI * 2;
+                var zxzy_speed = 6 + Math.random() * 8;
+                zxzy_p.vx = Math.cos(zxzy_angle) * zxzy_speed;
+                zxzy_p.vy = Math.sin(zxzy_angle) * zxzy_speed;
+            });
+        }
+
+        // ===== 启动 =====
+        zxzy_build();
+
+        // 先离线跑 220 步物理计算，让粒子直接落在文字上
+        // 这样页面一打开就能看到完整的“周徐倬玚”，随后才开始浮动与鼠标互动
+        for (var zxzy_i = 0; zxzy_i < 220; zxzy_i++) {
+            zxzy_step();
+        }
+        zxzy_draw(true);
+
+        zxzy_animate();
+    </script>
+</body>
+</html>

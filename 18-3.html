@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-11-05，功能名称：基于知识库的智能客服系统架构图（SVG 科研风格） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-3 · 智能客服系统架构（SVG）</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #eef1f5;
+            color: #243244;
+            padding: 28px 16px 48px;
+            min-height: 100vh;
+        }
+        .zxzy_wrap { max-width: 1240px; margin: 0 auto; }
+
+        /* ===== 顶部标题卡片 ===== */
+        .zxzy_hero {
+            background: #ffffff;
+            border: 1px solid #dfe5ec;
+            border-radius: 14px;
+            padding: 24px 28px 26px;
+            box-shadow: 0 2px 10px rgba(36, 50, 68, .04);
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .zxzy_badge {
+            background: #eaf2fb;
+            color: #2f5f8f;
+            border: 1px solid #cfdff0;
+            font-size: 12.5px;
+            font-weight: bold;
+            padding: 4px 13px;
+            border-radius: 999px;
+        }
+        .zxzy_home {
+            background: #f5f7fa;
+            border: 1px solid #d8dfe8;
+            color: #3c4a5c;
+            font-size: 12.5px;
+            text-decoration: none;
+            padding: 5px 15px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #e9eef5; }
+        .zxzy_h1 {
+            font-size: 26px;
+            font-weight: bold;
+            letter-spacing: .5px;
+            margin-bottom: 12px;
+        }
+        .zxzy_intro {
+            font-size: 13.5px;
+            line-height: 2.05;
+            color: #5a6879;
+        }
+        .zxzy_intro b { color: #243244; }
+        .zxzy_t {
+            display: inline-block;
+            padding: 0 7px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            font-weight: bold;
+            background: #f1f5f9;
+            color: #2f5f8f;
+        }
+
+        /* ===== 图区 ===== */
+        .zxzy_figure {
+            background: #ffffff;
+            border: 1px solid #dfe5ec;
+            border-radius: 14px;
+            padding: 22px 22px 18px;
+            margin-top: 18px;
+            box-shadow: 0 2px 10px rgba(36, 50, 68, .04);
+        }
+        .zxzy_figure svg { display: block; width: 100%; height: auto; }
+
+        /* SVG 内部样式 */
+        .zxzy_svg text {
+            font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif;
+        }
+        .zxzy_svg .nd rect {
+            fill: #ffffff;
+            stroke: #ccd5e0;
+            stroke-width: 1;
+        }
+        .zxzy_svg .tt { font-size: 13px; font-weight: 700; fill: #243244; text-anchor: middle; }
+        .zxzy_svg .ss { font-size: 10.6px; fill: #74808f; text-anchor: middle; }
+        .zxzy_svg .lbl { font-size: 13.5px; font-weight: 700; text-anchor: start; }
+        .zxzy_svg .lbl-en {
+            font-family: Consolas, monospace;
+            font-size: 8.5px;
+            fill: #98a3b1;
+            letter-spacing: .6px;
+            text-anchor: start;
+        }
+        .zxzy_svg .flow { stroke: #8a95a3; stroke-width: 1.2; fill: none; }
+        .zxzy_svg .fb {
+            stroke: #b4632f;
+            stroke-width: 1.3;
+            stroke-dasharray: 6 5;
+            fill: none;
+        }
+        .zxzy_svg .box-rag rect {
+            fill: #fffdfb;
+            stroke: #dcc0ad;
+        }
+
+        /* 每层配色 */
+        .zxzy_svg .b1 .lbl { fill: #2f5f8f; }
+        .zxzy_svg .b2 .lbl { fill: #2c6b5f; }
+        .zxzy_svg .b3 .lbl { fill: #a35427; }
+        .zxzy_svg .b4 .lbl { fill: #56507c; }
+        .zxzy_svg .b5 .lbl { fill: #74622e; }
+        .zxzy_svg .b6 .lbl { fill: #7c4450; }
+
+        /* 图注 */
+        .zxzy_caption {
+            text-align: center;
+            font-size: 13.5px;
+            color: #3f4c5c;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px dashed #e2e8ef;
+            line-height: 1.9;
+        }
+        .zxzy_caption small { color: #8b96a4; font-size: 11.5px; }
+
+        /* ===== 说明卡片 ===== */
+        .zxzy_h2 { font-size: 17px; font-weight: bold; margin: 26px 4px 12px; }
+        .zxzy_cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 12px;
+        }
+        .zxzy_card {
+            background: #ffffff;
+            border: 1px solid #e0e6ee;
+            border-radius: 12px;
+            padding: 15px 18px;
+        }
+        .zxzy_card h3 {
+            font-size: 14px;
+            margin-bottom: 7px;
+            color: #2f5f8f;
+        }
+        .zxzy_card p { font-size: 12.8px; line-height: 1.95; color: #5a6879; }
+        .zxzy_card code {
+            font-family: Consolas, monospace;
+            font-size: 12px;
+            color: #a35427;
+            background: #fbf3ee;
+            border-radius: 3px;
+            padding: 1px 5px;
+        }
+
+        @media (max-width: 700px) {
+            .zxzy_hero { padding: 20px; }
+            .zxzy_h1 { font-size: 21px; }
+            .zxzy_figure { padding: 10px; overflow-x: auto; }
+            .zxzy_figure svg { min-width: 900px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶部标题 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第18课 · SVG 绘图</span>
+                <a class="zxzy_home" href="index.html">← 返回首页</a>
+            </div>
+            <h1 class="zxzy_h1">基于知识库的智能客服系统架构</h1>
+            <p class="zxzy_intro">
+                整张图使用 <b>SVG</b> 绘制：每个模块是一个 <span class="zxzy_t">&lt;g&gt;</span>，里面放
+                <span class="zxzy_t">&lt;rect&gt;</span> 圆角矩形与 <span class="zxzy_t">&lt;text&gt;</span> 文字，
+                模块之间用 <span class="zxzy_t">&lt;path&gt;</span> 加箭头标记连接。
+                系统按“接入 → 理解 → 检索增强生成 → 对话管理 → 知识库 → 运营迭代”分层，
+                实线表示在线请求链路，虚线表示离线数据与模型迭代闭环。
+            </p>
+        </header>
+
+        <!-- 架构图 -->
+        <section class="zxzy_figure">
+            <svg class="zxzy_svg" viewBox="0 0 1200 950" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5"
+                            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M0,0 L10,5 L0,10 z" fill="#8a95a3"></path>
+                    </marker>
+                    <marker id="arw-fb" viewBox="0 0 10 10" refX="9" refY="5"
+                            markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                        <path d="M0,0 L10,5 L0,10 z" fill="#b4632f"></path>
+                    </marker>
+                </defs>
+
+                <!-- ================= ① 接入层 ================= -->
+                <g class="b1">
+                    <text class="lbl" x="40" y="112">接入层</text>
+                    <text class="lbl-en" x="40" y="128">ACCESS</text>
+
+                    <g class="nd">
+                        <rect x="131" y="64" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="253.5" y="100">Web / App 在线客服</text>
+                        <text class="ss" x="253.5" y="122">网页、小程序、SDK 嵌入</text>
+                    </g>
+                    <g class="nd">
+                        <rect x="392" y="64" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="514.5" y="100">微信 / 企业微信</text>
+                        <text class="ss" x="514.5" y="122">公众号、社群消息</text>
+                    </g>
+                    <g class="nd">
+                        <rect x="653" y="64" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="775.5" y="100">电话语音接入</text>
+                        <text class="ss" x="775.5" y="122">PSTN · 实时流式音频</text>
+                    </g>
+                    <g class="nd">
+                        <rect x="914" y="64" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="1036.5" y="100">工单 / 邮件</text>
+                        <text class="ss" x="1036.5" y="122">异步咨询与售后</text>
+                    </g>
+                </g>
+
+                <path class="flow" d="M253.5,152 V180" marker-end="url(#arw)"></path>
+                <path class="flow" d="M514.5,152 V180" marker-end="url(#arw)"></path>
+                <path class="flow" d="M775.5,152 V180" marker-end="url(#arw)"></path>
+                <path class="flow" d="M1036.5,152 V180" marker-end="url(#arw)"></path>
+
+                <!-- ================= ② 理解层 ================= -->
+                <g class="b2">
+                    <text class="lbl" x="40" y="232">理解层</text>
+                    <text class="lbl-en" x="40" y="248">NLU</text>
+
+                    <g class="nd">
+                        <rect x="131" y="184" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="253.5" y="220">语音识别 ASR</text>
+                        <text class="ss" x="253.5" y="242">降噪 · 流式转写</text>
+                    </g>
+                    <g class="nd">
+                        <rect x="392" y="184" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="514.5" y="220">文本预处理</text>
+                        <text class="ss" x="514.5" y="242">纠错 · 分句 · 脱敏</text>
+                    </g>
+                    <g class="nd">
+                        <rect x="653" y="184" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="775.5" y="220">意图识别</text>
+                        <text class="ss" x="775.5" y="242">文本分类 · 小样本学习</text>
+                    </g>
+                    <g class="nd">
+                        <rect x="914" y="184" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="1036.5" y="220">槽位抽取</text>
+                        <text class="ss" x="1036.5" y="242">NER · 情绪识别</text>
+                    </g>
+                </g>
+
+                <path class="flow" d="M514.5,272 V296" marker-end="url(#arw)"></path>
+                <path class="flow" d="M775.5,272 V296" marker-end="url(#arw)"></path>
+
+                <!-- ================= ③ 检索增强生成（RAG） ================= -->
+                <g class="b3">
+                    <text class="lbl" x="40" y="403">检索生成</text>
+                    <text class="lbl-en" x="40" y="419">RAG CORE</text>
+
+                    <!-- 核心流程容器 -->
+                    <rect x="124" y="300" width="1040" height="196" rx="10"
+                          fill="#fdf8f4" stroke="#e3cbb9" stroke-width="1.2" stroke-dasharray="7 5"></rect>
+                    <text x="142" y="324" font-size="12.5" font-weight="700" fill="#a35427">
+                        检索增强生成（RAG）核心流程
+                    </text>
+                    <text x="1146" y="324" font-size="9.5" fill="#b08a72" text-anchor="end"
+                          font-family="Consolas, monospace">Retrieval-Augmented Generation</text>
+
+                    <!-- ① 查询改写 -->
+                    <g class="nd box-rag">
+                        <rect x="150" y="350" width="147" height="80" rx="6"></rect>
+                        <text x="163" y="368" font-size="10.5" fill="#c07a4e">①</text>
+                        <text class="tt" x="223.5" y="388" font-size="12.2">查询理解与改写</text>
+                        <text class="ss" x="223.5" y="408" font-size="10.2">指代消解 · HyDE</text>
+                    </g>
+                    <!-- ② 混合检索 -->
+                    <g class="nd box-rag">
+                        <rect x="318" y="350" width="147" height="80" rx="6"></rect>
+                        <text x="331" y="368" font-size="10.5" fill="#c07a4e">②</text>
+                        <text class="tt" x="391.5" y="388" font-size="12.2">混合检索</text>
+                        <text class="ss" x="391.5" y="408" font-size="10.2">Dense + BM25</text>
+                    </g>
+                    <!-- ③ 重排 -->
+                    <g class="nd box-rag">
+                        <rect x="486" y="350" width="147" height="80" rx="6"></rect>
+                        <text x="499" y="368" font-size="10.5" fill="#c07a4e">③</text>
+                        <text class="tt" x="559.5" y="388" font-size="12.2">重排 Reranker</text>
+                        <text class="ss" x="559.5" y="408" font-size="10.2">Cross-Encoder</text>
+                    </g>
+                    <!-- ④ Prompt 组装 -->
+                    <g class="nd box-rag">
+                        <rect x="654" y="350" width="147" height="80" rx="6"></rect>
+                        <text x="667" y="368" font-size="10.5" fill="#c07a4e">④</text>
+                        <text class="tt" x="727.5" y="388" font-size="12.2">Prompt 组装</text>
+                        <text class="ss" x="727.5" y="408" font-size="10.2">上下文 · 引用约束</text>
+                    </g>
+                    <!-- ⑤ LLM 生成 -->
+                    <g class="nd box-rag">
+                        <rect x="822" y="350" width="147" height="80" rx="6"></rect>
+                        <text x="835" y="368" font-size="10.5" fill="#c07a4e">⑤</text>
+                        <text class="tt" x="895.5" y="388" font-size="12.2">LLM 生成</text>
+                        <text class="ss" x="895.5" y="408" font-size="10.2">领域微调 · LoRA</text>
+                    </g>
+                    <!-- ⑥ 事实校验 -->
+                    <g class="nd box-rag">
+                        <rect x="990" y="350" width="147" height="80" rx="6"></rect>
+                        <text x="1003" y="368" font-size="10.5" fill="#c07a4e">⑥</text>
+                        <text class="tt" x="1063.5" y="388" font-size="12.2">事实校验</text>
+                        <text class="ss" x="1063.5" y="408" font-size="10.2">引用溯源 · 拒答</text>
+                    </g>
+
+                    <!-- 流程内部箭头 -->
+                    <path class="flow" d="M299,390 H314" marker-end="url(#arw)"></path>
+                    <path class="flow" d="M467,390 H482" marker-end="url(#arw)"></path>
+                    <path class="flow" d="M635,390 H650" marker-end="url(#arw)"></path>
+                    <path class="flow" d="M803,390 H818" marker-end="url(#arw)"></path>
+                    <path class="flow" d="M971,390 H986" marker-end="url(#arw)"></path>
+                </g>
+
+                <!-- RAG → 对话管理 -->
+                <path class="flow" d="M400,498 V512" marker-end="url(#arw)"></path>
+                <path class="flow" d="M720,498 V512" marker-end="url(#arw)"></path>
+
+                <!-- ================= ④ 对话管理层 ================= -->
+                <g class="b4">
+                    <text class="lbl" x="40" y="564">对话管理</text>
+                    <text class="lbl-en" x="40" y="580">DIALOG</text>
+
+                    <g class="nd">
+                        <rect x="131" y="516" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="253.5" y="552">对话状态跟踪 DST</text>
+                        <text class="ss" x="253.5" y="574">多轮上下文 · 用户画像</text>
+                    </g>
+                    <g class="nd">
+                        <rect x="392" y="516" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="514.5" y="552">策略决策</text>
+                        <text class="ss" x="514.5" y="574">规则 + 强化学习（RL）</text>
+                    </g>
+                    <g class="nd">
+                        <rect x="653" y="516" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="775.5" y="552">多轮澄清</text>
+                        <text class="ss" x="775.5" y="574">槽位补全 · 反问生成</text>
+                    </g>
+                    <g class="nd">
+                        <rect x="914" y="516" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="1036.5" y="552">人机协同</text>
+                        <text class="ss" x="1036.5" y="574">低置信转人工 · 坐席辅助</text>
+                    </g>
+                </g>
+
+                <path class="flow" d="M253.5,604 V632" marker-end="url(#arw)"></path>
+                <path class="flow" d="M514.5,604 V632" marker-end="url(#arw)"></path>
+                <path class="flow" d="M775.5,604 V632" marker-end="url(#arw)"></path>
+                <path class="flow" d="M1036.5,604 V632" marker-end="url(#arw)"></path>
+
+                <!-- ================= ⑤ 知识层 ================= -->
+                <g class="b5">
+                    <text class="lbl" x="40" y="689">知识层</text>
+                    <text class="lbl-en" x="40" y="705">KNOWLEDGE</text>
+
+                    <g class="nd">
+                        <rect x="131" y="636" width="245" height="96" rx="6"></rect>
+                        <text class="tt" x="253.5" y="674">知识库</text>
+                        <text class="ss" x="253.5" y="698">FAQ · 文档 · 业务规则</text>
+                    </g>
+                    <g class="nd">
+                        <rect x="392" y="636" width="245" height="96" rx="6"></rect>
+                        <text class="tt" x="514.5" y="674">知识图谱</text>
+                        <text class="ss" x="514.5" y="698">实体 · 关系 · 三元组</text>
+                    </g>
+                    <g class="nd">
+                        <rect x="653" y="636" width="245" height="96" rx="6"></rect>
+                        <text class="tt" x="775.5" y="674">向量索引</text>
+                        <text class="ss" x="775.5" y="698">Embedding · 向量数据库</text>
+                    </g>
+                    <g class="nd">
+                        <rect x="914" y="636" width="245" height="96" rx="6"></rect>
+                        <text class="tt" x="1036.5" y="674">标注与质检</text>
+                        <text class="ss" x="1036.5" y="698">人工标注 · 会话质检</text>
+                    </g>
+                </g>
+
+                <path class="flow" d="M253.5,734 V756" marker-end="url(#arw)"></path>
+                <path class="flow" d="M514.5,734 V756" marker-end="url(#arw)"></path>
+                <path class="flow" d="M775.5,734 V756" marker-end="url(#arw)"></path>
+                <path class="flow" d="M1036.5,734 V756" marker-end="url(#arw)"></path>
+
+                <!-- ================= ⑥ 运营与迭代 ================= -->
+                <g class="b6">
+                    <text class="lbl" x="40" y="808">运营迭代</text>
+                    <text class="lbl-en" x="40" y="824">OPS</text>
+
+                    <g class="nd">
+                        <rect x="131" y="760" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="253.5" y="796">指标监控</text>
+                        <text class="ss" x="253.5" y="818">解决率 · 满意度 · 时延</text>
+                    </g>
+                    <g class="nd">
+                        <rect x="392" y="760" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="514.5" y="796">A/B 实验</text>
+                        <text class="ss" x="514.5" y="818">策略对比 · 灰度发布</text>
+                    </g>
+                    <g class="nd">
+                        <rect x="653" y="760" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="775.5" y="796">模型迭代</text>
+                        <text class="ss" x="775.5" y="818">SFT · RLHF / DPO</text>
+                    </g>
+                    <g class="nd">
+                        <rect x="914" y="760" width="245" height="86" rx="6"></rect>
+                        <text class="tt" x="1036.5" y="796">数据回流</text>
+                        <text class="ss" x="1036.5" y="818">会话日志 · 语料清洗</text>
+                    </g>
+                </g>
+
+                <!-- 虚线：运营数据回流到 RAG -->
+                <path class="fb" d="M1160,803 H1186 V390 H1168" marker-end="url(#arw-fb)"></path>
+
+                <!-- 图例 -->
+                <g font-size="10.5" fill="#7c8794">
+                    <path class="flow" d="M40,906 H74" marker-end="url(#arw)"></path>
+                    <text x="82" y="910">在线请求链路</text>
+                    <path class="fb" d="M200,906 H234" marker-end="url(#arw-fb)"></path>
+                    <text x="242" y="910">运营数据回流 · 知识与模型迭代闭环</text>
+                </g>
+            </svg>
+
+            <figcaption class="zxzy_caption">
+                图 1　基于知识库的智能客服系统总体架构（KB-RAG）<br>
+                <small>注：实线为在线服务链路，虚线为离线数据与模型迭代闭环；RAG 核心流程按 ①~⑥ 顺序执行。</small>
+            </figcaption>
+        </section>
+
+        <!-- 技术要点 -->
+        <h2 class="zxzy_h2">技术要点</h2>
+        <section class="zxzy_cards">
+            <div class="zxzy_card">
+                <h3>检索增强生成（RAG）</h3>
+                <p>先检索再生成：混合检索把向量相似度与 BM25 关键词得分加权融合，重排模型再精排，最后交给大模型基于证据作答，显著降低幻觉。</p>
+            </div>
+            <div class="zxzy_card">
+                <h3>多轮对话管理</h3>
+                <p>用对话状态跟踪记录槽位与上下文，策略决策在规则与强化学习之间选择澄清、检索或转人工，保证复杂业务问题的完成率。</p>
+            </div>
+            <div class="zxzy_card">
+                <h3>知识构建与更新</h3>
+                <p>FAQ、产品文档、业务规则经清洗、切分、向量化后入索引；知识图谱补充实体关系，支撑精确查询与可解释推理。</p>
+            </div>
+            <div class="zxzy_card">
+                <h3>可信与可解释</h3>
+                <p>答案附带引用来源，事实校验模块比对知识片段，置信度低时拒答或转人工，便于构建可审计的服务链路。</p>
+            </div>
+        </section>
+
+        <!-- 科研方向 -->
+        <h2 class="zxzy_h2">可延伸的科研方向</h2>
+        <section class="zxzy_cards">
+            <div class="zxzy_card">
+                <h3>检索质量与查询理解</h3>
+                <p>多轮指代消解、查询改写（HyDE、回译）、稀疏-稠密混合检索权重学习，以及面向领域语料的嵌入模型微调。</p>
+            </div>
+            <div class="zxzy_card">
+                <h3>对话策略学习</h3>
+                <p>基于强化学习或偏好优化的对话策略，在澄清成本、解决率与用户满意度之间做多目标权衡。</p>
+            </div>
+            <div class="zxzy_card">
+                <h3>幻觉抑制与可信生成</h3>
+                <p>引用约束解码、事实一致性校验、不确定性估计与选择性回答，让模型“知道就说、不知道就转人工”。</p>
+            </div>
+            <div class="zxzy_card">
+                <h3>多模态与情感交互</h3>
+                <p>语音、图像（如订单截图）等多模态输入的理解与融合，结合情绪识别调整应答语气与服务策略。</p>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>

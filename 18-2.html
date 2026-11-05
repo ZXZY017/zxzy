@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<!-- 姓名：周徐倬玚，日期：2026-11-05，功能名称：Canvas 绘制电商系统架构图 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-2 · 电商系统架构图</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(160deg, #182140 0%, #1d2850 100%);
+            color: #eef1fb;
+            padding: 28px 16px 44px;
+            min-height: 100vh;
+        }
+        .zxzy_wrap { max-width: 1000px; margin: 0 auto; }
+
+        /* ===== 顶部英雄卡片 ===== */
+        .zxzy_hero {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 16px;
+            padding: 24px 28px 28px;
+        }
+        .zxzy_hero_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .zxzy_badge {
+            background: #86b9f2;
+            color: #14264d;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 999px;
+        }
+        .zxzy_home {
+            background: #2a3760;
+            border: 1px solid #46558a;
+            color: #dfe4f3;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 5px 16px;
+            border-radius: 999px;
+        }
+        .zxzy_home:hover { background: #354478; }
+        .zxzy_h1 { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+        .zxzy_intro { font-size: 14px; line-height: 2.1; color: #aab4d4; }
+        .zxzy_t {
+            display: inline-block;
+            padding: 0 8px;
+            border-radius: 5px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .zxzy_t_fn { background: rgba(74, 222, 128, .14); color: #4ade80; }
+        .zxzy_b { color: #eef1fb; font-weight: bold; }
+
+        /* ===== 区块标题 ===== */
+        .zxzy_h2 { font-size: 18px; font-weight: bold; margin: 26px 2px 14px; }
+
+        /* ===== 画布 ===== */
+        .zxzy_stage {
+            background: #131b36;
+            border: 1px solid #2c3865;
+            border-radius: 16px;
+            padding: 12px;
+            overflow-x: auto;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            min-width: 720px;
+            border-radius: 10px;
+        }
+
+        /* ===== 图例 ===== */
+        .zxzy_legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 14px;
+            font-size: 12.5px;
+            color: #aab4d4;
+        }
+        .zxzy_legend span { display: flex; align-items: center; gap: 6px; }
+        .zxzy_dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        /* ===== 说明卡片 ===== */
+        .zxzy_cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+        .zxzy_card {
+            background: #212c50;
+            border: 1px solid #323f6e;
+            border-radius: 14px;
+            padding: 15px 18px;
+        }
+        .zxzy_card h3 { font-size: 14.5px; margin-bottom: 6px; color: #7dd3fc; }
+        .zxzy_card p { font-size: 13px; line-height: 1.95; color: #aab4d4; }
+        .zxzy_card code {
+            font-family: Consolas, monospace;
+            font-size: 12.5px;
+            color: #4ade80;
+            background: rgba(74, 222, 128, .1);
+            border-radius: 4px;
+            padding: 1px 5px;
+        }
+
+        @media (max-width: 660px) {
+            .zxzy_hero { padding: 20px; }
+            .zxzy_h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="zxzy_wrap">
+
+        <!-- 顶部英雄卡片 -->
+        <header class="zxzy_hero">
+            <div class="zxzy_hero_top">
+                <span class="zxzy_badge">第18课 · Canvas</span>
+                <a class="zxzy_home" href="index.html">← 返回首页</a>
+            </div>
+            <h1 class="zxzy_h1">电商系统整体架构</h1>
+            <p class="zxzy_intro">
+                整张图全部用 Canvas 绘制：先用 <span class="zxzy_t zxzy_t_fn">roundRect()</span> 画圆角盒子，
+                用 <span class="zxzy_t zxzy_t_fn">fillText()</span> 写标题与说明，
+                再用 <span class="zxzy_t zxzy_t_fn">lineTo()</span> 连接各层并画箭头；
+                层与层之间的数据流动，由 <span class="zxzy_t zxzy_t_fn">requestAnimationFrame()</span> 让光点沿连线移动来实现。
+            </p>
+        </header>
+
+        <!-- 架构图 -->
+        <h2 class="zxzy_h2">一、系统结构图</h2>
+        <section class="zxzy_stage">
+            <canvas id="zxzy_cv" width="1000" height="760"></canvas>
+        </section>
+
+        <div class="zxzy_legend">
+            <span><i class="zxzy_dot" style="background:#7dd3fc"></i>用户层</span>
+            <span><i class="zxzy_dot" style="background:#38bdf8"></i>接入层</span>
+            <span><i class="zxzy_dot" style="background:#4ade80"></i>应用服务层</span>
+            <span><i class="zxzy_dot" style="background:#fb923c"></i>中间件层</span>
+            <span><i class="zxzy_dot" style="background:#a78bfa"></i>数据存储层</span>
+            <span><i class="zxzy_dot" style="background:#f472b6"></i>外部系统</span>
+        </div>
+
+        <!-- 说明 -->
+        <h2 class="zxzy_h2">二、各层职责</h2>
+        <section class="zxzy_cards">
+            <div class="zxzy_card">
+                <h3>用户层</h3>
+                <p>买家在 PC 商城、小程序、App 浏览下单；卖家在工作台管理商品与订单；运营在后台配置活动、查看数据。</p>
+            </div>
+            <div class="zxzy_card">
+                <h3>接入层</h3>
+                <p>CDN 分发图片等静态资源，Nginx 做负载均衡与反向代理，API 网关统一鉴权、限流和路由。</p>
+            </div>
+            <div class="zxzy_card">
+                <h3>应用服务层</h3>
+                <p>按业务拆分为商品、订单、支付、库存、用户、营销等微服务，各自独立部署、互相调用。</p>
+            </div>
+            <div class="zxzy_card">
+                <h3>中间件层</h3>
+                <p>消息队列让下单、发券等动作异步执行；Redis 缓存热点数据；注册中心管服务地址；调度中心跑定时任务。</p>
+            </div>
+            <div class="zxzy_card">
+                <h3>数据存储层</h3>
+                <p>MySQL 存订单、用户等核心交易数据；MongoDB 存商品详情与日志；OSS 存图片视频；数仓用于报表分析。</p>
+            </div>
+            <div class="zxzy_card">
+                <h3>外部系统</h3>
+                <p>支付服务对接微信、支付宝；物流服务同步快递轨迹；短信推送发送验证码与订单通知。</p>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        var zxzy_cv = document.getElementById("zxzy_cv");
+        var zxzy_ctx = zxzy_cv.getContext("2d");
+
+        // 逻辑尺寸
+        var zxzy_W = 1000;
+        var zxzy_H = 760;
+        var zxzy_dpr = window.devicePixelRatio || 1;
+
+        // 按设备像素比放大，避免高清屏发虚
+        zxzy_cv.width = zxzy_W * zxzy_dpr;
+        zxzy_cv.height = zxzy_H * zxzy_dpr;
+        zxzy_ctx.setTransform(zxzy_dpr, 0, 0, zxzy_dpr, 0, 0);
+
+        // 布局常量
+        var zxzy_X0 = 100;      // 主区域左边界
+        var zxzy_MW = 710;      // 主区域宽度
+
+        // 各层颜色
+        var zxzy_C = {
+            user: "#7dd3fc",
+            access: "#38bdf8",
+            app: "#4ade80",
+            middle: "#fb923c",
+            data: "#a78bfa",
+            ext: "#f472b6"
+        };
+
+        // 连线（用于动画光点）
+        var zxzy_links = [];
+
+        // ===== 工具：圆角矩形 =====
+        function zxzy_roundRect(zxzy_c, zxzy_x, zxzy_y, zxzy_w, zxzy_h, zxzy_r) {
+            zxzy_c.beginPath();
+            zxzy_c.moveTo(zxzy_x + zxzy_r, zxzy_y);
+            zxzy_c.lineTo(zxzy_x + zxzy_w - zxzy_r, zxzy_y);
+            zxzy_c.quadraticCurveTo(zxzy_x + zxzy_w, zxzy_y, zxzy_x + zxzy_w, zxzy_y + zxzy_r);
+            zxzy_c.lineTo(zxzy_x + zxzy_w, zxzy_y + zxzy_h - zxzy_r);
+            zxzy_c.quadraticCurveTo(zxzy_x + zxzy_w, zxzy_y + zxzy_h, zxzy_x + zxzy_w - zxzy_r, zxzy_y + zxzy_h);
+            zxzy_c.lineTo(zxzy_x + zxzy_r, zxzy_y + zxzy_h);
+            zxzy_c.quadraticCurveTo(zxzy_x, zxzy_y + zxzy_h, zxzy_x, zxzy_y + zxzy_h - zxzy_r);
+            zxzy_c.lineTo(zxzy_x, zxzy_y + zxzy_r);
+            zxzy_c.quadraticCurveTo(zxzy_x, zxzy_y, zxzy_x + zxzy_r, zxzy_y);
+            zxzy_c.closePath();
+        }
+
+        // ===== 工具：画一个带标题和说明的模块盒子 =====
+        function zxzy_box(zxzy_x, zxzy_y, zxzy_w, zxzy_h, zxzy_color, zxzy_title, zxzy_sub) {
+            var zxzy_c = zxzy_ctx;
+            zxzy_roundRect(zxzy_c, zxzy_x, zxzy_y, zxzy_w, zxzy_h, 9);
+
+            // 半透明填充 + 描边
+            zxzy_c.fillStyle = zxzy_color + "16";        // 颜色 + 透明度
+            zxzy_c.fill();
+            zxzy_c.strokeStyle = zxzy_color + "99";
+            zxzy_c.lineWidth = 1.4;
+            zxzy_c.stroke();
+
+            zxzy_c.textAlign = "center";
+            zxzy_c.textBaseline = "middle";
+
+            zxzy_c.fillStyle = "#eef1fb";
+            zxzy_c.font = 'bold 14px "Microsoft YaHei", sans-serif';
+            zxzy_c.fillText(zxzy_title, zxzy_x + zxzy_w / 2, zxzy_y + zxzy_h / 2 - 8);
+
+            if (zxzy_sub !== "") {
+                zxzy_c.fillStyle = "#93a0c4";
+                zxzy_c.font = '11.5px "Microsoft YaHei", sans-serif';
+                zxzy_c.fillText(zxzy_sub, zxzy_x + zxzy_w / 2, zxzy_y + zxzy_h / 2 + 12);
+            }
+        }
+
+        // ===== 工具：画一层（一行盒子），返回每个盒子的中心 x =====
+        function zxzy_row(zxzy_y, zxzy_h, zxzy_color, zxzy_items, zxzy_gap) {
+            var zxzy_n = zxzy_items.length;
+            var zxzy_w = (zxzy_MW - zxzy_gap * (zxzy_n - 1)) / zxzy_n;
+            var zxzy_centers = [];
+
+            zxzy_items.forEach(function (zxzy_it, zxzy_i) {
+                var zxzy_x = zxzy_X0 + zxzy_i * (zxzy_w + zxzy_gap);
+                zxzy_box(zxzy_x, zxzy_y, zxzy_w, zxzy_h, zxzy_color, zxzy_it.t, zxzy_it.s);
+                zxzy_centers.push(zxzy_x + zxzy_w / 2);
+            });
+            return zxzy_centers;
+        }
+
+        // ===== 工具：层标签（左侧竖排说明） =====
+        function zxzy_label(zxzy_y, zxzy_h, zxzy_color, zxzy_text, zxzy_en) {
+            var zxzy_c = zxzy_ctx;
+            var zxzy_x = 12;
+            var zxzy_w = 76;
+
+            zxzy_roundRect(zxzy_c, zxzy_x, zxzy_y + zxzy_h / 2 - 28, zxzy_w, 56, 9);
+            zxzy_c.fillStyle = zxzy_color + "14";
+            zxzy_c.fill();
+            zxzy_c.strokeStyle = zxzy_color + "66";
+            zxzy_c.lineWidth = 1;
+            zxzy_c.stroke();
+
+            zxzy_c.textAlign = "center";
+            zxzy_c.textBaseline = "middle";
+            zxzy_c.fillStyle = zxzy_color;
+            zxzy_c.font = 'bold 13.5px "Microsoft YaHei", sans-serif';
+            zxzy_c.fillText(zxzy_text, zxzy_x + zxzy_w / 2, zxzy_y + zxzy_h / 2 - 7);
+
+            zxzy_c.fillStyle = "#6b78a3";
+            zxzy_c.font = '10px Consolas, monospace';
+            zxzy_c.fillText(zxzy_en, zxzy_x + zxzy_w / 2, zxzy_y + zxzy_h / 2 + 13);
+        }
+
+        // ===== 工具：竖直箭头 =====
+        function zxzy_arrow(zxzy_x, zxzy_y1, zxzy_y2, zxzy_color) {
+            var zxzy_c = zxzy_ctx;
+            zxzy_c.strokeStyle = "#46558a";
+            zxzy_c.lineWidth = 1.4;
+            zxzy_c.beginPath();
+            zxzy_c.moveTo(zxzy_x, zxzy_y1);
+            zxzy_c.lineTo(zxzy_x, zxzy_y2 - 7);
+            zxzy_c.stroke();
+
+            zxzy_c.fillStyle = "#5b6b9d";
+            zxzy_c.beginPath();
+            zxzy_c.moveTo(zxzy_x, zxzy_y2);
+            zxzy_c.lineTo(zxzy_x - 4.5, zxzy_y2 - 8);
+            zxzy_c.lineTo(zxzy_x + 4.5, zxzy_y2 - 8);
+            zxzy_c.closePath();
+            zxzy_c.fill();
+
+            // 记录一条连线，供动画光点使用
+            zxzy_links.push({ x: zxzy_x, y1: zxzy_y1, y2: zxzy_y2, t: Math.random(), color: zxzy_color });
+        }
+
+        // ===== 工具：水平箭头（指向外部系统） =====
+        function zxzy_hArrow(zxzy_x1, zxzy_x2, zxzy_y) {
+            var zxzy_c = zxzy_ctx;
+            zxzy_c.strokeStyle = "#46558a";
+            zxzy_c.lineWidth = 1.4;
+            zxzy_c.beginPath();
+            zxzy_c.moveTo(zxzy_x1, zxzy_y);
+            zxzy_c.lineTo(zxzy_x2 - 7, zxzy_y);
+            zxzy_c.stroke();
+
+            zxzy_c.fillStyle = "#5b6b9d";
+            zxzy_c.beginPath();
+            zxzy_c.moveTo(zxzy_x2, zxzy_y);
+            zxzy_c.lineTo(zxzy_x2 - 8, zxzy_y - 4.5);
+            zxzy_c.lineTo(zxzy_x2 - 8, zxzy_y + 4.5);
+            zxzy_c.closePath();
+            zxzy_c.fill();
+        }
+
+        // ===== 画整张静态图 =====
+        function zxzy_scene() {
+            var zxzy_c = zxzy_ctx;
+
+            // 背景 + 淡格子
+            zxzy_c.fillStyle = "#101830";
+            zxzy_c.fillRect(0, 0, zxzy_W, zxzy_H);
+            zxzy_c.strokeStyle = "rgba(70, 85, 138, .16)";
+            zxzy_c.lineWidth = 1;
+            for (var zxzy_gx = 0; zxzy_gx <= zxzy_W; zxzy_gx += 40) {
+                zxzy_c.beginPath();
+                zxzy_c.moveTo(zxzy_gx, 0);
+                zxzy_c.lineTo(zxzy_gx, zxzy_H);
+                zxzy_c.stroke();
+            }
+            for (var zxzy_gy = 0; zxzy_gy <= zxzy_H; zxzy_gy += 40) {
+                zxzy_c.beginPath();
+                zxzy_c.moveTo(0, zxzy_gy);
+                zxzy_c.lineTo(zxzy_W, zxzy_gy);
+                zxzy_c.stroke();
+            }
+
+            // ---------- ① 用户层 ----------
+            var zxzy_c1 = zxzy_row(34, 88, zxzy_C.user, [
+                { t: "买家端", s: "PC 商城 · 小程序 · App" },
+                { t: "卖家工作台", s: "商品上架 · 订单处理" },
+                { t: "运营管理后台", s: "活动配置 · 数据看板" }
+            ], 16);
+            zxzy_label(34, 88, zxzy_C.user, "用户层", "USER");
+
+            // ---------- ② 接入层 ----------
+            var zxzy_c2 = zxzy_row(158, 88, zxzy_C.access, [
+                { t: "CDN 加速", s: "图片 · 静态资源分发" },
+                { t: "Nginx", s: "负载均衡 · 反向代理" },
+                { t: "API 网关", s: "鉴权 · 限流 · 路由" }
+            ], 16);
+            zxzy_label(158, 88, zxzy_C.access, "接入层", "ACCESS");
+
+            // ---------- ③ 应用服务层（两行） ----------
+            var zxzy_c3a = zxzy_row(282, 80, zxzy_C.app, [
+                { t: "商品服务", s: "商品 · 类目 · 搜索" },
+                { t: "订单服务", s: "下单 · 状态流转" },
+                { t: "支付服务", s: "支付 · 退款 · 对账" }
+            ], 16);
+            var zxzy_c3b = zxzy_row(376, 80, zxzy_C.app, [
+                { t: "库存服务", s: "扣减 · 预占 · 回滚" },
+                { t: "用户服务", s: "账号 · 地址 · 会员" },
+                { t: "营销服务", s: "优惠券 · 秒杀 · 活动" }
+            ], 16);
+            zxzy_label(282, 174, zxzy_C.app, "应用层", "SERVICE");
+
+            // ---------- ④ 中间件层 ----------
+            var zxzy_c4 = zxzy_row(500, 88, zxzy_C.middle, [
+                { t: "消息队列", s: "RocketMQ · 异步解耦" },
+                { t: "Redis 缓存", s: "热点数据 · 分布式锁" },
+                { t: "注册中心", s: "服务发现 · 配置" },
+                { t: "任务调度", s: "定时任务 · 补偿" }
+            ], 14);
+            zxzy_label(500, 88, zxzy_C.middle, "中间件层", "MIDDLEWARE");
+
+            // ---------- ⑤ 数据存储层 ----------
+            var zxzy_c5 = zxzy_row(624, 96, zxzy_C.data, [
+                { t: "MySQL 集群", s: "主从复制 · 分库分表" },
+                { t: "MongoDB", s: "商品详情 · 日志" },
+                { t: "对象存储 OSS", s: "图片 · 视频" },
+                { t: "数据仓库", s: "报表 · 分析" }
+            ], 14);
+            zxzy_label(624, 96, zxzy_C.data, "数据层", "DATA");
+
+            // ---------- ⑥ 外部系统（右侧竖排） ----------
+            zxzy_c.textAlign = "center";
+            zxzy_c.textBaseline = "middle";
+            zxzy_c.fillStyle = zxzy_C.ext;
+            zxzy_c.font = 'bold 12px "Microsoft YaHei", sans-serif';
+            zxzy_c.fillText("外部系统 · EXTERNAL", 911, 256);
+
+            zxzy_box(836, 282, 150, 62, zxzy_C.ext, "支付渠道", "微信 · 支付宝");
+            zxzy_box(836, 362, 150, 62, zxzy_C.ext, "物流平台", "快递轨迹");
+            zxzy_box(836, 442, 150, 62, zxzy_C.ext, "短信推送", "验证码 · 通知");
+
+            // ---------- 层间箭头 ----------
+            zxzy_c1.forEach(function (zxzy_x, zxzy_i) {
+                zxzy_arrow(zxzy_x, 124, 156, zxzy_C.user);
+                zxzy_arrow(zxzy_c2[zxzy_i], 248, 280, zxzy_C.access);
+            });
+            zxzy_c4.forEach(function (zxzy_x) {
+                zxzy_arrow(zxzy_x, 458, 498, zxzy_C.middle);
+                zxzy_arrow(zxzy_x, 590, 622, zxzy_C.data);
+            });
+
+            // 应用层 → 外部系统（水平箭头）
+            zxzy_hArrow(812, 834, 313);
+            zxzy_hArrow(812, 834, 393);
+            zxzy_hArrow(812, 834, 473);
+        }
+
+        // ===== 光点动画：让数据“流动”起来 =====
+        var zxzy_static = document.createElement("canvas");
+        zxzy_static.width = zxzy_W * zxzy_dpr;
+        zxzy_static.height = zxzy_H * zxzy_dpr;
+        var zxzy_sctx = zxzy_static.getContext("2d");
+        // 先把静态部分画到离屏画布，避免每帧重复画几十个盒子和文字
+        zxzy_sctx.setTransform(zxzy_dpr, 0, 0, zxzy_dpr, 0, 0);
+
+        // 临时把绘制目标切到离屏画布
+        var zxzy_mainCtx = zxzy_ctx;
+        zxzy_ctx = zxzy_sctx;
+        zxzy_scene();
+        zxzy_ctx = zxzy_mainCtx;
+
+        function zxzy_loop() {
+            var zxzy_c = zxzy_ctx;
+
+            // 底图
+            zxzy_c.clearRect(0, 0, zxzy_W, zxzy_H);
+            zxzy_c.drawImage(zxzy_static, 0, 0, zxzy_W, zxzy_H);
+
+            // 沿箭头移动的光点
+            zxzy_links.forEach(function (zxzy_l) {
+                zxzy_l.t += 0.012;
+                if (zxzy_l.t > 1) { zxzy_l.t = 0; }
+
+                var zxzy_y = zxzy_l.y1 + (zxzy_l.y2 - zxzy_l.y1) * zxzy_l.t;
+
+                zxzy_c.beginPath();
+                zxzy_c.fillStyle = zxzy_l.color;
+                zxzy_c.shadowColor = zxzy_l.color;
+                zxzy_c.shadowBlur = 8;
+                zxzy_c.arc(zxzy_l.x, zxzy_y, 2.6, 0, Math.PI * 2);
+                zxzy_c.fill();
+                zxzy_c.shadowBlur = 0;
+            });
+
+            requestAnimationFrame(zxzy_loop);
+        }
+
+        zxzy_loop();
+    </script>
+</body>
+</html>
